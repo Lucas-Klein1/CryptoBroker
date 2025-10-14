@@ -1,0 +1,17 @@
+Code und Implementierung: 
+  - Code muss vor dem Push von mindestens zwei Devs geprüft werden
+
+Testing:
+  - Code muss compilieren
+  - Code muss funktionsfähig sein
+  - Mindestens 2 Unittest müssen für neuen Code geschrieben und bestanden werden
+
+Dokumentation:
+  - Neu erstellter Code muss vollständig dokumentiert werden
+  - Neue Builds müssen jeweils über Patch Notes verfügen, die neue Funktionen erläutern.
+
+Akzeptanzkriterien:
+  - Dokumentation muss vorhanden sein
+  - Testing muss erfolgreich durchgeführt worden sein
+
+
