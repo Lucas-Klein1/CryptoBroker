@@ -29,8 +29,17 @@ public class RealCoin {
 
     // === Getter ===
     public String getName() { return name; }
-    public byte[] getImageData() { return imageData; }      // <-- Zugriff auf die rohen Bytes
-    public Image getImageObject() { return imageObject; }   // <-- Für ImageView nutzbar
+    public byte[] getImageData() { return imageData; }          // <-- Zugriff auf die rohen Bytes
+    public Image getImageObject() { return imageObject; }       // <-- Für ImageView nutzbar
     public double getCurrent_price() { return current_price; }
     public int getMarket_cap_rank() { return market_cap_rank; }
+
+    @Override
+    public String toString() {
+        return "RealCoin{" +
+                "name='" + name + '\'' + "imgeData='" + imageData + '\'' +
+                ", current_price=" + current_price +
+                ", market_cap_rank=" + market_cap_rank +
+                '}'  + "\n" ;
+    }
 }
