@@ -44,7 +44,7 @@ public class CryptoDashboard extends Application {
                 Coin c = tableView.getSelectionModel().getSelectedItem();
                 Notifications.create()
                         .title(c.getName() + " (" + c.getSymbol() + ")")
-                        .text("Preis: " + c.getCurrent_price() + " $\n" +
+                        .text("Preis: " + c.getCurrent_price() + " €\n" +
                                 "Marktkapitalisierung: " + c.getMarket_cap() + "\n" +
                                 "Rang: " + c.getMarket_cap_rank() + "\n" +
                                 "Volumen: " + c.getTotal_volume() + "\n" +
@@ -102,7 +102,7 @@ public class CryptoDashboard extends Application {
         symbolCol.setCellValueFactory(new PropertyValueFactory<>("symbol"));
         symbolCol.setPrefWidth(100);
 
-        TableColumn<Coin, Double> priceCol = new TableColumn<>("Preis ($)");
+        TableColumn<Coin, Double> priceCol = new TableColumn<>("Preis (€)");
         priceCol.setCellValueFactory(new PropertyValueFactory<>("current_price"));
         priceCol.setPrefWidth(120);
 
@@ -136,11 +136,13 @@ public class CryptoDashboard extends Application {
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
+                byte[] imageData = rs.getBytes("image"); // <-- Bild aus BLOB-Feld holen
+
                 coins.add(new Coin(
                         rs.getString("id"),
                         rs.getString("symbol"),
                         rs.getString("name"),
-                        rs.getString("image"),
+                        imageData, // <-- byte[] statt URL
                         rs.getDouble("current_price"),
                         rs.getLong("market_cap"),
                         rs.getInt("market_cap_rank"),
@@ -157,5 +159,3 @@ public class CryptoDashboard extends Application {
         launch(args);
     }
 }
-
-
