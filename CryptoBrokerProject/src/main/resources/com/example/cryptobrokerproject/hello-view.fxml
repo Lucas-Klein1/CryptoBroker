@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.cryptobrokerproject.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cryptobrokerproject.HelloController">
+   <children>
+      <ListView prefHeight="421.0" prefWidth="129.0" AnchorPane.bottomAnchor="-1.0" />
+      <Button cache="true" layoutY="34.0" mnemonicParsing="false" onAction="#homeButton" prefHeight="25.0" prefWidth="129.0" text="HOME" />
+      <Button cache="true" layoutY="59.0" mnemonicParsing="false" onAction="#overAllButton" prefHeight="25.0" prefWidth="129.0" text="OVERALL" />
+      <Button cache="true" layoutY="358.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="ACCOUNT">
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </Button>
+      <TableView fixedCellSize="0.0" layoutX="145.0" layoutY="34.0" prefHeight="350.0" prefWidth="434.0" fx:id="overviewTable">
+        <columns>
+          <TableColumn prefWidth="108.66665649414062" resizable="false" text="LOGO" />
+          <TableColumn prefWidth="92.66668701171875" resizable="false" text="NAME" />
+            <TableColumn prefWidth="104.66668701171875" resizable="false" text="PRICE" />
+            <TableColumn prefWidth="127.33331298828125" resizable="false" text="RANK" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </children>
+</AnchorPane>

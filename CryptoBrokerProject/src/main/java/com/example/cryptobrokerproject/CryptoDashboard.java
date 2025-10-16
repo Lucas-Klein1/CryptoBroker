@@ -149,6 +149,7 @@ public class CryptoDashboard extends Application {
                         rs.getLong("total_volume"),
                         rs.getString("last_updated")
                 ));
+                System.out.println(coins);
             }
         } catch (SQLException e) {
             e.printStackTrace();
