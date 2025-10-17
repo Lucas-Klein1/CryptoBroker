@@ -4,13 +4,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -23,6 +21,18 @@ public class HelloController implements Initializable {
     private final String DB_URL = "jdbc:sqlite:src/main/db/crypto.db";
 
     ObservableList<RealCoin> coins = FXCollections.observableArrayList();
+
+    @FXML
+    private Label accountLabel;
+
+    @FXML
+    private Label homeLabel;
+
+    @FXML
+    private Label overallLabel;
+
+    @FXML
+    private GridPane loginPane;
 
     @FXML
     private TableColumn<RealCoin, byte[]> logo;
@@ -42,10 +52,26 @@ public class HelloController implements Initializable {
 
     public void homeButton(javafx.event.ActionEvent actionEvent) {
         overviewTable.setVisible(false);
+        homeLabel.setVisible(true);
+        accountLabel.setVisible(false);
+        overallLabel.setVisible(false);
+        loginPane.setVisible(false);
     }
 
     public void overAllButton(javafx.event.ActionEvent actionEvent) {
         overviewTable.setVisible(true);
+        homeLabel.setVisible(false);
+        accountLabel.setVisible(false);
+        overallLabel.setVisible(true);
+        loginPane.setVisible(false);
+    }
+
+    public void accountButton(javafx.event.ActionEvent actionEvent) {
+        overviewTable.setVisible(false);
+        homeLabel.setVisible(false);
+        accountLabel.setVisible(true);
+        overallLabel.setVisible(false);
+        loginPane.setVisible(true);
     }
 
     public static ObservableList<RealCoin> getCoins() {
@@ -104,7 +130,7 @@ public class HelloController implements Initializable {
                     } else {
                         // Wenn Bilddaten vorhanden sind, erstelle ein Image aus dem byte[]
                         // und setze es in den ImageView.
-                        try (ByteArrayInputStream bis = new ByteArrayInputStream(item)) {
+                        try (   ByteArrayInputStream bis = new ByteArrayInputStream(item)) {
                             Image image = new Image(bis);
                             imageView.setImage(image);
                             setGraphic(imageView); // Setze den ImageView als Grafik für die Zelle
