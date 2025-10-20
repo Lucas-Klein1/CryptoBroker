@@ -12,7 +12,7 @@ Die Anwendung verwendet eine **lokale SQLite-Datenbank** zur Speicherung von Nut
 #### 1.2 Geltungsbereich
 
 Dieses Dokument beschreibt die funktionalen und nicht-funktionalen Anforderungen des gesamten Systems.  
-Es dient der Umsetzung eines Desktop-Tools zur Verwaltung und Anzeige von Kryptodaten.  
+Es dient der Umsetzung eines Desktop-Tools zur Verwaltung und Anzeige von Kryptodaten.
 
 #### 1.3 Definitionen und Abkürzungen
 
