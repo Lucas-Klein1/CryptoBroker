@@ -29,14 +29,15 @@ Es dient der Umsetzung eines Desktop-Tools zur Verwaltung und Anzeige von Krypto
 
 #### 2.1 Übersicht
 
-Das System umfasst drei Hauptfunktionen, wie im folgenden **UML-Anwendungsfalldiagramm** dargestellt:
+Das System umfasst vier Hauptfunktionen, wie im folgenden **UML-Anwendungsfalldiagramm** dargestellt:
 ![UML Use Case Diagram](UML-UseCaseDiagram.png "UML Use Case Diagram")
 
 Hauptanwendungsfälle:
 
 1. **Create Account**  
 2. **Invest**  
-3. **View Crypto Data**
+3. **View Crypto Data**  
+4. **Database**
 
 ---
 
@@ -60,6 +61,13 @@ Hauptanwendungsfälle:
 - **Voraussetzung:** Die Datenbank ist initialisiert.  
 - **Nachbedingung:** Daten werden aus der DB gelesen und angezeigt.  
 - **Aufwand:** Niedrig  
+
+#### 2.5 Database
+
+- **Beschreibung:** Verwaltung der SQLite-Datenbank inkl. Speichern, Abrufen und Aktualisieren von Daten.  
+- **Voraussetzung:** Anwendung gestartet, Datenbank vorhanden oder initialisiert.  
+- **Nachbedingung:** Datenbankoperationen erfolgreich durchgeführt.  
+- **Aufwand:** Mittel  
 
 ---
 
