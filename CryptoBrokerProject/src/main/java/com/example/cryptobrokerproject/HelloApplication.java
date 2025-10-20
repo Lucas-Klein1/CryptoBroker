@@ -16,6 +16,8 @@ public class HelloApplication extends Application {
         stage.setTitle("Crypto Broker");
         stage.getIcons().add(new Image("file:src/main/resources/com/example/cryptobrokerproject/icon.png"));
         stage.setScene(scene);
+        stage.setResizable(false);
+        stage.setAlwaysOnTop(true);
         stage.show();
     }
 

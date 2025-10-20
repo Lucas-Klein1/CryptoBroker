@@ -4,10 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
 import javax.swing.*;
@@ -23,16 +25,37 @@ public class HelloController implements Initializable {
     ObservableList<RealCoin> coins = FXCollections.observableArrayList();
 
     @FXML
-    private Label accountLabel;
+    private GridPane accountPane;
 
     @FXML
-    private Label homeLabel;
+    private Label cryptLabel;
 
     @FXML
-    private Label overallLabel;
+    private GridPane cryptPane;
 
     @FXML
-    private GridPane loginPane;
+    private Button accountButton;
+
+    @FXML
+    private Button logoutButton;
+
+    @FXML
+    private GridPane homePane;
+
+    @FXML
+    private GridPane overallPane;
+
+    @FXML
+    private PasswordField passwordField;
+
+    @FXML
+    private LineChart<RealCoin, String> cryptLineChart;
+
+    @FXML
+    private RadioButton showPassword;
+
+    @FXML
+    private TextField usernameField;
 
     @FXML
     private TableColumn<RealCoin, byte[]> logo;
@@ -49,29 +72,84 @@ public class HelloController implements Initializable {
     @FXML
     private TableView<RealCoin> overviewTable;
 
+    @FXML
+    private TextField showedPassword;
 
-    public void homeButton(javafx.event.ActionEvent actionEvent) {
+    public void homeButtonAction(javafx.event.ActionEvent actionEvent) {
         overviewTable.setVisible(false);
-        homeLabel.setVisible(true);
-        accountLabel.setVisible(false);
-        overallLabel.setVisible(false);
-        loginPane.setVisible(false);
+        homePane.setVisible(true);
+        accountPane.setVisible(false);
+        overallPane.setVisible(false);
+        cryptPane.setVisible(false);
     }
 
-    public void overAllButton(javafx.event.ActionEvent actionEvent) {
+    public void overAllButtonAction(javafx.event.ActionEvent actionEvent) {
         overviewTable.setVisible(true);
-        homeLabel.setVisible(false);
-        accountLabel.setVisible(false);
-        overallLabel.setVisible(true);
-        loginPane.setVisible(false);
+        homePane.setVisible(false);
+        accountPane.setVisible(false);
+        overallPane.setVisible(true);
+        cryptPane.setVisible(false);
     }
 
-    public void accountButton(javafx.event.ActionEvent actionEvent) {
+    public void accountButtonAction(javafx.event.ActionEvent actionEvent) {
         overviewTable.setVisible(false);
-        homeLabel.setVisible(false);
-        accountLabel.setVisible(true);
-        overallLabel.setVisible(false);
-        loginPane.setVisible(true);
+        homePane.setVisible(false);
+        accountPane.setVisible(true);
+        overallPane.setVisible(false);
+        cryptPane.setVisible(false);
+    }
+
+    public void logoutButtonAction(javafx.event.ActionEvent actionEvent) {
+        logoutButton.setVisible(false);
+        cryptPane.setVisible(false);
+        accountButton.setVisible(true);
+        homePane.setVisible(true);
+        overallPane.setVisible(false);
+        accountPane.setVisible(false);
+        JOptionPane.showMessageDialog(null, "Erfolgreich ausgeloggt.");
+    }
+
+    public void loginButtonAction(javafx.event.ActionEvent actionEvent) {
+        if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Bitte Benutzername und Passwort eingeben.");
+            return;
+        }
+        if (usernameField.getText().length() < 3) {
+            JOptionPane.showMessageDialog(null, "Benutzername ist zu kurz.");
+            return;
+        }
+        String[] parts = usernameField.getText().split(" ");
+        if (parts.length > 1) {
+            JOptionPane.showMessageDialog(null, "Benutzername darf keine Leerzeichen enthalten.");
+            return;
+        }
+        if (showPassword.isSelected() && 6 >= showedPassword.getText().length()) {
+            JOptionPane.showMessageDialog(null, "Passwort ist zu kurz.");
+            return;
+        }else if (!showPassword.isSelected() && 6 >= passwordField.getText().length()) {
+            JOptionPane.showMessageDialog(null, "Passwort ist zu kurz.");
+            return;
+        }
+        logoutButton.setVisible(true);
+        accountButton.setVisible(false);
+        accountPane.setVisible(false);
+        homePane.setVisible(true);
+        cryptPane.setVisible(false);
+        passwordField.setText("");
+        showedPassword.setText("");
+        usernameField.setText("");
+    }
+
+    public void showPasswordButton(javafx.event.ActionEvent actionEvent) {
+        if (showPassword.isSelected()) {
+            showedPassword.setText(passwordField.getText());
+            showedPassword.setVisible(true);
+            passwordField.setVisible(false);
+        }else {
+            passwordField.setText(showedPassword.getText());
+            showedPassword.setVisible(false);
+            passwordField.setVisible(true);
+        }
     }
 
     public static ObservableList<RealCoin> getCoins() {
@@ -89,7 +167,6 @@ public class HelloController implements Initializable {
                         rs.getInt("market_cap_rank")
                 ));
             }
-            JOptionPane.showMessageDialog(null, "Datenbankverbindung erfolgreich!");
         }catch (Exception e){
             JOptionPane.showMessageDialog(null, e);
         }
@@ -144,9 +221,16 @@ public class HelloController implements Initializable {
                 }
             };
         });
-
         coins = getCoins();
-        System.out.println(coins);
         overviewTable.setItems(coins);
+    }
+
+    public void getCryptoData(MouseEvent mouseEvent) {
+        RealCoin coin = overviewTable.getSelectionModel().getSelectedItem();
+        if (coin != null) {
+            overallPane.setVisible(false);
+            cryptLabel.setText(coin.getName());
+            cryptPane.setVisible(true);
+        }
     }
 }
