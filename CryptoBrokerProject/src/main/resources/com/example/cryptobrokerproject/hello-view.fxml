@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.Cursor?>
-<?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
@@ -181,9 +180,9 @@
                   <Font name="System Bold" size="30.0" />
                </font>
             </Label>
-            <LineChart fx:id="cryptLineChart" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <LineChart fx:id="cryptLineChart" createSymbols="false" style="-fx-alternative-row-fill-visible: RED;" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <NumberAxis />
               </xAxis>
               <yAxis>
                 <NumberAxis side="LEFT" />

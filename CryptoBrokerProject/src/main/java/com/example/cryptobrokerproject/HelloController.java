@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
@@ -49,7 +50,7 @@ public class HelloController implements Initializable {
     private PasswordField passwordField;
 
     @FXML
-    private LineChart<RealCoin, String> cryptLineChart;
+    private LineChart<Number, Number> cryptLineChart;
 
     @FXML
     private RadioButton showPassword;
@@ -161,6 +162,7 @@ public class HelloController implements Initializable {
             while (rs.next()) {
                 byte[] imageData = rs.getBytes("image"); // <-- Bild aus BLOB-Feld holen
                 list.add(new RealCoin(
+                        rs.getString("id"),
                         rs.getString("name"),
                         imageData, // <-- byte[] statt URL
                         rs.getDouble("current_price"),
@@ -225,12 +227,32 @@ public class HelloController implements Initializable {
         overviewTable.setItems(coins);
     }
 
-    public void getCryptoData(MouseEvent mouseEvent) {
+    public void getCryptoData(MouseEvent mouseEvent) throws SQLException {
         RealCoin coin = overviewTable.getSelectionModel().getSelectedItem();
         if (coin != null) {
             overallPane.setVisible(false);
-            cryptLabel.setText(coin.getName());
             cryptPane.setVisible(true);
+            cryptLabel.setText(coin.getName());
+            String priceText = coin.getId().replace("-","_")+"_history";
+            XYChart.Series series = new XYChart.Series();
+            try (Connection conn = DriverManager.getConnection(DB_URL)) {
+                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + priceText);
+                ResultSet rs = stmt.executeQuery();
+                series.setName("Preisverlauf von " + coin.getName());
+                while (rs.next()) {
+                    rs.next();
+                    rs.next();
+                    System.out.println(new Date(rs.getLong("timestamp_ms")));
+                    Number ts = rs.getInt("timestamp_ms");
+                    double priceVal = rs.getDouble("price");
+                    series.getData().add(new XYChart.Data(ts, priceVal));
+                }
+                cryptLineChart.getData().clear();
+                cryptLineChart.getData().add(series);
+                cryptPane.setVisible(true);
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(null, e);
+            }
         }
     }
 }
