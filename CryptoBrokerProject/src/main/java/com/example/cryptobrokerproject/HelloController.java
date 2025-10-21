@@ -1,10 +1,13 @@
 package com.example.cryptobrokerproject;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -12,13 +15,19 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
+import javafx.util.StringConverter;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 import java.sql.*;
-import java.util.ResourceBundle;
+import java.sql.Date;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class HelloController implements Initializable {
     private final String DB_URL = "jdbc:sqlite:src/main/db/crypto.db";
@@ -227,32 +236,120 @@ public class HelloController implements Initializable {
         overviewTable.setItems(coins);
     }
 
-    public void getCryptoData(MouseEvent mouseEvent) throws SQLException {
+    public void getCryptoData(MouseEvent mouseEvent) {
         RealCoin coin = overviewTable.getSelectionModel().getSelectedItem();
-        if (coin != null) {
-            overallPane.setVisible(false);
-            cryptPane.setVisible(true);
-            cryptLabel.setText(coin.getName());
-            String priceText = coin.getId().replace("-","_")+"_history";
-            XYChart.Series series = new XYChart.Series();
-            try (Connection conn = DriverManager.getConnection(DB_URL)) {
-                PreparedStatement stmt = conn.prepareStatement("SELECT * FROM " + priceText);
-                ResultSet rs = stmt.executeQuery();
-                series.setName("Preisverlauf von " + coin.getName());
-                while (rs.next()) {
-                    rs.next();
-                    rs.next();
-                    System.out.println(new Date(rs.getLong("timestamp_ms")));
-                    Number ts = rs.getInt("timestamp_ms");
-                    double priceVal = rs.getDouble("price");
-                    series.getData().add(new XYChart.Data(ts, priceVal));
-                }
-                cryptLineChart.getData().clear();
-                cryptLineChart.getData().add(series);
-                cryptPane.setVisible(true);
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(null, e);
+        if (coin == null) return;
+
+        overallPane.setVisible(false);
+        cryptPane.setVisible(true);
+        cryptLabel.setText(coin.getName());
+
+        String tableName = coin.getId().replace("-", "_") + "_history";
+        XYChart.Series<Number, Number> series = new XYChart.Series<>();
+        series.setName("Preisverlauf – " + coin.getName());
+
+        List<Long> timestamps = new ArrayList<>();
+        List<Double> prices = new ArrayList<>();
+
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement("SELECT timestamp_ms, price FROM " + tableName);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                timestamps.add(rs.getLong("timestamp_ms"));
+                prices.add(rs.getDouble("price"));
             }
+
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "Fehler beim Laden der Kursdaten:\n" + e.getMessage()).showAndWait();
+            return;
         }
+
+        if (timestamps.isEmpty()) return;
+
+        long minTs = Collections.min(timestamps);
+        long maxTs = Collections.max(timestamps);
+        double minPrice = Collections.min(prices);
+        double maxPrice = Collections.max(prices);
+
+        // === Daten in Serie einfügen ===
+        for (int i = 0; i < timestamps.size(); i++) {
+            series.getData().add(new XYChart.Data<>(timestamps.get(i) - minTs, prices.get(i)));
+        }
+
+        cryptLineChart.getData().clear();
+        cryptLineChart.getData().add(series);
+
+        NumberAxis xAxis = (NumberAxis) cryptLineChart.getXAxis();
+        NumberAxis yAxis = (NumberAxis) cryptLineChart.getYAxis();
+
+        xAxis.setLabel("Zeit");
+        yAxis.setLabel("Preis (EUR)");
+
+        // === Y-Achse: 10 % Puffer ===
+        double range = maxPrice - minPrice;
+        double padding = range * 0.10;
+        if (padding == 0) padding = maxPrice * 0.01;
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(minPrice - padding);
+        yAxis.setUpperBound(maxPrice + padding);
+        yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / 5);
+
+        // === Zeit-Achse (dd.MM HH:mm) ===
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM HH:mm");
+        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number value) {
+                return sdf.format(new Date(minTs + value.longValue()));
+            }
+
+            @Override
+            public Number fromString(String string) {
+                return 0;
+            }
+        });
+
+        // === EUR-Formatierung der Preisachse ===
+        NumberFormat eurFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
+        eurFormat.setMaximumFractionDigits(2);
+        eurFormat.setMinimumFractionDigits(2);
+
+        yAxis.setTickLabelFormatter(new StringConverter<Number>() {
+            @Override
+            public String toString(Number value) {
+                return eurFormat.format(value.doubleValue());
+            }
+
+            @Override
+            public Number fromString(String string) {
+                try {
+                    return eurFormat.parse(string).doubleValue();
+                } catch (ParseException e) {
+                    return 0;
+                }
+            }
+        });
+
+        // === Chart-Styling ===
+        cryptLineChart.setAnimated(false);
+        cryptLineChart.setCreateSymbols(false);
+        cryptLineChart.setLegendVisible(true);
+        cryptLineChart.setTitle("Preisverlauf von " + coin.getName());
+        cryptLineChart.setVerticalGridLinesVisible(true);
+        cryptLineChart.setHorizontalGridLinesVisible(true);
+        cryptLineChart.setStyle("-fx-background-color: #f9fafb; -fx-border-color: #dee2e6;");
+
+        // === Farbwahl (grün/rot) ===
+        double firstPrice = prices.get(0);
+        double lastPrice = prices.get(prices.size() - 1);
+        boolean isUp = lastPrice > firstPrice;
+
+        Platform.runLater(() -> {
+            String lineColor = isUp ? "#28a745" : "#dc3545"; // grün oder rot
+            Node line = series.getNode().lookup(".chart-series-line");
+            if (line != null) {
+                line.setStyle("-fx-stroke: " + lineColor + "; -fx-stroke-width: 2.5px;");
+            }
+        });
     }
 }
