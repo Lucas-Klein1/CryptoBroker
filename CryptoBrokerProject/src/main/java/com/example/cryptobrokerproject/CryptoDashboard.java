@@ -56,7 +56,7 @@ public class CryptoDashboard extends Application {
         BorderPane root = new BorderPane(tableView);
         root.setPadding(new Insets(15));
 
-        Scene scene = new Scene(root, 1100, 600);
+        Scene scene = new Scene(root, 1100, 601);
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
 
         stage.setScene(scene);

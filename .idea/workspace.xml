@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <change beforePath="$PROJECT_DIR$/CryptoBrokerProject/src/main/java/com/example/cryptobrokerproject/CryptoDashboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/CryptoBrokerProject/src/main/java/com/example/cryptobrokerproject/CryptoDashboard.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,10 +83,168 @@
       <workItem from="1761232887182" duration="21000" />
       <workItem from="1761233027650" duration="608000" />
       <workItem from="1761233812840" duration="32000" />
+      <workItem from="1761233883982" duration="173000" />
     </task>
+    <task id="LOCAL-00001" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761233947809</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1761233947809</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761233951255</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1761233951255</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761233954157</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1761233954157</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234013289</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234013289</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234014005</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234014005</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234014198</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234014198</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234014377</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234014377</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234014549</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234014549</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234014722</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234014722</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234014882</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234014882</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234015038</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234015038</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234015189</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234015189</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234015347</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234015347</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234015479</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234015479</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234017999</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234017999</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234018149</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234018149</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234018308</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234018308</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234018473</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234018473</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234018622</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234018622</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added two new Aktivitäetendiagramme with .drawio and .png files." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added two new Aktivitäetendiagramme with .drawio and .png files." />
   </component>
 </project>
