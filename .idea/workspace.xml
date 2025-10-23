@@ -5,6 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <change afterPath="$PROJECT_DIR$/docs/UML/Aktivitätendiagramm_Anmelden.drawio" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/UML/Aktivitätendiagramm_User_Anmelden.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/UML/Aktivitätendiagramm_User_Registrieren.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/UML/Aktivitätsdiagramm_Registrieren.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CryptoBrokerProject/src/main/java/com/example/cryptobrokerproject/CryptoDashboard.java" beforeDir="false" afterPath="$PROJECT_DIR$/CryptoBrokerProject/src/main/java/com/example/cryptobrokerproject/CryptoDashboard.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -38,23 +43,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/lucaskleineidam/IdeaProjects/CryptoBroker&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/lucaskleineidam/IdeaProjects/CryptoBroker",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/docs" />
@@ -83,7 +98,8 @@
       <workItem from="1761232887182" duration="21000" />
       <workItem from="1761233027650" duration="608000" />
       <workItem from="1761233812840" duration="32000" />
-      <workItem from="1761233883982" duration="173000" />
+      <workItem from="1761233883982" duration="287000" />
+      <workItem from="1761234200614" duration="323000" />
     </task>
     <task id="LOCAL-00001" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
       <option name="closed" value="true" />
@@ -237,11 +253,38 @@
       <option name="project" value="LOCAL" />
       <updated>1761234018622</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234069472</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234069472</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Added two new Aktivitäetendiagramme with .drawio and .png files.">
+      <option name="closed" value="true" />
+      <created>1761234468491</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1761234468491</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added two new Aktivitäetendiagramme with .drawio and .png files." />
