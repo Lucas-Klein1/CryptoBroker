@@ -31,6 +31,8 @@ Es dient der Umsetzung eines Desktop-Tools zur Verwaltung und Anzeige von Krypto
 
 Das System umfasst vier Hauptfunktionen, wie im folgenden **UML-Anwendungsfalldiagramm** dargestellt:
 
+![UML Use Case Diagram](UML/UML-UseCase.png "UML Use Case Diagram")
+
 Hauptanwendungsfälle:
 
 1. **Create Account**  
@@ -41,7 +43,8 @@ Hauptanwendungsfälle:
 ---
 
 #### 2.2 Create Account
-![](\docs\UML\Aktivitätendiagramm_Anmelden_User.png)
+
+![UML](UML/Aktivitätendiagramm_Anmelden_User.png)
 
 - **Beschreibung:** Benutzer können ein Konto anlegen, um personalisierte Daten zu speichern. Sodass ihr Investitionsverlauf und Einstellungen erhalten bleiben.
 - **Voraussetzung:** Die Anwendung ist gestartet. Kein bestehendes Konto mit derselben E-Mail-Adresse.
@@ -49,14 +52,18 @@ Hauptanwendungsfälle:
 - **Aufwand:** Niedrig  
 
 #### 2.3 Invest
-![](\docs\UML\Aktivitätendiagramm_Löschen_User.png)
+
+![UML](UML/Aktivitätendiagramm_Löschen_User.png)
+
 - **Beschreibung:** Benutzer können Investitionen in Kryptowährungen simulieren oder speichern.
 - **Voraussetzung:** Ein Benutzerkonto existiert.  
 - **Nachbedingung:** Investitionsdaten werden in der Datenbank gesichert.  
 - **Aufwand:** Mittel  
 
 #### 2.4 View Crypto Data
-![](\docs\UML\Aktivitätendiagramm_Registrieren_User.png)
+
+![UML](UML/Aktivitätendiagramm_Registrieren_User.png)
+
 - **Beschreibung:** Benutzer können Kryptoinformationen (z. B. Preise, Symbole, Bilder) einsehen.  
 - **Voraussetzung:** Die Datenbank ist initialisiert.  
 - **Nachbedingung:** Daten werden aus der DB gelesen und angezeigt.  
