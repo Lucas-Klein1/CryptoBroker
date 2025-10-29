@@ -38,10 +38,10 @@ Hauptanwendungsfälle:
 1. **Create Account**  
 2. **Crypto Kaufen**  
 3. **Crypto Verkaufen**
-4. **View Crypto Data** 
-7. **Login**
-8. **Logout**
-9. **Crypto Watchlist**
+4. **View Crypto Data**
+5. **Login**
+6. **Logout**
+7. **Crypto Watchlist**
 
 ---
 
