@@ -38,9 +38,7 @@ Hauptanwendungsfälle:
 1. **Create Account**  
 2. **Crypto Kaufen**  
 3. **Crypto Verkaufen**
-4. **View Crypto Data**  
-5. **Database**
-6. **Portfolio Management**
+4. **View Crypto Data** 
 7. **Login**
 8. **Logout**
 9. **Crypto Watchlist**
@@ -75,33 +73,22 @@ Hauptanwendungsfälle:
 - **Nachbedingung:** Daten werden aus der DB gelesen und angezeigt.  
 - **Aufwand:** Niedrig  
 
-#### 2.6 Database
+#### 2.6 Login
 
-- **Beschreibung:** Verwaltung der SQLite-Datenbank inkl. Speichern, Abrufen und Aktualisieren von Daten.  
-- **Voraussetzung:** Anwendung gestartet, Datenbank vorhanden oder initialisiert.  
-- **Nachbedingung:** Datenbankoperationen erfolgreich durchgeführt.  
-- **Aufwand:** Mittel  
-
-#### 2.7 Portfolio Management
-
-- **Beschreibung:** Mit dieser Funktion können Benutzer ihr Krypto-Portfolio verwalten, einschließlich der Anzeige von Investitionen, Gewinnen und Verlusten.
-- **Voraussetzung:** Anwendung gestartet, in Kryptowährungen investiert.
-- **Nachbedingung:** Daten werden aus der DB gelesen und Gewinn wird aus dem ehemaligen Einkaufsstand und dem aktuellen Kryptoverlauf berechnet.
-- **Aufwand:** Schwer
-
-#### 2.8 Login
 - **Beschreibung:** Benutzer können sich mit ihren Anmeldedaten in ihr Konto einloggen, um auf personalisierte Funktionen zuzugreifen.
 - **Voraussetzung:** Die Anwendung ist gestartet. Ein bestehendes Konto mit der eingegebenen E-Mail-Adresse.
 - **Nachbedingung:** Der Benutzer wird authentifiziert und erhält Zugriff auf sein Konto.
 - **Aufwand:** Niedrig
 
-#### 2.9 Logout
+#### 2.7 Logout
+
 - **Beschreibung:** Benutzer können sich aus ihrem Konto ausloggen, um die Sitzung zu beenden.
 - **Voraussetzung:** Der Benutzer ist eingeloggt.
 - **Nachbedingung:** Die Sitzung wird beendet und der Benutzer wird zur Anmeldeseite zurückgeleitet.
 - **Aufwand:** Niedrig
 
-#### 2.10 Crypto Watchlist
+#### 2.8 Crypto Watchlist
+
 - **Beschreibung:** Benutzer können eine Watchlist erstellen, um bestimmte Kryptowährungen zu verfolgen.
 - **Voraussetzung:** Der Benutzer ist eingeloggt.
 - **Nachbedingung:** Die Watchlist wird in der Datenbank gespeichert und kann jederzeit abgerufen werden. Sieht den aktuellen Preisverlauf der Kryptowährungen in der Watchlist abhängig vom Startzeitpunkt der Beobachtung.
