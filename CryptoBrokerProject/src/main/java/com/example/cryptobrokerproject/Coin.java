@@ -4,16 +4,16 @@ import javafx.scene.image.Image;
 import java.io.ByteArrayInputStream;
 
 public class Coin {
-    private String id;
-    private String symbol;
-    private String name;
-    private byte[] imageData;      // <-- Bilddaten als BLOB (Byte-Array)
+    private final String id;
+    private final String symbol;
+    private final String name;
+    private final byte[] imageData;      // <-- Bilddaten als BLOB (Byte-Array)
     private Image imageObject;     // <-- tatsächliches Bildobjekt
-    private double current_price;
-    private long market_cap;
-    private int market_cap_rank;
-    private long total_volume;
-    private String last_updated;
+    private final double current_price;
+    private final long market_cap;
+    private final int market_cap_rank;
+    private final long total_volume;
+    private final String last_updated;
 
     public Coin(String id, String symbol, String name, byte[] imageData,
                 double current_price, long market_cap, int market_cap_rank,
