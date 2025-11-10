@@ -13,4 +13,6 @@ module com.example.cryptobrokerproject {
 
     opens com.example.cryptobrokerproject to javafx.fxml;
     exports com.example.cryptobrokerproject;
+    exports com.example.cryptobrokerproject.main;
+    opens com.example.cryptobrokerproject.main to javafx.fxml;
 }

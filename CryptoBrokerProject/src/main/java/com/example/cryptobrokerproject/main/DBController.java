@@ -1,5 +1,6 @@
-package com.example.cryptobrokerproject;
+package com.example.cryptobrokerproject.main;
 
+import com.example.cryptobrokerproject.Coin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -82,10 +83,11 @@ public class DBController {
     }
 
     /**
-     * Verifiziert einen Account (Login-Prüfung).
+     * Verifiziert einen Account (Login-Prüfung) und gibt die Account-ID zurück.
+     * @return Account-ID, falls gültig, sonst -1
      */
-    public boolean verifyAccount(String name, String pw) {
-        String sql = "SELECT * FROM accounts WHERE name = ? AND pw = ?";
+    public int verifyAccount(String name, String pw) {
+        String sql = "SELECT id FROM accounts WHERE name = ? AND pw = ?";
         try (Connection conn = DriverManager.getConnection(DB_URL);
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -93,11 +95,36 @@ public class DBController {
             stmt.setString(2, pw);
             ResultSet rs = stmt.executeQuery();
 
-            return rs.next(); // true, wenn Account gefunden
+            if (rs.next()) {
+                return rs.getInt("id"); // ID zurückgeben, wenn gefunden
+            } else {
+                return -1; // Kein Treffer
+            }
 
         } catch (SQLException e) {
             System.err.println("Fehler bei der Account-Verifizierung: " + e.getMessage());
-            return false;
+            return -1; // Fehlerfall
+        }
+    }
+
+    /**
+     * Prüft, ob ein Benutzername bereits vergeben ist.
+     * @param name Benutzername
+     * @return true, wenn der Benutzername schon existiert, sonst false
+     */
+    public boolean isUsernameTaken(String name) {
+        String sql = "SELECT id FROM accounts WHERE name = ?";
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next(); // true → Name existiert bereits
+
+        } catch (SQLException e) {
+            System.err.println("Fehler bei der Überprüfung des Benutzernamens: " + e.getMessage());
+            return false; // Im Fehlerfall lieber false zurückgeben
         }
     }
 
