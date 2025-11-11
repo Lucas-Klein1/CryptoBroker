@@ -15,14 +15,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.Font;
 import javafx.util.StringConverter;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
-import java.sql.*;
+import java.sql.Timestamp;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -30,60 +28,27 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class HelloController implements Initializable {
-    private final String DB_URL = "jdbc:sqlite:src/main/db/crypto.db";
 
-    ObservableList<RealCoin> coins = FXCollections.observableArrayList();
+    private final ObservableList<Coin> coins = FXCollections.observableArrayList();
+    private final DBController dbCon = new DBController("jdbc:sqlite:src/main/db/crypto.db");
 
-    @FXML
-    private GridPane accountPane;
-
-    @FXML
-    private Label cryptLabel;
-
-    @FXML
-    private GridPane cryptPane;
-
-    @FXML
-    private Button accountButton;
-
-    @FXML
-    private Button logoutButton;
-
-    @FXML
-    private GridPane homePane;
-
-    @FXML
-    private GridPane overallPane;
-
-    @FXML
-    private PasswordField passwordField;
-
-    @FXML
-    private LineChart<Number, Number> cryptLineChart;
-
-    @FXML
-    private RadioButton showPassword;
-
-    @FXML
-    private TextField usernameField;
-
-    @FXML
-    private TableColumn<RealCoin, byte[]> logo;
-
-    @FXML
-    private TableColumn<RealCoin, String> name;
-
-    @FXML
-    private TableColumn<RealCoin, Float> price;
-
-    @FXML
-    private TableColumn<RealCoin, Integer> rank;
-
-    @FXML
-    private TableView<RealCoin> overviewTable;
-
-    @FXML
-    private TextField showedPassword;
+    @FXML private GridPane accountPane;
+    @FXML private Label cryptLabel;
+    @FXML private GridPane cryptPane;
+    @FXML private Button accountButton;
+    @FXML private Button logoutButton;
+    @FXML private GridPane homePane;
+    @FXML private GridPane overallPane;
+    @FXML private PasswordField passwordField;
+    @FXML private LineChart<Number, Number> cryptLineChart;
+    @FXML private RadioButton showPassword;
+    @FXML private TextField usernameField;
+    @FXML private TableColumn<Coin, byte[]> logo;
+    @FXML private TableColumn<Coin, String> name;
+    @FXML private TableColumn<Coin, Float> price;
+    @FXML private TableColumn<Coin, Integer> rank;
+    @FXML private TableView<Coin> overviewTable;
+    @FXML private TextField showedPassword;
 
     public void homeButtonAction(javafx.event.ActionEvent actionEvent) {
         overviewTable.setVisible(false);
@@ -128,26 +93,24 @@ public class HelloController implements Initializable {
             JOptionPane.showMessageDialog(null, "Benutzername ist zu kurz.");
             return;
         }
-        String[] parts = usernameField.getText().split(" ");
-        if (parts.length > 1) {
+        if (usernameField.getText().contains(" ")) {
             JOptionPane.showMessageDialog(null, "Benutzername darf keine Leerzeichen enthalten.");
             return;
         }
-        if (showPassword.isSelected() && 6 >= showedPassword.getText().length()) {
-            JOptionPane.showMessageDialog(null, "Passwort ist zu kurz.");
-            return;
-        }else if (!showPassword.isSelected() && 6 >= passwordField.getText().length()) {
+        if (showPassword.isSelected() && showedPassword.getText().length() <= 6
+                || !showPassword.isSelected() && passwordField.getText().length() <= 6) {
             JOptionPane.showMessageDialog(null, "Passwort ist zu kurz.");
             return;
         }
+
         logoutButton.setVisible(true);
         accountButton.setVisible(false);
         accountPane.setVisible(false);
         homePane.setVisible(true);
         cryptPane.setVisible(false);
-        passwordField.setText("");
-        showedPassword.setText("");
-        usernameField.setText("");
+        passwordField.clear();
+        showedPassword.clear();
+        usernameField.clear();
     }
 
     public void showPasswordButton(javafx.event.ActionEvent actionEvent) {
@@ -155,138 +118,94 @@ public class HelloController implements Initializable {
             showedPassword.setText(passwordField.getText());
             showedPassword.setVisible(true);
             passwordField.setVisible(false);
-        }else {
+        } else {
             passwordField.setText(showedPassword.getText());
             showedPassword.setVisible(false);
             passwordField.setVisible(true);
         }
     }
 
-    public static ObservableList<RealCoin> getCoins() {
-        ObservableList<RealCoin> list = FXCollections.observableArrayList();
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:src/main/db/crypto.db")){
-
-            PreparedStatement stmt = conn.prepareStatement("SELECT * FROM coins");
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                byte[] imageData = rs.getBytes("image"); // <-- Bild aus BLOB-Feld holen
-                list.add(new RealCoin(
-                        rs.getString("id"),
-                        rs.getString("name"),
-                        imageData, // <-- byte[] statt URL
-                        rs.getDouble("current_price"),
-                        rs.getInt("market_cap_rank")
-                ));
-            }
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(null, e);
-        }
-        return list;
-    }
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        name.setCellValueFactory(new PropertyValueFactory<RealCoin, String>("name"));
-        price.setCellValueFactory(new PropertyValueFactory<RealCoin, Float>("current_price"));
-        rank.setCellValueFactory(new PropertyValueFactory<RealCoin, Integer>("market_cap_rank"));
-        logo.setCellValueFactory(new PropertyValueFactory<RealCoin, byte[]>("imageData")); // imageData ist das byte[] Feld in RealCoin
-        logo.setCellFactory(column -> {
-            return new TableCell<RealCoin, byte[]>() { // Der Typ des Items in dieser Zelle ist byte[]
-                private final ImageView imageView = new ImageView();
+        name.setCellValueFactory(new PropertyValueFactory<>("name"));
+        price.setCellValueFactory(new PropertyValueFactory<>("current_price"));
+        rank.setCellValueFactory(new PropertyValueFactory<>("market_cap_rank"));
+        logo.setCellValueFactory(new PropertyValueFactory<>("imageData"));
 
-                {
-                    // Optional: Größe des Bildes festlegen, damit es in die Zelle passt
-                    imageView.setFitHeight(30); // Oder eine andere passende Größe
-                    imageView.setFitWidth(30);
-                    imageView.setPreserveRatio(true); // Wichtig, um das Seitenverhältnis zu erhalten
+        logo.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+            {
+                imageView.setFitHeight(30);
+                imageView.setFitWidth(30);
+                imageView.setPreserveRatio(true);
+                setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
+            }
 
-                    // Setze den ImageView als Grafik für die Zelle
-                    // setGraphic(imageView); // Dies wird in updateItem gemacht, um leere Zellen zu handhaben
-                    setContentDisplay(javafx.scene.control.ContentDisplay.GRAPHIC_ONLY); // Zeigt nur das Bild, keinen Text
-                }
-
-                @Override
-                protected void updateItem(byte[] item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (empty || item == null) {
-                        // Wenn die Zelle leer ist oder kein Bilddaten vorhanden sind,
-                        // zeige nichts an. Wichtig: setGraphic(null) entfernt alte Grafiken.
-                        imageView.setImage(null);
+            @Override
+            protected void updateItem(byte[] item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    try (ByteArrayInputStream bis = new ByteArrayInputStream(item)) {
+                        imageView.setImage(new Image(bis));
+                        setGraphic(imageView);
+                    } catch (Exception e) {
+                        System.err.println("Fehler beim Laden des Bildes: " + e.getMessage());
                         setGraphic(null);
-                    } else {
-                        // Wenn Bilddaten vorhanden sind, erstelle ein Image aus dem byte[]
-                        // und setze es in den ImageView.
-                        try (   ByteArrayInputStream bis = new ByteArrayInputStream(item)) {
-                            Image image = new Image(bis);
-                            imageView.setImage(image);
-                            setGraphic(imageView); // Setze den ImageView als Grafik für die Zelle
-                        } catch (Exception e) {
-                            // Fehlerbehandlung, falls das byte[] keine gültigen Bilddaten enthält
-                            System.err.println("Fehler beim Laden des Bildes aus Byte-Array: " + e.getMessage());
-                            imageView.setImage(null);
-                            setGraphic(null);
-                        }
                     }
                 }
-            };
+            }
         });
-        coins = getCoins();
+
+        coins.setAll(dbCon.getCoins());
         overviewTable.setItems(coins);
     }
 
     public void getCryptoData(MouseEvent mouseEvent) {
-        RealCoin coin = overviewTable.getSelectionModel().getSelectedItem();
+        Coin coin = overviewTable.getSelectionModel().getSelectedItem();
         if (coin == null) return;
 
         overallPane.setVisible(false);
         cryptPane.setVisible(true);
         cryptLabel.setText(coin.getName());
 
-        String tableName = coin.getId().replace("-", "_") + "_history";
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         series.setName("Preisverlauf – " + coin.getName());
 
-        List<Long> timestamps = new ArrayList<>();
-        List<Double> prices = new ArrayList<>();
+        // 🔹 Neuer DBController-Aufruf statt direkter SQL
+        HashMap<Timestamp, Double> history = dbCon.getCoinHistory(coin);
 
-        try (Connection conn = DriverManager.getConnection(DB_URL);
-             PreparedStatement stmt = conn.prepareStatement("SELECT timestamp_ms, price FROM " + tableName);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                timestamps.add(rs.getLong("timestamp_ms"));
-                prices.add(rs.getDouble("price"));
-            }
-
-        } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Fehler beim Laden der Kursdaten:\n" + e.getMessage()).showAndWait();
+        if (history == null || history.isEmpty()) {
+            new Alert(Alert.AlertType.INFORMATION, "Keine Preisdaten für " + coin.getName() + " gefunden.").showAndWait();
             return;
         }
 
-        if (timestamps.isEmpty()) return;
+        // Sortieren nach Timestamp
+        List<Map.Entry<Timestamp, Double>> sorted = new ArrayList<>(history.entrySet());
+        sorted.sort(Comparator.comparing(Map.Entry::getKey));
 
-        long minTs = Collections.min(timestamps);
-        long maxTs = Collections.max(timestamps);
+        List<Double> prices = new ArrayList<>();
+        for (Map.Entry<Timestamp, Double> entry : sorted) {
+            prices.add(entry.getValue());
+        }
+
+        Timestamp minTs = sorted.get(0).getKey();
         double minPrice = Collections.min(prices);
         double maxPrice = Collections.max(prices);
 
-        // === Daten in Serie einfügen ===
-        for (int i = 0; i < timestamps.size(); i++) {
-            series.getData().add(new XYChart.Data<>(timestamps.get(i) - minTs, prices.get(i)));
+        for (Map.Entry<Timestamp, Double> entry : sorted) {
+            long diff = entry.getKey().getTime() - minTs.getTime();
+            series.getData().add(new XYChart.Data<>(diff, entry.getValue()));
         }
 
-        cryptLineChart.getData().clear();
-        cryptLineChart.getData().add(series);
-
+        cryptLineChart.getData().setAll(series);
         NumberAxis xAxis = (NumberAxis) cryptLineChart.getXAxis();
         NumberAxis yAxis = (NumberAxis) cryptLineChart.getYAxis();
 
         xAxis.setLabel("Zeit");
         yAxis.setLabel("Preis (EUR)");
 
-        // === Y-Achse: 10 % Puffer ===
         double range = maxPrice - minPrice;
         double padding = range * 0.10;
         if (padding == 0) padding = maxPrice * 0.01;
@@ -295,61 +214,41 @@ public class HelloController implements Initializable {
         yAxis.setUpperBound(maxPrice + padding);
         yAxis.setTickUnit((yAxis.getUpperBound() - yAxis.getLowerBound()) / 5);
 
-        // === Zeit-Achse (dd.MM HH:mm) ===
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM HH:mm");
-        xAxis.setTickLabelFormatter(new StringConverter<Number>() {
+        xAxis.setTickLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Number value) {
-                return sdf.format(new Date(minTs + value.longValue()));
+                return sdf.format(new Date(minTs.getTime() + value.longValue()));
             }
-
-            @Override
-            public Number fromString(String string) {
-                return 0;
-            }
+            @Override public Number fromString(String s) { return 0; }
         });
 
-        // === EUR-Formatierung der Preisachse ===
         NumberFormat eurFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY);
-        eurFormat.setMaximumFractionDigits(2);
-        eurFormat.setMinimumFractionDigits(2);
-
-        yAxis.setTickLabelFormatter(new StringConverter<Number>() {
+        yAxis.setTickLabelFormatter(new StringConverter<>() {
             @Override
             public String toString(Number value) {
                 return eurFormat.format(value.doubleValue());
             }
-
-            @Override
-            public Number fromString(String string) {
-                try {
-                    return eurFormat.parse(string).doubleValue();
-                } catch (ParseException e) {
-                    return 0;
-                }
+            @Override public Number fromString(String s) {
+                try { return eurFormat.parse(s).doubleValue(); }
+                catch (ParseException e) { return 0; }
             }
         });
 
-        // === Chart-Styling ===
         cryptLineChart.setAnimated(false);
         cryptLineChart.setCreateSymbols(false);
         cryptLineChart.setLegendVisible(true);
         cryptLineChart.setTitle("Preisverlauf von " + coin.getName());
-        cryptLineChart.setVerticalGridLinesVisible(true);
-        cryptLineChart.setHorizontalGridLinesVisible(true);
         cryptLineChart.setStyle("-fx-background-color: #f9fafb; -fx-border-color: #dee2e6;");
 
-        // === Farbwahl (grün/rot) ===
         double firstPrice = prices.get(0);
         double lastPrice = prices.get(prices.size() - 1);
         boolean isUp = lastPrice > firstPrice;
 
         Platform.runLater(() -> {
-            String lineColor = isUp ? "#28a745" : "#dc3545"; // grün oder rot
+            String lineColor = isUp ? "#28a745" : "#dc3545";
             Node line = series.getNode().lookup(".chart-series-line");
-            if (line != null) {
-                line.setStyle("-fx-stroke: " + lineColor + "; -fx-stroke-width: 2.5px;");
-            }
+            if (line != null) line.setStyle("-fx-stroke: " + lineColor + "; -fx-stroke-width: 2.5px;");
         });
     }
 }

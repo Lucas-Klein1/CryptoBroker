@@ -1,6 +1,5 @@
-package com.example.cryptobrokerproject.main;
+package com.example.cryptobrokerproject;
 
-import com.example.cryptobrokerproject.main.DBController;
 import javafx.scene.control.Alert;
 
 public class AccController {

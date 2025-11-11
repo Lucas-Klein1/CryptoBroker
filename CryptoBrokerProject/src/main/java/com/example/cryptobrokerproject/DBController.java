@@ -1,6 +1,5 @@
-package com.example.cryptobrokerproject.main;
+package com.example.cryptobrokerproject;
 
-import com.example.cryptobrokerproject.Coin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -223,7 +222,7 @@ public class DBController {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Timestamp timestamp = rs.getTimestamp("timestamp");
+                Timestamp timestamp = rs.getTimestamp("timestamp_ms");
                 Double price = rs.getDouble("price");
                 map.put(timestamp, price);
             }

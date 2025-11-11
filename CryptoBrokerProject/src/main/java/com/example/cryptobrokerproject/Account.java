@@ -1,4 +1,4 @@
-package com.example.cryptobrokerproject.main;
+package com.example.cryptobrokerproject;
 
 public class Account {
     String name;
