@@ -27,7 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class HelloController implements Initializable {
+public class GUIController implements Initializable {
 
     private final ObservableList<Coin> coins = FXCollections.observableArrayList();
     private final DBController dbCon = new DBController("jdbc:sqlite:src/main/db/crypto.db");
