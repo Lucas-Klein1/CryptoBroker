@@ -12,6 +12,8 @@ public class AccController {
         }
         else {
             account = null;
+            showError("Invalid username or password");
+            System.out.println("Invalid username or password");
         }
         return account;
     }

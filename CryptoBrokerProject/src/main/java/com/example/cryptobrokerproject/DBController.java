@@ -19,6 +19,7 @@ public class DBController {
         if (dbURL == null) {
             JOptionPane.showMessageDialog(null, "Keine Datenbank gefunden.");
         }
+        createAccountAndTransactionTables();
     }
 
     /**

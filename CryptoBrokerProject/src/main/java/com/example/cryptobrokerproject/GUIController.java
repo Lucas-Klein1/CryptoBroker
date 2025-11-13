@@ -31,6 +31,7 @@ public class GUIController implements Initializable {
 
     private final ObservableList<Coin> coins = FXCollections.observableArrayList();
     private final DBController dbCon = new DBController("jdbc:sqlite:src/main/db/crypto.db");
+    private final AccController accCon = new AccController();
 
     @FXML private GridPane accountPane;
     @FXML private Label cryptLabel;
@@ -85,7 +86,10 @@ public class GUIController implements Initializable {
     }
 
     public void loginButtonAction(javafx.event.ActionEvent actionEvent) {
-        if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
+
+        Account acc = accCon.login(usernameField.getText(), passwordField.getText());
+
+        /*if (usernameField.getText().isEmpty() || passwordField.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Bitte Benutzername und Passwort eingeben.");
             return;
         }
@@ -101,16 +105,18 @@ public class GUIController implements Initializable {
                 || !showPassword.isSelected() && passwordField.getText().length() <= 6) {
             JOptionPane.showMessageDialog(null, "Passwort ist zu kurz.");
             return;
-        }
+        }*/
 
-        logoutButton.setVisible(true);
-        accountButton.setVisible(false);
-        accountPane.setVisible(false);
-        homePane.setVisible(true);
-        cryptPane.setVisible(false);
-        passwordField.clear();
-        showedPassword.clear();
-        usernameField.clear();
+        if (acc != null) {
+            logoutButton.setVisible(true);
+            accountButton.setVisible(false);
+            accountPane.setVisible(false);
+            homePane.setVisible(true);
+            cryptPane.setVisible(false);
+            passwordField.clear();
+            showedPassword.clear();
+            usernameField.clear();
+        }
     }
 
     public void showPasswordButton(javafx.event.ActionEvent actionEvent) {
