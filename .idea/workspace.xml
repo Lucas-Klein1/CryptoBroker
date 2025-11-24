@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="update SRS v2">
-      <change beforePath="$PROJECT_DIR$/.idea/CryptoBroker.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CryptoBroker.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CryptoBrokerProject/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/CryptoBrokerProject/.idea/misc.xml" afterDir="false" />
-    </list>
+    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="update SRS v2" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,12 +23,12 @@
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="d3163603-ae91-47fb-9dfa-afb80940d1a3" />
   </component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Lucas-Klein1/CryptoBroker.git&quot;,
-    &quot;accountId&quot;: &quot;7535b6f0-cd20-4aa6-aee3-73b1c2967b94&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Lucas-Klein1/CryptoBroker.git",
+    "accountId": "d1811617-0b53-49e6-9c1b-a47d8692c8db"
   }
-}</component>
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -66,8 +61,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26574.91" />
-        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26574.91" />
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.28774.11" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-IU-251.28774.11" />
       </set>
     </attachedChunks>
   </component>
@@ -88,6 +83,7 @@
       <workItem from="1761808750092" duration="151000" />
       <workItem from="1761808931594" duration="284000" />
       <workItem from="1761809229194" duration="1005000" />
+      <workItem from="1763121474144" duration="26000" />
     </task>
     <task id="LOCAL-00001" summary="update SRS">
       <option name="closed" value="true" />
