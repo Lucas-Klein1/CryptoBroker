@@ -50,6 +50,10 @@ public class GUIController implements Initializable {
     @FXML private TableColumn<Coin, Integer> rank;
     @FXML private TableView<Coin> overviewTable;
     @FXML private TextField showedPassword;
+    @FXML private Button registerButton;
+    @FXML private PasswordField passwordFieldRegister1;
+    @FXML private PasswordField passwordFieldRegister2;
+    @FXML private GridPane registerPane;
 
     public void homeButtonAction(javafx.event.ActionEvent actionEvent) {
         overviewTable.setVisible(false);
@@ -117,6 +121,11 @@ public class GUIController implements Initializable {
             showedPassword.clear();
             usernameField.clear();
         }
+    }
+
+    @FXML
+    void registerButtonAction(javafx.event.ActionEvent event) {
+        System.out.println("registerButtonAction");
     }
 
     public void showPasswordButton(javafx.event.ActionEvent actionEvent) {

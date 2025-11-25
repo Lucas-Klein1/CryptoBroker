@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% block title %}{{ coin.name }} – Details{% endblock %}
+
+{% block content %}
+
+<h2>{{ coin.name }} ({{ coin.symbol.upper() }})</h2>
+
+<img src="{{ url_for('coin_image', coin_id=coin.id) }}"
+     alt="{{ coin.name }}"
+     style="width: 64px; height: 64px; border-radius: 50%; margin-bottom:1rem;">
+
+
+<div class="coin-info"
+     data-history='{{ history | tojson }}'
+     data-price="{{ coin.current_price }}">
+  <p>Aktueller Preis: {{ coin.current_price|eur }}</p>
+  <p>Market Cap Rank: {{ coin.market_cap_rank }}</p>
+  <p>Market Cap: {{ coin.market_cap|eur }}</p>
+
+  {% if position is not none %}
+    <p>Dein Bestand: <strong>{{ "%.6f"|format(position) }} {{ coin.symbol.upper() }}</strong></p>
+  {% else %}
+    <p>Logge dich ein, um deinen Bestand zu sehen.</p>
+  {% endif %}
+</div>
+
+<h3 style="margin-top: 2rem;">Kursverlauf</h3>
+
+<div id="rangeButtons" style="margin-bottom: 1rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <button class="btn small-btn" data-range="1M">1M</button>
+    <button class="btn small-btn" data-range="3M">3M</button>
+    <button class="btn small-btn" data-range="6M">6M</button>
+    <button class="btn small-btn" data-range="1Y">1Y</button>
+    <button class="btn small-btn" data-range="ALL">ALL</button>
+</div>
+
+<div style="
+    padding: 1.5rem;
+    border-radius: 15px;
+    background:#0f1528;
+    border:1px solid #222a3a;
+    min-height: 380px;
+">
+    <canvas id="priceChart"></canvas>
+</div>
+
+<h3 style="margin-top: 2rem;">Handeln</h3>
+
+<div class="trade-card">
+    {% if position is not none %}
+    <div class="trade-info">
+        <p>Dein Bestand: <strong>{{ "%.6f"|format(position) }} {{ coin.symbol.upper() }}</strong></p>
+        <p>Preis pro Einheit: <strong>{{ coin.current_price|eur }}</strong></p>
+        <p>Gesamt (Menge × Preis): <strong><span id="tradeTotal">0,00 €</span></strong></p>
+    </div>
+
+    <form method="post"
+          action="{{ url_for('trade', coin_id=coin.id) }}"
+          class="trade-form">
+
+        <label for="amount">Menge</label>
+        <input type="number"
+               id="tradeAmount"
+               step="0.000001"
+               min="0"
+               name="amount"
+               required
+               placeholder="z.B. 0.05">
+
+        <div class="trade-buttons">
+            <button class="btn small-btn buy-btn"
+                    type="submit"
+                    name="action"
+                    value="BUY">
+                Kaufen
+            </button>
+
+            <button class="btn small-btn sell-btn"
+                    type="submit"
+                    name="action"
+                    value="SELL">
+                Verkaufen
+            </button>
+        </div>
+    </form>
+    {% else %}
+      <p>Bitte logge dich ein, um handeln zu können.</p>
+    {% endif %}
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // ---------- Grunddaten ----------
+    const coinInfoEl = document.querySelector(".coin-info");
+    if (!coinInfoEl) return;
+
+    const rawHistory = coinInfoEl.dataset.history || "[]";
+    const priceAttr = (coinInfoEl.dataset.price || "").toString().replace(",", ".");
+    const unitPrice = parseFloat(priceAttr);  // Euro pro Einheit
+
+    let fullHistory;
+    try {
+        fullHistory = JSON.parse(rawHistory);
+    } catch (e) {
+        fullHistory = [];
+    }
+
+    fullHistory.sort((a, b) => a.timestamp - b.timestamp);
+
+    const monthNames = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+
+    function filterRange(range) {
+        if (!fullHistory.length) return [];
+        const now = fullHistory[fullHistory.length - 1].timestamp;
+        let cutoff = null;
+
+        if (range === "1M") cutoff = now - 1000 * 60 * 60 * 24 * 30;
+        if (range === "3M") cutoff = now - 1000 * 60 * 60 * 24 * 90;
+        if (range === "6M") cutoff = now - 1000 * 60 * 60 * 24 * 180;
+        if (range === "1Y") cutoff = now - 1000 * 60 * 60 * 24 * 365;
+
+        if (!cutoff) return fullHistory;
+        return fullHistory.filter(p => p.timestamp >= cutoff);
+    }
+
+    function buildChartData(history) {
+        if (!history.length) {
+            return {
+                labels: [],
+                prices: [],
+                dates: [],
+                lineColor: "rgba(180,180,180,0.5)"
+            };
+        }
+
+        const dates = history.map(p => new Date(p.timestamp));
+        const prices = history.map(p => p.price);
+
+        const first = prices[0];
+        const last = prices[prices.length - 1];
+
+        let lineColor = "rgba(180,180,180,0.95)";
+        if (last > first) lineColor = "rgba(0,200,0,0.95)";
+        if (last < first) lineColor = "rgba(255,60,60,0.95)";
+
+        return {
+            labels: dates.map(d => monthNames[d.getMonth()]),
+            prices,
+            dates,
+            lineColor
+        };
+    }
+
+    // ---------- Chart ----------
+    const canvas = document.getElementById("priceChart");
+    if (!canvas || typeof Chart === "undefined") {
+        // falls Chart.js aus irgendeinem Grund nicht geladen ist
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+    let chart = null;
+
+    function updateChart(range = "ALL") {
+        const filtered = filterRange(range);
+        const data = buildChartData(filtered);
+
+        if (chart) chart.destroy();
+
+        chart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: "{{ coin.name }} Preis",
+                    data: data.prices,
+                    borderWidth: 3,
+                    borderColor: data.lineColor,
+                    tension: 0.35,
+                    pointRadius: 0,
+                    pointHitRadius: 20,
+                    pointHoverRadius: 6,
+                    hoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: "index"
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: "#ddd" },
+                        onClick: () => {}  // Linie nicht ausblendbar
+                    },
+                    tooltip: {
+                        backgroundColor: "rgba(0,0,0,0.7)",
+                        titleColor: "#fff",
+                        bodyColor: "#fff",
+                        callbacks: {
+                            title: (items) => {
+                                if (!filtered.length) return "";
+                                const d = filtered[items[0].dataIndex].timestamp;
+                                return new Date(d).toLocaleDateString("de-DE");
+                            },
+                            label: (item) =>
+                                item.raw.toLocaleString("de-DE", {
+                                    style: "currency",
+                                    currency: "EUR"
+                                })
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: "#b0b5d0",
+                            maxTicksLimit: 12
+                        },
+                        grid: {
+                            color: "rgba(255,255,255,0.05)"
+                        }
+                    },
+                    y: {
+                        grace: "10%",
+                        ticks: {
+                            color: "#b0b5d0",
+                            callback: value =>
+                                value.toLocaleString("de-DE", {
+                                    style: "currency",
+                                    currency: "EUR"
+                                })
+                        },
+                        grid: {
+                            color: "rgba(255,255,255,0.05)"
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    updateChart("ALL");
+
+    // ---------- Buttons & aktive Hervorhebung ----------
+    const buttons = document.querySelectorAll("[data-range]");
+    function setActiveButton(active) {
+        buttons.forEach(btn => {
+            if (btn.dataset.range === active) {
+                btn.classList.add("btn-active");
+            } else {
+                btn.classList.remove("btn-active");
+            }
+        });
+    }
+    setActiveButton("ALL");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const range = btn.dataset.range;
+            updateChart(range);
+            setActiveButton(range);
+        });
+    });
+
+    // ---------- Live Gesamtpreis (Menge × Preis) ----------
+    const amountInput = document.getElementById("tradeAmount");
+    const totalEl = document.getElementById("tradeTotal");
+
+    function updateTotal() {
+        if (!amountInput || !totalEl || !unitPrice || isNaN(unitPrice)) {
+            if (totalEl) totalEl.textContent = "0,00 €";
+            return;
+        }
+        const raw = amountInput.value.trim().replace(",", ".");
+        const amount = parseFloat(raw);
+        if (isNaN(amount) || amount <= 0) {
+            totalEl.textContent = "0,00 €";
+            return;
+        }
+        const total = amount * unitPrice;
+        totalEl.textContent = total.toLocaleString("de-DE", {
+            style: "currency",
+            currency: "EUR"
+        });
+    }
+
+    if (amountInput && totalEl) {
+        amountInput.addEventListener("input", updateTotal);
+        updateTotal();
+    }
+});
+</script>
+
+{% endblock %}

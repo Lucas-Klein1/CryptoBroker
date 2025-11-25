@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Home – CryptoSim{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Willkommen bei CryptoSim</h1>
+  <p>Simuliere einen Crypto-Broker, handle Coins und beobachte dein virtuelles Portfolio.</p>
+  <a class="btn" href="{{ url_for('dashboard') }}">Zum Dashboard</a>
+</section>
+{% endblock %}

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}CryptoSim{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Chart.js kann hier oben oder unten geladen werden; unten lassen wir es, aber sorgen dafür,
+       dass die Seitenskripte erst auf DOMContentLoaded laufen -->
+</head>
+
+<body>
+  <nav class="navbar">
+    <div class="nav-logo">CryptoSim</div>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('home') }}">Home</a></li>
+      <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+      <li><a href="{{ url_for('portfolio') }}">Portfolio</a></li>
+      <li><a href="{{ url_for('transactions') }}">Transaktionen</a></li>
+      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+    </ul>
+
+  </nav>
+
+  <main class="container">
+
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    <div class="flash-container">
+      {% for category, message in messages %}
+      <div class="flash flash-{{ category }}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Chart.js und globales JS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

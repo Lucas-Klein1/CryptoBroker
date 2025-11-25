@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Dashboard – CryptoSim{% endblock %}
+
+{% block content %}
+<h2>Alle Coins</h2>
+<p class="subtext">Klicke auf einen Coin für Details.</p>
+
+<table class="table dashboard-table">
+  <thead>
+    <tr>
+      <th>Bild</th>
+      <th>Name</th>
+      <th>Symbol</th>
+      <th>Preis</th>
+      <th>Market Cap</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in coins %}
+    <tr class="dashboard-row"
+        data-href="{{ url_for('coin_detail', coin_id=c.id) }}">
+
+      <td>
+        <img src="{{ url_for('coin_image', coin_id=c.id) }}"
+             style="width:32px; height:32px; border-radius:50%;">
+      </td>
+
+      <td>{{ c.name }}</td>
+
+      <td>{{ c.symbol.upper() }}</td>
+
+      <td>{{ c.current_price|eur }}</td>
+
+      <td>{{ c.market_cap|eur }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

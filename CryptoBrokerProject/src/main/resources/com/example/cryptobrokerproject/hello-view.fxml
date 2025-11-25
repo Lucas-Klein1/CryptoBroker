@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -24,15 +25,29 @@
 
 <AnchorPane maxHeight="420.0" maxWidth="600.0" minHeight="420.0" minWidth="600.0" prefHeight="420.0" prefWidth="600.0" style="-fx-background-color: #2b262d;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cryptobrokerproject.GUIController">
    <children>
-      <ListView prefHeight="421.0" prefWidth="129.0" style="-fx-background-color: #9f496e;" AnchorPane.bottomAnchor="-1.0" />
-      <Button cache="true" layoutX="-6.0" layoutY="52.0" mnemonicParsing="false" onAction="#homeButtonAction" prefHeight="25.0" prefWidth="129.0" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="HOME" textFill="WHITE" />
-      <Button cache="true" layoutX="-6.0" layoutY="85.0" mnemonicParsing="false" onAction="#overAllButtonAction" prefHeight="25.0" prefWidth="129.0" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="OVERALL" textFill="WHITE" />
-      <Button fx:id="accountButton" cache="true" layoutX="-6.0" layoutY="358.0" mnemonicParsing="false" onAction="#accountButtonAction" prefHeight="25.0" prefWidth="129.0" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="ACCOUNT" textFill="WHITE">
-         <cursor>
-            <Cursor fx:constant="DEFAULT" />
-         </cursor>
-      </Button>
-      <GridPane fx:id="overallPane" layoutX="129.0" layoutY="2.0">
+      <AnchorPane prefHeight="420.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button fx:id="logoutButton" cache="true" mnemonicParsing="false" onAction="#logoutButtonAction" prefHeight="25.0" prefWidth="129.0" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="LOGOUT" textFill="WHITE" visible="false" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="-6.0">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Button>
+            <ListView prefHeight="421.0" prefWidth="129.0" style="-fx-background-color: #9f496e;" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-2.842170943040401E-14" AnchorPane.rightAnchor="70.66666666666666" AnchorPane.topAnchor="5.684341886080802E-14" />
+            <Button cache="true" layoutX="-6.0" layoutY="92.0" mnemonicParsing="false" onAction="#homeButtonAction" prefHeight="25.0" prefWidth="129.0" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="HOME" textFill="WHITE" AnchorPane.leftAnchor="-6.0" AnchorPane.topAnchor="90.0" />
+            <Button cache="true" layoutY="51.0" mnemonicParsing="false" onAction="#overAllButtonAction" prefHeight="25.0" prefWidth="129.0" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="OVERALL" textFill="WHITE" AnchorPane.leftAnchor="-6.0" AnchorPane.topAnchor="50.0" />
+            <Button fx:id="accountButton" cache="true" layoutX="-17.0" layoutY="336.0" mnemonicParsing="false" onAction="#accountButtonAction" prefHeight="25.0" prefWidth="129.0" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="ACCOUNT" textFill="WHITE" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="-6.0">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Button>
+            <Button fx:id="registerButton" cache="true" layoutX="4.0" layoutY="355.0" mnemonicParsing="false" onAction="#registerButtonAction" prefHeight="25.0" prefWidth="129.0" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="REGISTER" textFill="WHITE" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="-6.0">
+               <cursor>
+                  <Cursor fx:constant="DEFAULT" />
+               </cursor>
+            </Button>
+         </children>
+      </AnchorPane>
+      <GridPane fx:id="overallPane" layoutX="129.0" layoutY="2.0" visible="false" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="1.9999999999999432" AnchorPane.topAnchor="2.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="0.0" prefWidth="14.333343505859375" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="435.99998982747394" />
@@ -62,7 +77,7 @@
             </Label>
          </children>
       </GridPane>
-      <GridPane fx:id="homePane" layoutX="129.0" layoutY="2.0" visible="false">
+      <GridPane fx:id="homePane" layoutX="129.0" layoutY="2.0" visible="false" AnchorPane.leftAnchor="129.0" AnchorPane.rightAnchor="1.9999999999999432" AnchorPane.topAnchor="2.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="0.0" prefWidth="14.333343505859375" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="435.99998982747394" />
@@ -108,7 +123,7 @@
             </Label>
          </children>
       </GridPane>
-      <GridPane fx:id="accountPane" layoutX="129.0" layoutY="2.0" visible="false">
+      <GridPane fx:id="accountPane" layoutX="129.0" layoutY="2.0" visible="false" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="0.0" prefWidth="14.333343505859375" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="435.99998982747394" />
@@ -158,11 +173,6 @@
             </Label>
          </children>
       </GridPane>
-      <Button fx:id="logoutButton" cache="true" layoutX="-6.0" layoutY="358.0" mnemonicParsing="false" onAction="#logoutButtonAction" style="-fx-background-color: #647295; -fx-font-weight: bold;" text="LOGOUT" textFill="WHITE" visible="false">
-         <cursor>
-            <Cursor fx:constant="DEFAULT" />
-         </cursor>
-      </Button>
       <GridPane fx:id="cryptPane" layoutX="129.0" layoutY="2.0" visible="false">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="0.0" prefWidth="14.333343505859375" />
@@ -188,6 +198,67 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
+         </children>
+      </GridPane>
+      <GridPane fx:id="accountPane1" layoutX="139.0" layoutY="12.0" AnchorPane.leftAnchor="130.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="2.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="152.0" minWidth="0.0" prefWidth="14.333343505859375" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="445.0" minWidth="10.0" prefWidth="435.99998982747394" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="124.3333740234375" minWidth="0.0" prefWidth="17.3333740234375" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="141.33332188924152" minHeight="0.0" prefHeight="51.999989827473954" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="344.6666666666667" minHeight="10.0" prefHeight="309.3333435058594" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <GridPane fx:id="loginPane1" alignment="CENTER" prefHeight="249.0" prefWidth="436.0" style="-fx-background-color: #f2ebe5;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="193.9999796549479" minHeight="10.0" prefHeight="111.33331298828125" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="115.66663106282552" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="500.0" minHeight="10.0" prefHeight="115.66663106282552" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="245.99999237060547" minHeight="10.0" prefHeight="103.33336893717447" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Pane prefHeight="100.0" prefWidth="438.0" GridPane.rowIndex="1">
+                     <children>
+                        <PasswordField fx:id="passwordFieldRegister1" layoutX="145.0" layoutY="43.0" />
+                        <Label layoutX="145.0" layoutY="26.0" text="Passwort:" />
+                        <TextField fx:id="showedPassword1" layoutX="145.0" layoutY="43.0" visible="false" />
+                     </children>
+                  </Pane>
+                  <Pane fx:id="showedPasswordRegister2" prefHeight="53.0" prefWidth="436.0" GridPane.rowSpan="3">
+                     <children>
+                        <Label layoutX="144.0" layoutY="55.0" text="Benutzername:" />
+                        <TextField fx:id="usernameField1" layoutX="144.0" layoutY="72.0" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="50.0" prefWidth="436.0" GridPane.rowIndex="3">
+                     <children>
+                        <Button layoutX="196.0" layoutY="14.0" mnemonicParsing="false" onAction="#loginButtonAction" text="Register" />
+                     </children>
+                  </Pane>
+                  <Pane layoutX="10.0" layoutY="87.0" prefHeight="125.0" prefWidth="436.0" GridPane.rowIndex="2">
+                     <children>
+                        <PasswordField fx:id="passwordFieldRegister2" layoutX="145.0" layoutY="43.0" />
+                        <RadioButton fx:id="showPasswordRegister" layoutX="160.0" layoutY="77.0" mnemonicParsing="false" onAction="#showPasswordRegisterButton" text="Passwort anzeigen" />
+                        <Label layoutX="145.0" layoutY="26.0" text="Passwort:" />
+                        <TextField fx:id="showedPassword11" layoutX="145.0" layoutY="43.0" visible="false" />
+                     </children>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Pane>
+               </children>
+            </GridPane>
+            <Label alignment="CENTER" prefHeight="0.0" prefWidth="438.0" text="REGISTER" textFill="WHITE" GridPane.columnIndex="1">
+               <font>
+                  <Font name="System Bold" size="30.0" />
+               </font>
+            </Label>
          </children>
       </GridPane>
    </children>
