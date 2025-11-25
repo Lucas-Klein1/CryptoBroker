@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Portfolio – CryptoSim{% endblock %}
+
+{% block content %}
+<h2>Dein Portfolio</h2>
+
+{% if positions %}
+<table class="table portfolio-table">
+  <thead>
+    <tr>
+      <th>Bild</th>
+      <th>Coin</th>
+      <th>Symbol</th>
+      <th>Menge</th>
+      <th>Wert</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in positions %}
+    <tr class="portfolio-row"
+        data-href="{{ url_for('coin_detail', coin_id=p.coin.id) }}">
+      
+      <td>
+        <img src="{{ url_for('coin_image', coin_id=p.coin.id) }}"
+             style="width:32px; height:32px; border-radius:50%;">
+      </td>
+
+      <td>{{ p.coin.name }}</td>
+
+      <td>{{ p.coin.symbol.upper() }}</td>
+
+      <td>{{ "%.6f"|format(p.amount) }}</td>
+
+      <td>{{ p.value|eur }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<p class="total">Gesamtwert: <strong>{{ total_value|eur }}</strong></p>
+
+{% else %}
+<p>Du hast noch keine Transaktionen.</p>
+{% endif %}
+
+{% endblock %}

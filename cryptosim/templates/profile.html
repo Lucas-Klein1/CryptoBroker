@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Profil – CryptoSim{% endblock %}
+
+{% block content %}
+<h2>Profil / Login</h2>
+
+{% if account %}
+<p>Angemeldet als: <strong>{{ account.name }}</strong></p>
+<p>Account-ID: {{ account.id }}</p>
+<p>Erstellt am: {{ account.created_at }}</p>
+{% else %}
+<form method="post" class="form">
+  <label>
+    Name:
+    <input type="text" name="name" required>
+  </label>
+  <label>
+    Passwort:
+    <input type="password" name="pw" required>
+  </label>
+  <button type="submit" class="btn">Login / Registrieren</button>
+</form>
+<p class="hint">Falls der Name noch nicht existiert, wird ein neuer Account angelegt.</p>
+{% endif %}
+{% endblock %}

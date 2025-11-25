@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}Transaktionen – CryptoSim{% endblock %}
+
+{% block content %}
+<h2>Transaktionshistorie</h2>
+
+<!-- ========== FILTERLEISTE ========== -->
+<div class="tx-filters">
+
+  <div class="tx-filter-group">
+    <button class="btn small-btn tx-type-btn active" data-type="ALL">Alle</button>
+    <button class="btn small-btn tx-type-btn" data-type="BUY">Käufe</button>
+    <button class="btn small-btn tx-type-btn" data-type="SELL">Verkäufe</button>
+  </div>
+
+  <div class="tx-filter-group">
+    <button class="btn small-btn tx-time-btn active" data-range="ALL">Alle</button>
+    <button class="btn small-btn tx-time-btn" data-range="7D">7 Tage</button>
+    <button class="btn small-btn tx-time-btn" data-range="1M">1 Monat</button>
+    <button class="btn small-btn tx-time-btn" data-range="1Y">1 Jahr</button>
+  </div>
+
+</div>
+<!-- ================================= -->
+
+{% if txs %}
+<table class="table transactions-table" id="txTable">
+  <thead>
+    <tr>
+      <th>Bild</th>
+      <th>Coin</th>
+      <th>Typ</th>
+      <th>Menge</th>
+      <th>Preis</th>
+      <th>Gesamt</th>
+      <th>Datum</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in txs %}
+    <tr class="transaction-row"
+        data-type="{{ t.type }}"
+        data-timestamp="{{ t.ts }}"
+        data-href="{{ url_for('coin_detail', coin_id=t.coin_id) }}">
+
+      <td>
+        <img src="{{ url_for('coin_image', coin_id=t.coin_id) }}"
+             style="width:32px; height:32px; border-radius:50%;">
+      </td>
+
+      <td>{{ t.coin_name }}</td>
+
+      <td>
+        {% if t.type == "BUY" %}
+          <span style="color:#38c76a;">Kauf</span>
+        {% else %}
+          <span style="color:#ff5c5c;">Verkauf</span>
+        {% endif %}
+      </td>
+
+      <td>{{ "%.6f"|format(t.amount) }}</td>
+
+      <td>{{ t.price|eur }}</td>
+
+      <td>{{ t.total|eur }}</td>
+
+      <td>{{ t.ts | int | datetimeformat }}</td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+<p>Keine Transaktionen vorhanden.</p>
+{% endif %}
+
+<script>
+// =========================================
+//        FILTERLOGIK – TYP & ZEIT
+// =========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const rows = document.querySelectorAll(".transaction-row");
+
+    let activeType = "ALL";
+    let activeRange = "ALL";
+
+    const typeButtons = document.querySelectorAll(".tx-type-btn");
+    const timeButtons = document.querySelectorAll(".tx-time-btn");
+
+    function setActive(btns, activeValue, attr) {
+        btns.forEach(b => {
+            if (b.dataset[attr] === activeValue) b.classList.add("active");
+            else b.classList.remove("active");
+        });
+    }
+
+    function filterRows() {
+        const now = Date.now();
+
+        rows.forEach(row => {
+            const rowType = row.dataset.type;
+            const ts = parseInt(row.dataset.timestamp);
+
+            let show = true;
+
+            // --- Typfilter ---
+            if (activeType !== "ALL" && rowType !== activeType) {
+                show = false;
+            }
+
+            // --- Zeitfilter ---
+            if (activeRange !== "ALL") {
+                const diff = now - ts;
+
+                if (activeRange === "7D" && diff > 7 * 24 * 60 * 60 * 1000) show = false;
+                if (activeRange === "1M" && diff > 30 * 24 * 60 * 60 * 1000) show = false;
+                if (activeRange === "1Y" && diff > 365 * 24 * 60 * 60 * 1000) show = false;
+            }
+
+            row.style.display = show ? "" : "none";
+        });
+    }
+
+    // --- Typfilter Buttons ---
+    typeButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            activeType = btn.dataset.type;
+            setActive(typeButtons, activeType, "type");
+            filterRows();
+        });
+    });
+
+    // --- Zeitfilter Buttons ---
+    timeButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            activeRange = btn.dataset.range;
+            setActive(timeButtons, activeRange, "range");
+            filterRows();
+        });
+    });
+
+});
+</script>
+
+{% endblock %}
