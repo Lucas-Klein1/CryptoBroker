@@ -1,0 +1,355 @@
+/* -----------------------------------------
+   Global Styles
+------------------------------------------ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  background: #0b1020;
+  color: #f5f5f5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* -----------------------------------------
+   Navbar
+------------------------------------------ */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #111726;
+  border-bottom: 1px solid #222a3a;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.nav-logo {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-links a {
+  color: #cfd3ff;
+  font-size: 0.95rem;
+}
+
+.nav-links a:hover {
+  color: #ffffff;
+}
+
+/* -----------------------------------------
+   Layout Container
+------------------------------------------ */
+
+.container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* -----------------------------------------
+   Flash Messages
+------------------------------------------ */
+
+.flash-container {
+  margin-bottom: 1rem;
+}
+
+.flash {
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.flash-success {
+  background: rgba(56, 199, 106, 0.15);
+  border: 1px solid rgba(56, 199, 106, 0.5);
+  color: #aef6c9;
+}
+
+.flash-error {
+  background: rgba(255, 92, 92, 0.15);
+  border: 1px solid rgba(255, 92, 92, 0.5);
+  color: #ffd2d2;
+}
+
+/* -----------------------------------------
+   Buttons
+------------------------------------------ */
+
+.btn {
+  display: inline-block;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #4b8cff, #6f5cff);
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.small-btn {
+  padding: 0.35rem 0.8rem;
+  font-size: 0.8rem;
+  border-radius: 12px;
+}
+
+/* Zeitraum-Button-Grundzustand */
+[data-range] {
+  opacity: 0.65;
+  transition: all 0.15s ease;
+}
+
+[data-range]:hover {
+  opacity: 0.85;
+}
+
+/* Premium Active Button Marking */
+.btn-active {
+  opacity: 1 !important;
+  border: 2px solid #ffffff88 !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.22);
+  transform: scale(1.08) !important;
+}
+
+/* Trade Buttons */
+.buy-btn {
+  background: linear-gradient(135deg, #38c76a, #2ca656);
+}
+
+.sell-btn {
+  background: linear-gradient(135deg, #ff5c5c, #ff3333);
+}
+
+/* -----------------------------------------
+   Tables
+------------------------------------------ */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background: #111726;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid #222a3a;
+  font-size: 0.9rem;
+}
+
+.table th {
+  background: #151b2c;
+  text-align: left;
+}
+
+.table tr:hover {
+  background: #181f33;
+}
+
+.coin-link {
+  color: #82aaff;
+}
+
+.coin-link:hover {
+  color: #b4c5ff;
+}
+
+/* -----------------------------------------
+   Hero
+------------------------------------------ */
+
+.hero {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  margin-bottom: 2rem;
+  color: #b0b5d0;
+}
+
+/* -----------------------------------------
+   Forms
+------------------------------------------ */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 320px;
+  background: #111726;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 1px solid #222a3a;
+}
+
+.form input {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #222a3a;
+  background: #0b1020;
+  color: #f5f5f5;
+}
+
+/* -----------------------------------------
+   Portfolio
+------------------------------------------ */
+
+.total {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* komplette Zeile wie klickbaren Link behandeln */
+.portfolio-row {
+  transition: background 0.15s ease;
+}
+
+.portfolio-row:hover {
+  background: #182033;
+  cursor: pointer;
+}
+
+
+/* -----------------------------------------
+   Coin Detail Page
+------------------------------------------ */
+
+.coin-info {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: #111726;
+  border: 1px solid #222a3a;
+  border-radius: 12px;
+}
+
+.coin-info p {
+  margin: 0.3rem 0;
+}
+
+#priceChart {
+  margin-top: 0.5rem;
+}
+
+/* -----------------------------------------
+   Trade Card
+------------------------------------------ */
+
+.trade-card {
+  padding: 1rem;
+  border-radius: 12px;
+  background: #111726;
+  border: 1px solid #222a3a;
+  max-width: 420px;
+  margin-top: 0.5rem;
+}
+
+.trade-info p {
+  margin: 0.25rem 0;
+}
+
+.trade-form {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.trade-form input {
+  padding: 0.6rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #222a3a;
+  background: #0b1020;
+  color: #f5f5f5;
+}
+
+.trade-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* -----------------------------------------
+   Dashboard
+------------------------------------------ */
+
+/* Klickbare Dashboard-Zeilen */
+.dashboard-row {
+  transition: background 0.15s ease;
+}
+
+.dashboard-row:hover {
+  background: #182033;
+  cursor: pointer;
+}
+
+/* -----------------------------------------
+   Transactions
+------------------------------------------ */
+
+/* Klickbare Transaktionszeilen */
+.transaction-row {
+  transition: background 0.15s ease;
+}
+
+.transaction-row:hover {
+  background: #182033;
+  cursor: pointer;
+}
+
+/* Filter-Leiste für Transaktionshistorie */
+.tx-filters {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.tx-filter-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tx-type-btn.active,
+.tx-time-btn.active {
+  opacity: 1 !important;
+  border: 2px solid #ffffff88 !important;
+  transform: scale(1.07);
+  box-shadow: 0 0 12px rgba(255,255,255,0.2);
+}
