@@ -7,7 +7,7 @@
 
 # **Schritt 1 – Qualitätsziele & Qualitätsszenarien**
 
-## **1. Qualitätsszenarien (je 1 Szenario pro Attribut)**
+## **1. Qualitätsszenarien **
 
 | **Qualitätsattribut (Quelle)** | **Stimulus** | **Artefakt / Gegenstand** | **Umgebung** | **Antwort** | **Antwortmaß (Messgröße)** |
 |-------------------------------|-------------|----------------------------|--------------|-------------|------------------------------|
