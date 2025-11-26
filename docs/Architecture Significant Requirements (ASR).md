@@ -20,7 +20,7 @@
 
 ---
 
-## **2. Qualitätsbaum (Nutzen + Risiko: Hoch / Mittel / Niedrig)**
+## **2. Qualitätsbaum **
 
 | **Qualitätsattribut** | **Verfeinerung** | **Qualitätsszenario** | **Nutzen** | **Risiko** |
 |----------------------|------------------|------------------------|------------|------------|
