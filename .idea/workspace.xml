@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="update SRS v2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CryptoBrokerProject/src/main/java/com/example/cryptobrokerproject/GUIController.java" beforeDir="false" afterPath="$PROJECT_DIR$/CryptoBrokerProject/src/main/java/com/example/cryptobrokerproject/GUIController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CryptoBrokerProject/src/main/java/com/example/cryptobrokerproject/HelloApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/CryptoBrokerProject/src/main/java/com/example/cryptobrokerproject/HelloApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CryptoBrokerProject/src/main/resources/com/example/cryptobrokerproject/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/CryptoBrokerProject/src/main/resources/com/example/cryptobrokerproject/hello-view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cryptosim/templates/Architecture Significant Requirements (ASR).md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/Architecture Significant Requirements (ASR).md" afterDir="false" />
-    </list>
+    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="update SRS v2" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -94,6 +88,7 @@
       <workItem from="1761808750092" duration="151000" />
       <workItem from="1761808931594" duration="284000" />
       <workItem from="1761809229194" duration="1005000" />
+      <workItem from="1764153324328" duration="219000" />
     </task>
     <task id="LOCAL-00001" summary="update SRS">
       <option name="closed" value="true" />
