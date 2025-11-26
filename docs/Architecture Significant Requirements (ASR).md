@@ -120,4 +120,4 @@ Dieses ASR-Dokument enthält:
 - Qualitätsszenarien für jedes Qualitätsziel
 - Strategien für die wichtigsten zwei Ziele
 - Zwei vollständige ADRs
-- 
+
