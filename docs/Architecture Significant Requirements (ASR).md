@@ -1,8 +1,7 @@
 # Architektur-Dokumentation – ASR (Architecture Significant Requirements)
 
-## Projekt: Crypto-Dashboard (Anzeige, Handel, User-Login)
+## Projekt: CryptoBroker
 
-Dieses Dokument fasst **Schritt 1–3 (ASR-Analyse)** vollständig zusammen.
 
 ---
 
