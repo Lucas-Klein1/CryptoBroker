@@ -1,0 +1,50 @@
+name: CI for cryptosim
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    # Wir arbeiten im Unterordner "cryptosim"
+    defaults:
+      run:
+        working-directory: cryptosim
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Syntax check (compile all .py files)
+        run: python -m compileall .
+
+      - name: Simple smoke test (startpage reachable)
+        run: |
+          python - << 'PY'
+          from app import app
+
+          # Flask Test-Client verwenden, damit der Server
+          # nicht endlos läuft:
+          with app.test_client() as client:
+              resp = client.get("/")
+              # Startseite muss antworten (200 OK oder 302 Redirect z.B. Login)
+              assert resp.status_code in (200, 302), resp.status_code
+          PY
+
+      - name: Build Docker image (test environment)
+        # Hier wird im Ordner "cryptosim" ein Docker-Image gebaut
+        run: docker build -t cryptosim-test .
