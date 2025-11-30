@@ -48,3 +48,6 @@ jobs:
       - name: Build Docker image (test environment)
         # Hier wird im Ordner "cryptosim" ein Docker-Image gebaut
         run: docker build -t cryptosim-test .
+
+      - name: Run Docker container
+        run: docker build -p :5000 cryptosim-test
