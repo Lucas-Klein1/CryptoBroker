@@ -50,4 +50,4 @@ jobs:
         run: docker build -t cryptosim-test .
 
       - name: Run Docker container
-        run: docker build -p :5000 cryptosim-test
+        run: docker run -p :5000 cryptosim-test
