@@ -6,13 +6,14 @@
 
 #### 1.1 Übersicht
 
-Das **CryptoBrokerProject** ist eine JavaFX-Anwendung, mit der Benutzer Kryptowährungsdaten einsehen, ein Konto erstellen und Investitionen simulieren können.  
-Die Anwendung verwendet eine **lokale SQLite-Datenbank** zur Speicherung von Nutzerdaten und Kryptoinformationen.  
+Das **CryptoBrokerProject** ist eine webbasierte Anwendung, die über einen Browser genutzt wird.
+Benutzer können Kryptowährungsdaten einsehen, Konten verwalten und Investitionen simulieren.
+Die Anwendung nutzt eine serverseitige Architektur.  
 
 #### 1.2 Geltungsbereich
 
 Dieses Dokument beschreibt die funktionalen und nicht-funktionalen Anforderungen des gesamten Systems.  
-Es dient der Umsetzung eines Desktop-Tools zur Verwaltung und Anzeige von Kryptodaten.
+Es dient der Umsetzung einer Webanwendung zur plattformunabhängigen Verwaltung und Anzeige von Kryptodaten über moderne Webbrowser.
 
 #### 1.3 Definitionen und Abkürzungen
 
@@ -29,7 +30,7 @@ Es dient der Umsetzung eines Desktop-Tools zur Verwaltung und Anzeige von Krypto
 
 #### 2.1 Übersicht
 
-Das System umfasst vier Hauptfunktionen, wie im folgenden **UML-Anwendungsfalldiagramm** dargestellt:
+Das System umfasst mehrere zentrale Hauptfunktionen, wie im folgenden **UML-Anwendungsfalldiagramm** dargestellt:
 
 ![UML Use Case Diagram](UML/UML-UseCase.png "UML Use Case Diagram")
 
@@ -59,11 +60,11 @@ Hauptanwendungsfälle:
 - **Nachbedingung:** Investitionsdaten werden in der Datenbank gesichert.  
 - **Aufwand:** Mittel  
 
-#### 2.4 Crypto Kaufen
+#### 2.4 Crypto Verkaufen
 
 - **Beschreibung:** Benutzer können ihre bereits gekauften Kryptowährungen wieder verkaufen.
 - **Voraussetzung:** Ein Benutzerkonto existiert und gekaufte Kryptowährungen.
-- **Nachbedingung:** Investitionsdaten werden aus der Datenbank geslöscht.
+- **Nachbedingung:** Eine Verkaufs-Transaktion wird in der Datenbank gespeichert.
 - **Aufwand:** Mittel
 
 #### 2.5 View Crypto Data
@@ -100,17 +101,17 @@ Hauptanwendungsfälle:
 
 | Kategorie | Beschreibung |
 |------------|--------------|
-| **Benutzerfreundlichkeit** | Einfache, übersichtliche GUI in JavaFX |
-| **Zuverlässigkeit** | Lokale Datenhaltung über SQLite |
+| **Benutzerfreundlichkeit** | Einfache, übersichtliche GUI in HTML / CSS |
+| **Zuverlässigkeit** | Datenhaltung über SQLite |
 | **Leistung** | Antwortzeiten unter 1 Sekunde |
-| **Sicherheit** | Keine sensiblen Datenübertragungen, lokale Speicherung |
-| **Wartbarkeit** | Modularer Aufbau in MVC-Struktur |
+| **Sicherheit** | Keine sensiblen Datenübertragungen |
+| **Wartbarkeit** | Trennung in Frontend / Backend |
 
 ---
 
 ### 4. Technische Einschränkungen
 
-- Programmiersprache: **Java 17+**  
-- Frameworks: **JavaFX**, **BootstrapFX**, **ControlsFX**  
+- Systemtyp: **Webanwendung (Client–Server)**
+- Frontend: **HTML, CSS, JavaScript**
+- Backend: **Python + Flask**
 - Datenbank: **SQLite**  
-- Systemtyp: **Desktop-Anwendung**
