@@ -24,6 +24,25 @@ Es dient der Umsetzung einer Webanwendung zur plattformunabhängigen Verwaltung 
 | **UML** | Unified Modeling Language |
 | **BLOB** | Binary Large Object (z. B. Bilder) |
 
+#### 1.4 Projektvision
+
+Die Vision des **CryptoBrokerProject** ist die Entwicklung einer verständlichen und realitätsnahen
+Krypto-Broker-Simulation, die es Nutzern ermöglicht, grundlegende Konzepte des
+Kryptowährungshandels kennenzulernen, ohne echtes finanzielles Risiko einzugehen.
+
+Die Anwendung soll insbesondere:
+- den Ablauf von Kauf- und Verkaufstransaktionen transparent darstellen,
+- Preisentwicklungen von Kryptowährungen nachvollziehbar visualisieren,
+- den Einfluss von Handelsentscheidungen auf ein virtuelles Portfolio aufzeigen.
+
+Der Fokus liegt auf **Lernbarkeit, Nachvollziehbarkeit und einfacher Bedienung**.
+Das System richtet sich nicht an professionelle Trader, sondern an Studierende und Einsteiger,
+die ein grundlegendes Verständnis für Kryptowährungen, Portfolios und Handelsmechanismen
+entwickeln möchten.
+
+Das CryptoBrokerProject ist ausdrücklich **kein produktiver Broker** und dient ausschließlich
+zu **Lehr-, Übungs- und Demonstrationszwecken** im Kontext der Software-Engineering-Vorlesung.
+
 ---
 
 ### 2. Funktionale Anforderungen
