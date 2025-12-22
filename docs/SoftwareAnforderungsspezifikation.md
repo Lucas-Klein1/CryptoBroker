@@ -102,9 +102,9 @@ Hauptanwendungsfälle:
 | Kategorie | Beschreibung |
 |------------|--------------|
 | **Benutzerfreundlichkeit** | Einfache, übersichtliche GUI in HTML / CSS |
-| **Zuverlässigkeit** | Datenhaltung über SQLite |
-| **Leistung** | Antwortzeiten unter 1 Sekunde |
-| **Sicherheit** | Keine sensiblen Datenübertragungen |
+| **Zuverlässigkeit** | Datenhaltung über SQLite und Validierung bei Fehleingaben |
+| **Leistung** | Antwortzeiten unter 2 Sekunde |
+| **Sicherheit** | Keine sensiblen Datenübertragungen, Passwörter gehasht |
 | **Wartbarkeit** | Trennung in Frontend / Backend |
 
 ---
