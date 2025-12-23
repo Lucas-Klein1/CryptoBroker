@@ -30,7 +30,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Syntax check (compile all .py files)
-        run: python -m compile .
+        run: python -m compileall .
 
       - name: Build Docker image (test environment)
         # Hier wird im Ordner "cryptosim" ein Docker-Image gebaut
