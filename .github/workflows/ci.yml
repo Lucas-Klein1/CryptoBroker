@@ -30,22 +30,31 @@ jobs:
           pip install -r requirements.txt
 
       - name: Syntax check (compile all .py files)
-        run: python -m compileall .
-
-      - name: Simple smoke test (startpage reachable)
-        run: |
-          python - << 'PY'
-          from app import app
-
-          # Flask Test-Client verwenden, damit der Server
-          # nicht endlos läuft:
-          with app.test_client() as client:
-              resp = client.get("/")
-              # Startseite muss antworten (200 OK oder 302 Redirect z.B. Login)
-              assert resp.status_code in (200, 302), resp.status_code
-          PY
+        run: python -m compile .
 
       - name: Build Docker image (test environment)
         # Hier wird im Ordner "cryptosim" ein Docker-Image gebaut
         run: docker build -t cryptosim-test .
 
+      - name: Start container for smoke test
+        run: |
+          Port = 5000
+          for i in {1..60}; do 
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${PORT}/ || true)
+            if [ "$code" = "200" ] || [ "$code" = "302" ]; then
+              echo "Startseite erreichbar: $code"
+              exit 0
+            fi
+            echo "Warte auf Server... Versuch $i/60"
+            sleep 1
+          done
+          echo "Server nicht erreichbar, Container-Logs:"
+          docker logs cryptosim-test || true
+          docker stop cryptosim-test || true
+          exit 1
+
+      - name: Stop and remove test container
+        if: always()
+        run:
+          docker stop cryptosim-test || true
+          docker rm cryptosim-test || true
