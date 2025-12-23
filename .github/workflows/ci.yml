@@ -43,8 +43,8 @@ jobs:
       - name: Smoke test (container reachable)
         run: |
           for i in {1..30}; do 
-            code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000 || true)
-            if [ "$code" = "200" ] || [ "$code" = "302" ]; then
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000 || true)
+            if [ "$code" = "200" ] || [ "$code" = "403" ]; then
               echo "Startseite erreichbar: $code"
               exit 0
             fi
