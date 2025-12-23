@@ -39,7 +39,7 @@ jobs:
       - name: Start container for smoke test
         run: |
           # Falls andere PORT nötig, hier anpassen
-          docker run -d --name cryptosim-test -p :5000 cryptosim-tes
+          docker run -d --name cryptosim-test -p :5000 cryptosim-test
 
       - name: Smoke test (container reachable)
         run: |
