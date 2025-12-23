@@ -38,7 +38,7 @@ jobs:
 
       - name: Start container for smoke test
         run: |
-          Port = 5000
+          PORT = 5000
           for i in {1..60}; do 
             code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${PORT}/ || true)
             if [ "$code" = "200" ] || [ "$code" = "302" ]; then
