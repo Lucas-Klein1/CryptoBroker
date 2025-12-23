@@ -38,7 +38,7 @@ jobs:
 
       - name: Start container for smoke test
         run: |
-          docker run -d --name cryptosim-test -p 127.0.0.1:5000 cryptosim-test
+          docker run -d --name cryptosim-test -p :5000 cryptosim-test
 
       - name: Smoke test (container reachable)
         run: |
