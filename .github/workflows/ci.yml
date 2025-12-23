@@ -47,9 +47,8 @@ jobs:
             if [ "$code" = "200" ] || [ "$code" = "302" ]; then
               echo "Startseite erreichbar: $code"
               exit 0
-            fi
-            if ["$code" = "403"]; then 
-              echo "Nicht Authorisiert: "$code"
+            elseif ["$code" = "403"]; then 
+              echo "Problem: $code"
               exit 0
             fi
             echo "Warte auf Server... Versuch $i/30"
