@@ -38,17 +38,17 @@ jobs:
 
       - name: Start container for smoke test
         run: |
-          docker run -d --name cryptosim-test -p :5000 cryptosim-test
+          docker run -d --name cryptosim-test -p 127.0.0.1:5000:5000 cryptosim-test
 
       - name: Smoke test (container reachable)
         run: |
           for i in {1..30}; do 
-            code=$(curl -s -o /dev/null -w "%{http_code}" 127.0.0.1:5000 || true)
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000 || true)
             if [ "$code" = "200" ] || [ "$code" = "302" ]; then
               echo "Startseite erreichbar: $code"
               exit 0
             fi
-            echo "Warte auf Server... Versuch $i/60"
+            echo "Warte auf Server... Versuch $i/30"
             sleep 1
           done
           echo "Server nicht erreichbar, Container-Logs:"
