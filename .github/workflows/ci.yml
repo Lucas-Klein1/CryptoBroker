@@ -47,7 +47,7 @@ jobs:
             if [ "$code" = "200" ] || [ "$code" = "302" ]; then
               echo "Startseite erreichbar: $code"
               exit 0
-            elif ["$code" = "403"]; then 
+            if [ "$code" = "403" ]; then 
               echo "Problem: $code"
               exit 0
             fi
