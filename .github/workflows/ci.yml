@@ -22,7 +22,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
 
       - name: Install dependencies
         run: |
@@ -38,19 +38,14 @@ jobs:
 
       - name: Start container for smoke test
         run: |
-          # Falls andere PORT nötig, hier anpassen
           docker run -d --name cryptosim-test -p :5000 cryptosim-test
 
       - name: Smoke test (container reachable)
         run: |
-          for i in {1..60}; do 
-            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5000/ || true)
+          for i in {1..30}; do 
+            code=$(curl -s -o /dev/null -w "%{http_code}" 127.0.0.1:5000 || true)
             if [ "$code" = "200" ] || [ "$code" = "302" ]; then
               echo "Startseite erreichbar: $code"
-              exit 0
-            fi
-            if ["$code" = "404"]; then
-              echo "Startseite erreichbar, jedoch access denied: $code"
               exit 0
             fi
             echo "Warte auf Server... Versuch $i/60"
