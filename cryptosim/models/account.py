@@ -1,4 +1,5 @@
 from .database import Database
+import bcrypt
 
 class Account:
     def __init__(self, id, name, pw, created_at):
@@ -38,11 +39,13 @@ class Account:
 
     @staticmethod
     def create(name: str, pw: str):
+        salt = bcrypt.gensalt(rounds=12)
+        hashed_password = bcrypt.hashpw(pw.encode("utf-8"), salt)
         conn = Database.get_connection()
         cur = conn.cursor()
         cur.execute(
             "INSERT INTO accounts (name, pw) VALUES (?, ?)",
-            (name, pw),
+            (name, hashed_password),
         )
         conn.commit()
         acc_id = cur.lastrowid
@@ -53,9 +56,13 @@ class Account:
     def login_or_register(name: str, pw: str):
         acc = Account.get_by_name(name)
         if acc:
-            # sehr simpel: Passwort-Check ohne Hashing (nur fürs Planspiel!)
-            if acc.pw != pw:
-                raise ValueError("Falsches Passwort")
-            return acc
+            try:
+                if not bcrypt.checkpw(pw.encode("utf-8"), acc.pw):
+                    raise ValueError("Falsches Passwort")
+                return acc
+            except: 
+                if not pw == acc.pw:
+                    raise ValueError("Falsches Passwort")
+                return acc
         # Falls nicht existiert -> registrieren
         return Account.create(name, pw)
