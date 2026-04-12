@@ -1,7 +1,12 @@
 import requests
 from models.database import Database
 from datetime import datetime
+from dotenv import load_dotenv
+import os
 
+load_dotenv()  # loads .env from current directory
+
+secret = os.getenv("SECRET_KEY")
 
 class CoinSyncService:
     def update_coins_table(self):
@@ -10,7 +15,7 @@ class CoinSyncService:
             url = "https://api.coingecko.com/api/v3/coins/markets"
             params = {
                 "vs_currency": "eur",
-                "x_cg_demo_api_key": "CG-Nv8tfrfQovH51o4NZQw3TjjK"
+                "x_cg_demo_api_key": secret
             }
 
             response = requests.get(url, params=params, timeout=10)
@@ -188,7 +193,7 @@ class CoinSyncService:
                 params = {
                     "vs_currency": "eur",
                     "days": "365",
-                    "x_cg_demo_api_key": "CG-Nv8tfrfQovH51o4NZQw3TjjK"
+                    "x_cg_demo_api_key": secret
                 }
                 
                 response = requests.get(url, params=params, timeout=10)
