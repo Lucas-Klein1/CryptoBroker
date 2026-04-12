@@ -21,7 +21,7 @@
         data-href="{{ url_for('coin_detail', coin_id=p.coin.id) }}">
       
       <td>
-        <img src="{{ url_for('coin_image', coin_id=p.coin.id) }}"
+        <img src="{{ p.coin.image }}"
              style="width:32px; height:32px; border-radius:50%;">
       </td>
 

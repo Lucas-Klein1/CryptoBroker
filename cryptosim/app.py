@@ -3,6 +3,7 @@ from models.account import Account
 from models.coin import Coin
 from services.portfolio_service import PortfolioService
 from services.market_service import MarketService
+from services.coin_sync_service import CoinSyncService
 
 app = Flask(__name__)
 app.secret_key = "change-me-in-production"  # für Sessions & flash
@@ -10,6 +11,10 @@ app.secret_key = "change-me-in-production"  # für Sessions & flash
 portfolio_service = PortfolioService()
 market_service = MarketService()
 
+coin_sync_service = CoinSyncService()
+
+# Tabelle beim Start aktualisieren
+coin_sync_service.update_coins_table()
 
 # ---------- EURO FORMAT FILTER ----------
 @app.template_filter("eur")
@@ -133,30 +138,7 @@ def trade(coin_id):
 
     return redirect(url_for("coin_detail", coin_id=coin_id))
 
-@app.route("/coin_image/<coin_id>")
-def coin_image(coin_id):
-    from models.database import Database
-
-    conn = Database.get_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT image FROM coins WHERE id = ?", (coin_id,))
-    row = cur.fetchone()
-    conn.close()
-
-    if row is None or row["image"] is None:
-        # Fallback: leeres Pixel-PNG
-        empty_png = (
-            b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01'
-            b'\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89'
-            b'\x00\x00\x00\nIDATx\x9cc``\x00\x00\x00\x02\x00\x01'
-            b'\xe2!\xbc\x33\x00\x00\x00\x00IEND\xaeB`\x82'
-        )
-        return empty_png, 200, {"Content-Type": "image/png"}
-
-    img_bytes = row["image"]
-    return img_bytes, 200, {"Content-Type": "image/png"}
-
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    app.run(debug=False, host="0.0.0.0", port=5000)
