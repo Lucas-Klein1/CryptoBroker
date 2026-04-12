@@ -88,14 +88,17 @@ def coin_detail(coin_id):
     if coin is None:
         flash("Coin nicht gefunden.", "error")
         return redirect(url_for("dashboard"))
-
+ 
+    # Synchronisiere History für diesen Coin
+    coin_sync_service.sync_coin_history(coin_id, days=365)
+    
     history = market_service.get_history(coin_id)
-
+ 
     acc_id = session.get("acc_id")
     position = None
     if acc_id:
         position = market_service.get_position(acc_id, coin_id)
-
+ 
     return render_template("coin_detail.html", coin=coin, history=history, position=position)
 
 
