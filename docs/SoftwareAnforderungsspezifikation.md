@@ -51,7 +51,7 @@ zu **Lehr-, Übungs- und Demonstrationszwecken** im Kontext der Software-Enginee
 
 Das System umfasst mehrere zentrale Hauptfunktionen, wie im folgenden **UML-Anwendungsfalldiagramm** dargestellt:
 
-![UML Use Case Diagram](UML/UML-UseCase.png "UML Use Case Diagram")
+![UML Use Case Diagram](UML/UML_Semester_1/UML-UseCase.png "UML Use Case Diagram")
 
 Hauptanwendungsfälle:
 

@@ -4,11 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="Uploaded Halbzeitpräsentation Powerpoint and PDF to Docs/Praesentationen">
-      <change afterPath="$PROJECT_DIR$/cryptosim/arc42-template-DE-withhelp-markdown/Aufgabenblatt 12 Architekturdokumentation.pdf" afterDir="false" />
+    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="Added new UML Diagramms and arc42 Softwarearchitektur for the CryptorBroker.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/Praesentationen/~$Praesentation_Cryptobroker.pptx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/UML/Aktivitätsdiagramm_Registrieren.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/Aktivitätsdiagramm_Registrieren.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/SoftwareAnforderungsspezifikation.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/SoftwareAnforderungsspezifikation.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/Aktivitätendiagramm_Anmelden.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/Aktivitätendiagramm_Anmelden.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/Aktivitätendiagramm_Anmelden_User.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/Aktivitätendiagramm_Anmelden_User.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/Aktivitätendiagramm_Löschen_User.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/Aktivitätendiagramm_Löschen_User.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/Aktivitätendiagramm_Registrieren_User.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/Aktivitätendiagramm_Registrieren_User.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/Aktivitätsdiagramm_Löschen_User.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/Aktivitätsdiagramm_Löschen_User.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/Aktivitätsdiagramm_Registrieren.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/Aktivitätsdiagramm_Registrieren.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/UML-Class.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/UML-Class.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/UML-Class.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/UML-Class.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/UML-Sequenz-CreateAccount.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/UML-Sequenz-CreateAccount.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/UML-Sequenz-CreateAccount.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/UML-Sequenz-CreateAccount.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/UML-Sequenz-showCoins.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/UML-Sequenz-showCoins.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/UML-Sequenz-showCoins.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/UML-Sequenz-showCoins.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/UML-UseCase.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/UML-UseCase.drawio" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/UML-UseCase.png" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/UML_Semester_1/UML-UseCase.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/arc42_Architekturdokumentation_Cryptosim.md" beforeDir="false" afterPath="$PROJECT_DIR$/docs/arc42_Architekturdokumentation_Cryptosim.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +58,9 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="eQOJtdl4" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -53,39 +69,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;Python.CryptoBroker.executor&quot;: &quot;Run&quot;,
-    &quot;Python.app.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Program Files (x86)/Zulu/JDK-21&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.CryptoBroker.executor": "Run",
+    "Python.app.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Program Files (x86)/Zulu/JDK-21",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "advanced.settings",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/docs/UML/UML_Semester_1" />
+      <recent name="$PROJECT_DIR$/docs/UML/UML_Semester_2" />
       <recent name="$PROJECT_DIR$/docs/UML/uml" />
       <recent name="$PROJECT_DIR$/docs" />
       <recent name="$PROJECT_DIR$/docs/UML" />
-      <recent name="$PROJECT_DIR$/cryptosim/arc42-template-DE-withhelp-markdown" />
-      <recent name="$PROJECT_DIR$/cryptosim" />
     </key>
   </component>
   <component name="RunManager">
@@ -148,7 +164,7 @@
       <workItem from="1764524667409" duration="30000" />
       <workItem from="1764524702534" duration="70000" />
       <workItem from="1764524800505" duration="101000" />
-      <workItem from="1776083957141" duration="8079000" />
+      <workItem from="1776083957141" duration="8881000" />
     </task>
     <task id="LOCAL-00001" summary="update SRS">
       <option name="closed" value="true" />
@@ -214,7 +230,15 @@
       <option name="project" value="LOCAL" />
       <updated>1775724903539</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Added new UML Diagramms and arc42 Softwarearchitektur for the CryptorBroker.">
+      <option name="closed" value="true" />
+      <created>1776093222200</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1776093222200</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,7 +263,8 @@
     <MESSAGE value="Modified ci.yml to run docker container" />
     <MESSAGE value="Modified ci.yml to not run docker contrainer." />
     <MESSAGE value="Uploaded Halbzeitpräsentation Powerpoint and PDF to Docs/Praesentationen" />
-    <option name="LAST_COMMIT_MESSAGE" value="Uploaded Halbzeitpräsentation Powerpoint and PDF to Docs/Praesentationen" />
+    <MESSAGE value="Added new UML Diagramms and arc42 Softwarearchitektur for the CryptorBroker." />
+    <option name="LAST_COMMIT_MESSAGE" value="Added new UML Diagramms and arc42 Softwarearchitektur for the CryptorBroker." />
   </component>
   <component name="github-copilot-workspace">
     <instructionFileLocations>
