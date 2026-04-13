@@ -1,0 +1,154 @@
+<mxfile host="app.diagrams.net" agent="5.0">
+  <diagram name="Deployment Diagram" id="deployment">
+    <mxGraphModel dx="2475" dy="2810" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1500" pageHeight="1100" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;fontSize=16;fontStyle=bold;align=center;" value="Verteilungssicht (Kapitel 7): CryptoBroker Deployment-Diagramm" vertex="1">
+          <mxGeometry height="30" width="1500" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="client_node" parent="1" style="shape=box;html=1;fontSize=13;fontStyle=bold;fillColor=#E3F2FD;strokeColor=#1976D2;strokeWidth=3;" value="Client Machine" vertex="1">
+          <mxGeometry height="230" width="280" x="40" y="-30" as="geometry" />
+        </mxCell>
+        <mxCell id="browser" parent="1" style="shape=box;html=1;fontSize=10;fillColor=#BBDEFB;strokeColor=#1565C0;strokeWidth=2;" value="Web Browser&#xa;Chrome / Firefox / Safari / Edge&#xa;&#xa;- Sendet HTTP(S)-Requests&#xa;- Rendert HTML/CSS/JS&#xa;- Zeigt Benutzeroberflaeche&#xa;- Verwaltet Cookies/Session" vertex="1">
+          <mxGeometry height="160" width="230" x="65" as="geometry" />
+        </mxCell>
+        <mxCell id="web_assets" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#FFF8E1;strokeColor=#F9A825;strokeWidth=1;" value="Web Assets (lokal auf Server)&#xa;&#xa;templates/:&#xa;  base.html, home.html&#xa;  dashboard.html, portfolio.html&#xa;  transactions.html, profile.html&#xa;  coin_detail.html&#xa;&#xa;static/:&#xa;  style.css, script.js" vertex="1">
+          <mxGeometry height="210" width="280" x="40" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="app_node" parent="1" style="shape=box;html=1;fontSize=13;fontStyle=bold;fillColor=#F3E5F5;strokeColor=#7B1FA2;strokeWidth=3;" value="Application Server&#xa;Python 3.13+ Runtime Environment" vertex="1">
+          <mxGeometry height="800" width="727.5" x="380" y="-30" as="geometry" />
+        </mxCell>
+        <mxCell id="flask_app" parent="1" style="shape=box;html=1;fontSize=11;fontStyle=bold;fillColor=#E1BEE7;strokeColor=#6A1B9A;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="245" width="680" x="403.75" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="routes" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="HTTP-Routen:&#xa;GET  /                  (Home-Seite)&#xa;GET  /dashboard         (Alle Coins)&#xa;GET  /portfolio         (Portfolio-Uebersicht)&#xa;GET  /transactions      (Transaktionsverlauf)&#xa;GET/POST /profile       (Login / Register)&#xa;GET  /coin/&lt;coin_id&gt;    (Coin-Details)&#xa;POST /trade/&lt;coin_id&gt;   (Trade ausfuehren)&#xa;&#xa;Filter: eur_format | datetimeformat" vertex="1">
+          <mxGeometry height="150" width="195" x="495" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="session_mgmt" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="Session Management&#xa;&#xa;session[&#39;acc_id&#39;] = account.id&#xa;SECRET_KEY (aus .env)&#xa;&#xa;Login-Pruefung bei&#xa;gesicherten Routen&#xa;(portfolio, transactions)" vertex="1">
+          <mxGeometry height="150" width="207.5" x="815" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="service_layer" parent="1" style="shape=box;html=1;fontSize=11;fontStyle=bold;fillColor=#E1BEE7;strokeColor=#6A1B9A;strokeWidth=2;" value="Service Layer" vertex="1">
+          <mxGeometry height="220" width="670" x="408.75" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="portfolio_svc" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="PortfolioService&#xa;portfolio_service.py&#xa;&#xa;get_portfolio_overview(acc_id)&#xa;- Summiert BUY/SELL pro Coin&#xa;- Berechnet Gesamtwert EUR" vertex="1">
+          <mxGeometry height="165" width="185" x="424" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="market_svc" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="MarketService&#xa;market_service.py&#xa;&#xa;get_all_coins()&#xa;get_history(coin_id)&#xa;get_position(acc_id, coin_id)&#xa;execute_trade(acc_id, coin_id,&#xa;  action, amount)&#xa;get_transactions(acc_id)" vertex="1">
+          <mxGeometry height="165" width="185" x="877.5" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="sync_svc" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="CoinSyncService&#xa;coin_sync_service.py&#xa;&#xa;update_coins_table()&#xa;sync_coin_history(coin_id)&#xa;_fetch_coin_history(coin_id,&#xa;  start, end)&#xa;&#xa;CoinGecko API-Integration" vertex="1">
+          <mxGeometry height="165" width="185" x="651.25" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="model_layer" parent="1" style="shape=box;html=1;fontSize=11;fontStyle=bold;fillColor=#E1BEE7;strokeColor=#6A1B9A;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="220" width="670" x="408.75" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="account_model" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="Account&#xa;models/account.py&#xa;&#xa;id, name, pw, created_at&#xa;login_or_register(name, pw)&#xa;bcrypt (12 Runden)&#xa;get_by_id(acc_id)&#xa;get_by_name(name)" vertex="1">
+          <mxGeometry height="145" width="148" x="442.5" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="coin_model" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="Coin&#xa;models/coin.py&#xa;&#xa;id, name, symbol&#xa;current_price&#xa;market_cap&#xa;market_cap_rank&#xa;get_all()&#xa;get_by_id(coin_id)" vertex="1">
+          <mxGeometry height="145" width="148" x="597.5" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="transaction_model" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="Transaction&#xa;models/transaction.py&#xa;&#xa;id, coin_id, acc_id&#xa;type (BUY/SELL)&#xa;amount, price, timestamp&#xa;for_account(acc_id)&#xa;from_row(row)" vertex="1">
+          <mxGeometry height="145" width="148" x="757.5" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="database_model" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#CE93D8;strokeColor=#5E35B1;strokeWidth=1;" value="Database&#xa;models/database.py&#xa;&#xa;Singleton-Pattern&#xa;get_connection()&#xa;row_factory&#xa;Pfad: crypto.db" vertex="1">
+          <mxGeometry height="145" width="137.5" x="920" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="storage_node" parent="1" style="shape=box;html=1;fontSize=13;fontStyle=bold;fillColor=#FFF3E0;strokeColor=#E65100;strokeWidth=3;" value="Datenspeicher" vertex="1">
+          <mxGeometry height="500" width="320" x="1170" y="-30" as="geometry" />
+        </mxCell>
+        <mxCell id="db" parent="1" style="shape=cylinder;html=1;fontSize=9;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=2;" value="SQLite Datenbank&#xa;crypto.db&#xa;&#xa;Tabellen:&#xa;&#xa;accounts&#xa;  id, name, pw (bcrypt), created_at&#xa;&#xa;coins&#xa;  id, symbol, name, current_price&#xa;  market_cap, market_cap_rank&#xa;&#xa;transactions&#xa;  id, coin_id, acc_id&#xa;  type (BUY/SELL)&#xa;  amount, price, timestamp&#xa;&#xa;{coin_id}_history (dynamisch)&#xa;  timestamp_ms, price&#xa;  UNIQUE: timestamp_ms" vertex="1">
+          <mxGeometry height="320" width="280" x="1190" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="env_file" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#FFE0B2;strokeColor=#E65100;strokeWidth=1;" value=".env Konfigurationsdatei&#xa;&#xa;SECRET_KEY&#xa;  (Flask Session-Verschluesselung)&#xa;&#xa;COINGECKO_API_KEY&#xa;  (API-Authentifizierung)&#xa;&#xa;Geladen per python-dotenv" vertex="1">
+          <mxGeometry height="100" width="280" x="1190" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="external_node" parent="1" style="shape=box;html=1;fontSize=13;fontStyle=bold;fillColor=#FCE4EC;strokeColor=#C2185B;strokeWidth=3;" value="Externe Systeme" vertex="1">
+          <mxGeometry height="220" width="1400" x="40" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="coingecko" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#F8BBD0;strokeColor=#C2185B;strokeWidth=2;" value="CoinGecko REST API&#xa;api.coingecko.com/api/v3&#xa;&#xa;Endpoints:&#xa;GET /coins/markets&#xa;  Top-250-Coins (Preis, Market Cap, Rang)&#xa;&#xa;GET /coins/{id}/market_chart&#xa;  Historische Preisdaten (bis 365 Tage)&#xa;&#xa;Protokoll: HTTPS&#xa;Format: JSON&#xa;Limit: 240 req/min (Free Tier)" vertex="1">
+          <mxGeometry height="160" width="250" x="80" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="deployment_variants" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#F8BBD0;strokeColor=#C2185B;strokeWidth=2;" value="Deployment-Varianten (arc42 Kapitel 7.2):&#xa;&#xa;Variante 1: Lokale Entwicklung&#xa;  python app.py -&gt; http://localhost:5000&#xa;&#xa;Variante 2: Heroku&#xa;  Procfile: web: python app.py&#xa;  Config Vars fuer Env-Variablen&#xa;&#xa;Variante 3: Docker&#xa;  FROM python:3.13&#xa;  EXPOSE 5000&#xa;  CMD python app.py" vertex="1">
+          <mxGeometry height="160" width="250" x="380" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="internet" parent="1" style="shape=box;html=1;fontSize=10;fillColor=#F8BBD0;strokeColor=#C2185B;strokeWidth=2;" value="Internet (Netzwerk)&#xa;&#xa;Protokoll: HTTP(S)&#xa;Format: HTML, JSON&#xa;&#xa;Client-Zugriff: Port 5000&#xa;API-Zugriff: Port 443 (HTTPS)" vertex="1">
+          <mxGeometry height="160" width="220" x="871.25" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="filesystem" parent="1" style="shape=box;html=1;fontSize=9;fillColor=#F8BBD0;strokeColor=#C2185B;strokeWidth=2;" value="Dateisystem (lokal)&#xa;&#xa;cryptosim/&#xa;  app.py, crypto.db, .env&#xa;  requirements.txt&#xa;models/&#xa;  account.py, coin.py&#xa;  transaction.py, database.py&#xa;services/&#xa;  market_service.py&#xa;  portfolio_service.py&#xa;  coin_sync_service.py&#xa;templates/ static/" vertex="1">
+          <mxGeometry height="160" width="250" x="1150" y="850" as="geometry" />
+        </mxCell>
+        <mxCell id="conn1" edge="1" parent="1" source="browser" style="endArrow=block;endFill=1;html=1;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;stroke=#0066CC;" target="flask_app" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="190" as="sourcePoint" />
+            <mxPoint x="420" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn1_label" connectable="0" parent="conn1" style="edgeLabel;resizable=0;align=center;verticalAlign=middle;fontSize=9;fillColor=white;rounded=1;" value="HTTP(S) Port 5000&#xa;HTML / JSON" vertex="1">
+          <mxGeometry relative="1" y="-25" as="geometry" />
+        </mxCell>
+        <mxCell id="conn2" edge="1" parent="1" source="flask_app" style="endArrow=open;endFill=0;html=1;strokeWidth=1.5;stroke=#009900;" target="service_layer" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn2_label" connectable="0" parent="conn2" style="edgeLabel;resizable=0;align=center;verticalAlign=bottom;fontSize=9;" value="ruft auf" vertex="1">
+          <mxGeometry relative="1" x="-20" as="geometry">
+            <mxPoint x="24" y="712" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn3" edge="1" parent="1" source="service_layer" style="endArrow=open;endFill=0;html=1;strokeWidth=1.5;stroke=#009900;" target="model_layer" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="conn3_label" connectable="0" parent="conn3" style="edgeLabel;resizable=0;align=center;verticalAlign=bottom;fontSize=9;" value="ruft auf" vertex="1">
+          <mxGeometry relative="1" x="-20" as="geometry">
+            <mxPoint x="24" y="140" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn4" edge="1" parent="1" source="model_layer" style="endArrow=block;endFill=1;html=1;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;stroke=#E65100;" target="db" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1030" y="640" as="sourcePoint" />
+            <mxPoint x="1150" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn4_label" connectable="0" parent="conn4" style="edgeLabel;resizable=0;align=center;verticalAlign=middle;fontSize=9;fillColor=white;rounded=1;" value="sqlite3-Treiber&#xa;SQL-Abfragen" vertex="1">
+          <mxGeometry relative="1" y="-20" as="geometry" />
+        </mxCell>
+        <mxCell id="conn5" edge="1" parent="1" source="session_mgmt" style="endArrow=open;endFill=0;html=1;strokeWidth=1;dashed=1;stroke=#888888;" target="env_file" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1010" y="220" as="sourcePoint" />
+            <mxPoint x="1150" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn5_label" connectable="0" parent="conn5" style="edgeLabel;resizable=0;align=center;verticalAlign=bottom;fontSize=9;" value="laedt Konfiguration" vertex="1">
+          <mxGeometry relative="1" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="conn6" edge="1" parent="1" source="portfolio_svc" style="endArrow=block;endFill=1;html=1;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;stroke=#C2185B;exitX=0.012;exitY=0.864;exitDx=0;exitDy=0;exitPerimeter=0;" target="coingecko" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="830" y="530" as="sourcePoint" />
+            <mxPoint x="220" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn6_label" connectable="0" parent="conn6" style="edgeLabel;resizable=0;align=center;verticalAlign=middle;fontSize=9;fillColor=white;rounded=1;" value="HTTPS REST&#xa;GET /coins/markets&#xa;GET /coins/{id}/market_chart" vertex="1">
+          <mxGeometry relative="1" y="-30" as="geometry">
+            <mxPoint x="110" y="-36" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn7" edge="1" parent="1" source="routes" style="endArrow=open;endFill=0;html=1;strokeWidth=1.5;dashed=0;stroke=#666666;" target="web_assets" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="480" y="305" as="sourcePoint" />
+            <mxPoint x="280" y="380" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="conn7_label" connectable="0" parent="conn7" style="edgeLabel;resizable=0;align=center;verticalAlign=bottom;fontSize=9;" value="render_template()&#xa;CSS / JS einbinden" vertex="1">
+          <mxGeometry relative="1" y="-15" as="geometry" />
+        </mxCell>
+        <mxCell id="jJOP5e2z4nCYT5CqMfRt-3" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;span style=&quot;white-space: nowrap;&quot;&gt;&lt;font style=&quot;font-size: 18px;&quot;&gt;Model &amp;amp; Data Layer&lt;/font&gt;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="30" width="260" x="609" y="550" as="geometry" />
+        </mxCell>
+        <mxCell id="jJOP5e2z4nCYT5CqMfRt-4" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;Flask Web Application (app.py)&lt;/span&gt;&lt;br style=&quot;white-space: nowrap;&quot;&gt;&lt;span style=&quot;white-space: nowrap;&quot;&gt;Port: 5000 | host=0.0.0.0 | debug=False (Production)&lt;/span&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="570" x="477.5" y="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

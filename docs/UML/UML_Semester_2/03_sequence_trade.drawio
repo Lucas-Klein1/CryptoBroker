@@ -1,0 +1,218 @@
+<mxfile host="app.diagrams.net" agent="5.0">
+  <diagram name="Sequence Trade" id="sequence_trade">
+    <mxGraphModel dx="3600" dy="1520" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1200" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;fontSize=16;fontStyle=bold;align=center;" value="Sequenzdiagramm: Trade-Ausführung (BUY)" vertex="1">
+          <mxGeometry height="30" width="1400" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="actor" parent="1" style="shape=umlActor;html=1;verticalAlign=bottom;labelPosition=right;verticalLabelPosition=bottom;" value="Benutzer" vertex="1">
+          <mxGeometry height="80" width="40" x="30" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="browser" parent="1" style="shape=box;html=1;fontSize=12;fillColor=#BBE3F0;strokeColor=#0066CC;" value="Browser" vertex="1">
+          <mxGeometry height="50" width="100" x="170" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="flask" parent="1" style="shape=box;html=1;fontSize=12;fillColor=#A5D6A7;strokeColor=#00AA00;" value="Flask App" vertex="1">
+          <mxGeometry height="50" width="100" x="370" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="market" parent="1" style="shape=box;html=1;fontSize=12;fillColor=#A5D6A7;strokeColor=#00AA00;" value="Market Service" vertex="1">
+          <mxGeometry height="50" width="110" x="570" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="coin" parent="1" style="shape=box;html=1;fontSize=12;fillColor:#FFE0B2;strokeColor=#FF8800;" value="Coin Model" vertex="1">
+          <mxGeometry height="50" width="100" x="770" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="database" parent="1" style="shape=box;html=1;fontSize=12;fillColor=#E1BEE7;strokeColor=#9C27B0;" value="SQLite DB" vertex="1">
+          <mxGeometry height="50" width="100" x="970" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="line1" parent="1" style="line;strokeWidth=2;html=1;stroke=#999999;dashed=1;" value="" vertex="1">
+          <mxGeometry height="1000" width="2" x="50" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="line2" parent="1" style="line;strokeWidth=2;html=1;stroke:#999999;dashed=1;" value="" vertex="1">
+          <mxGeometry height="1000" width="2" x="220" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="line3" parent="1" style="line;strokeWidth=2;html=1;stroke=#999999;dashed=1;" value="" vertex="1">
+          <mxGeometry height="1000" width="2" x="420" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="line4" parent="1" style="line;strokeWidth=2;html=1;stroke=#999999;dashed=1;" value="" vertex="1">
+          <mxGeometry height="1000" width="2" x="625" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="line5" parent="1" style="line;strokeWidth=2;html=1;stroke=#999999;dashed=1;" value="" vertex="1">
+          <mxGeometry height="1000" width="2" x="820" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="line6" parent="1" style="line;strokeWidth=2;html=1;stroke:#999999;dashed=1;" value="" vertex="1">
+          <mxGeometry height="1000" width="2" x="1020" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="msg1" edge="1" parent="1" source="1" style="html=1;verticalAlign=middle;endArrow=block;endFill=1;dashed=0;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="50" y="200" as="sourcePoint" />
+            <mxPoint x="220" y="200" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg1_label" connectable="0" parent="msg1" style="edgeLabel;resizable=0;align=left;verticalAlign=top;fontSize=11;" value="1: Menge eingeben + BUY" vertex="1">
+          <mxGeometry relative="1" x="-120" as="geometry" />
+        </mxCell>
+        <mxCell id="msg2" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=block;endFill=1;dashed=0;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="240" as="sourcePoint" />
+            <mxPoint x="420" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg2_label" connectable="0" parent="msg2" style="edgeLabel;resizable=0;align=left;verticalAlign=top;fontSize=11;" value="2: POST /trade/bitcoin" vertex="1">
+          <mxGeometry relative="1" x="-100" as="geometry">
+            <mxPoint x="9800" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="validate_box" parent="1" style="box;html=1;fontSize=10;fillColor=#FFF9C4;strokeColor=#FBC02D;dashed=1;" value="Validierung: amount &gt; 0 ✓" vertex="1">
+          <mxGeometry height="40" width="150" x="420" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="msg3" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=block;endFill=1;dashed=0;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="330" as="sourcePoint" />
+            <mxPoint x="820" y="330" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg3_label" connectable="0" parent="msg3" style="edgeLabel;resizable=0;align=left;verticalAlign=top;fontSize=11;" value="3: Coin.get_by_id(bitcoin)" vertex="1">
+          <mxGeometry relative="1" x="-100" as="geometry">
+            <mxPoint x="19670" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg4" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=block;endFill=1;dashed=0;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="820" y="370" as="sourcePoint" />
+            <mxPoint x="1020" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg4_label" connectable="0" parent="msg4" style="edgeLabel;resizable=0;align=left;verticalAlign=top;fontSize=11;" value="4: SELECT coins WHERE id=?" vertex="1">
+          <mxGeometry relative="1" x="-120" as="geometry">
+            <mxPoint x="11740" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg5" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=open;endFill=0;dashed=1;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="410" as="sourcePoint" />
+            <mxPoint x="820" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg5_label" connectable="0" parent="msg5" style="edgeLabel;resizable=0;align=right;verticalAlign=bottom;fontSize=11;" value="5: Coin (price=45000)" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry" />
+        </mxCell>
+        <mxCell id="msg6" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=open;endFill=0;dashed=1;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="820" y="450" as="sourcePoint" />
+            <mxPoint x="420" y="450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg6_label" connectable="0" parent="msg6" style="edgeLabel;resizable=0;align=right;verticalAlign=bottom;fontSize=11;" value="6: Coin Object" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry" />
+        </mxCell>
+        <mxCell id="msg7" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=block;endFill=1;dashed=0;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="500" as="sourcePoint" />
+            <mxPoint x="625" y="500" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg7_label" connectable="0" parent="msg7" style="edgeLabel;resizable=0;align=left;verticalAlign=top;fontSize=11;" value="7: execute_trade(BUY, 0.5, bitcoin)" vertex="1">
+          <mxGeometry relative="1" x="-150" as="geometry">
+            <mxPoint x="15092" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="trade_box" parent="1" style="box;html=1;fontSize=10;fillColor=#FFF9C4;strokeColor=#FBC02D;dashed=1;" value="✓ BUY: price=45000&#xa;timestamp=now()&#xa;INSERT transaction" vertex="1">
+          <mxGeometry height="70" width="150" x="625" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="msg8" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=block;endFill=1;dashed=0;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="625" y="640" as="sourcePoint" />
+            <mxPoint x="1020" y="640" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg8_label" connectable="0" parent="msg8" style="edgeLabel;resizable=0;align=left;verticalAlign=top;fontSize=11;" value="8: INSERT transaction" vertex="1">
+          <mxGeometry relative="1" x="-100" as="geometry">
+            <mxPoint x="19437" y="-20" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg9" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=open;endFill=0;dashed=1;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="680" as="sourcePoint" />
+            <mxPoint x="625" y="680" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg9_label" connectable="0" parent="msg9" style="edgeLabel;resizable=0;align=right;verticalAlign=bottom;fontSize=11;" value="9: OK ✓" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry" />
+        </mxCell>
+        <mxCell id="msg10" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=open;endFill=0;dashed=1;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="625" y="720" as="sourcePoint" />
+            <mxPoint x="420" y="720" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg10_label" connectable="0" parent="msg10" style="edgeLabel;resizable=0;align=right;verticalAlign=bottom;fontSize=11;" value="10: Trade ausgeführt ✓" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry" />
+        </mxCell>
+        <mxCell id="msg11" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=open;endFill=0;dashed=1;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="760" as="sourcePoint" />
+            <mxPoint x="220" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg11_label" connectable="0" parent="msg11" style="edgeLabel;resizable=0;align=right;verticalAlign=bottom;fontSize=11;" value="11: Flash success + redirect" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry" />
+        </mxCell>
+        <mxCell id="msg12" edge="1" parent="1" style="html=1;verticalAlign=middle;endArrow=open;endFill=0;dashed=1;fontSize=11;" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="800" as="sourcePoint" />
+            <mxPoint x="50" y="800" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="msg12_label" connectable="0" parent="msg12" style="edgeLabel;resizable=0;align=right;verticalAlign=bottom;fontSize=11;" value="12: Erfolg-Seite anzeigen" vertex="1">
+          <mxGeometry relative="1" x="1" as="geometry" />
+        </mxCell>
+        <mxCell id="final_box" parent="1" style="box;html=1;fontSize=11;fillColor=#C8E6C9;strokeColor=#00AA00;" value="✓ Trade erfolgreich ausgeführt&#xa;0.5 BTC @ 45.000 EUR = 22.500 EUR&#xa;Transaktion in DB gespeichert" vertex="1">
+          <mxGeometry height="80" width="400" x="30" y="980" as="geometry" />
+        </mxCell>
+        <mxCell id="z4nM4YLWHu0iiXUWNrWz-6" edge="1" parent="1" source="database" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <Array as="points" />
+            <mxPoint x="1040" y="380" as="sourcePoint" />
+            <mxPoint x="1020" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="z4nM4YLWHu0iiXUWNrWz-7" edge="1" parent="1" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <Array as="points" />
+            <mxPoint x="820" y="120" as="sourcePoint" />
+            <mxPoint x="820" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="z4nM4YLWHu0iiXUWNrWz-8" edge="1" parent="1" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <Array as="points" />
+            <mxPoint x="627" y="120" as="sourcePoint" />
+            <mxPoint x="627" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="z4nM4YLWHu0iiXUWNrWz-9" edge="1" parent="1" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <Array as="points" />
+            <mxPoint x="422" y="120" as="sourcePoint" />
+            <mxPoint x="422" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="z4nM4YLWHu0iiXUWNrWz-10" edge="1" parent="1" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <Array as="points" />
+            <mxPoint x="222" y="120" as="sourcePoint" />
+            <mxPoint x="222" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="z4nM4YLWHu0iiXUWNrWz-13" edge="1" parent="1" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;endArrow=none;endFill=0;" value="">
+          <mxGeometry relative="1" width="100" as="geometry">
+            <Array as="points" />
+            <mxPoint x="49.230000000000004" y="120" as="sourcePoint" />
+            <mxPoint x="49.230000000000004" y="960" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

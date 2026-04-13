@@ -4,11 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="Modified ci.yml to not run docker contrainer." />
+    <list default="true" id="30ddc70a-11ad-4089-a861-548456fc4f58" name="Changes" comment="Uploaded Halbzeitpräsentation Powerpoint and PDF to Docs/Praesentationen">
+      <change afterPath="$PROJECT_DIR$/cryptosim/arc42-template-DE-withhelp-markdown/Aufgabenblatt 12 Architekturdokumentation.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/Praesentationen/~$Praesentation_Cryptobroker.pptx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/UML/Aktivitätsdiagramm_Registrieren.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/docs/UML/Aktivitätsdiagramm_Registrieren.drawio" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/lucaskleineidam/IdeaProjects/CryptoBroker" value="343C3CJj26ABYhaUpKx2XC3mTxv" />
+    </persistenceIdMap>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -19,7 +29,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -72,7 +81,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\z0050w5w\OneDrive - Siemens AG\Dokumente\Studium\CryptoBroker\docs" />
+      <recent name="$PROJECT_DIR$/docs/UML/uml" />
+      <recent name="$PROJECT_DIR$/docs" />
+      <recent name="$PROJECT_DIR$/docs/UML" />
+      <recent name="$PROJECT_DIR$/cryptosim/arc42-template-DE-withhelp-markdown" />
+      <recent name="$PROJECT_DIR$/cryptosim" />
     </key>
   </component>
   <component name="RunManager">
@@ -135,6 +148,7 @@
       <workItem from="1764524667409" duration="30000" />
       <workItem from="1764524702534" duration="70000" />
       <workItem from="1764524800505" duration="101000" />
+      <workItem from="1776083957141" duration="8079000" />
     </task>
     <task id="LOCAL-00001" summary="update SRS">
       <option name="closed" value="true" />
@@ -192,7 +206,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764524119550</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Uploaded Halbzeitpräsentation Powerpoint and PDF to Docs/Praesentationen">
+      <option name="closed" value="true" />
+      <created>1775724903539</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1775724903539</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -216,6 +238,15 @@
     <MESSAGE value="Added ci.yml file an new .github/workflow directory for actions" />
     <MESSAGE value="Modified ci.yml to run docker container" />
     <MESSAGE value="Modified ci.yml to not run docker contrainer." />
-    <option name="LAST_COMMIT_MESSAGE" value="Modified ci.yml to not run docker contrainer." />
+    <MESSAGE value="Uploaded Halbzeitpräsentation Powerpoint and PDF to Docs/Praesentationen" />
+    <option name="LAST_COMMIT_MESSAGE" value="Uploaded Halbzeitpräsentation Powerpoint and PDF to Docs/Praesentationen" />
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>

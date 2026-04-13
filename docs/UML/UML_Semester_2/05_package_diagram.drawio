@@ -1,0 +1,117 @@
+<mxfile host="app.diagrams.net" agent="5.0">
+  <diagram name="Package Diagram" id="package">
+    <mxGraphModel dx="1523" dy="1052" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;fontSize=16;fontStyle=bold;align=center;" value="3-Schichten-Architektur: Package Diagram" vertex="1">
+          <mxGeometry height="30" width="1400" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="presentation" parent="1" style="swimlane;html=1;startSize=30;fillColor=#E3F2FD;strokeColor=#1976D2;fontSize=13;fontStyle=bold;" value="Presentation Layer" vertex="1">
+          <mxGeometry height="800" width="380" x="30" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="app" parent="presentation" style="shape=box;html=1;fontSize=11;fillColor=#BBDEFB;strokeColor=#1565C0;" value="app.py&#xa;Flask Web Application&#xa;- @app.route(path)&#xa;- render_template()&#xa;- session management" vertex="1">
+          <mxGeometry height="120" width="320" x="30" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="templates" parent="presentation" style="shape=box;html=1;fontSize=11;fillColor=#BBDEFB;strokeColor=#1565C0;" value="templates/&#xa;Jinja2 HTML Templates&#xa;- base.html&#xa;- dashboard.html&#xa;- portfolio.html&#xa;- coin_detail.html" vertex="1">
+          <mxGeometry height="120" width="320" x="30" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="static" parent="presentation" style="shape=box;html=1;fontSize=11;fillColor=#BBDEFB;strokeColor=#1565C0;" value="static/&#xa;CSS &amp; JavaScript&#xa;- style.css&#xa;- script.js&#xa;- images/" vertex="1">
+          <mxGeometry height="100" width="320" x="30" y="360" as="geometry" />
+        </mxCell>
+        <mxCell id="services" parent="1" style="swimlane;html=1;startSize=30;fillColor=#E8F5E9;strokeColor=#00AA00;fontSize=13;fontStyle=bold;" value="Service Layer" vertex="1">
+          <mxGeometry height="800" width="380" x="470" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="portfolio_service" parent="services" style="shape=box;html=1;fontSize=11;fillColor=#A5D6A7;strokeColor=#00AA00;" value="PortfolioService&#xa;+ get_portfolio_overview(acc_id)&#xa;- aggregate_positions()&#xa;- calculate_total_value()" vertex="1">
+          <mxGeometry height="130" width="320" x="30" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="market_service" parent="services" style="shape=box;html=1;fontSize=11;fillColor=#A5D6A7;strokeColor=#00AA00;" value="MarketService&#xa;+ get_all_coins()&#xa;+ get_history(coin_id)&#xa;+ execute_trade(...)&#xa;+ get_transactions(acc_id)&#xa;+ get_position(acc_id, coin_id)" vertex="1">
+          <mxGeometry height="150" width="320" x="30" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="sync_service" parent="services" style="shape=box;html=1;fontSize=11;fillColor=#A5D6A7;strokeColor=#00AA00;" value="CoinSyncService&#xa;+ update_coins_table()&#xa;+ sync_coin_history(coin_id)&#xa;- _fetch_coin_history()" vertex="1">
+          <mxGeometry height="120" width="320" x="30" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="data" parent="1" style="swimlane;html=1;startSize=30;fillColor=#FFF3E0;strokeColor=#E65100;fontSize=13;fontStyle=bold;" value="Model &amp; Persistence Layer" vertex="1">
+          <mxGeometry height="800" width="440" x="910" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="account" parent="data" style="shape=box;html=1;fontSize=10;fillColor=#FFE0B2;strokeColor=#E65100;" value="Account Model&#xa;- id: int&#xa;- name: str&#xa;- pw: str (hashed)&#xa;- created_at: timestamp&#xa;+ {static} get_by_id(id)&#xa;+ {static} get_by_name(name)&#xa;+ {static} login_or_register()" vertex="1">
+          <mxGeometry height="180" width="180" x="30" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="coin" parent="data" style="shape=box;html=1;fontSize=10;fillColor:#FFE0B2;strokeColor=#E65100;" value="Coin Model&#xa;- id: str&#xa;- name: str&#xa;- symbol: str&#xa;- current_price: float&#xa;- market_cap: int&#xa;+ {static} get_all()&#xa;+ {static} get_by_id(id)" vertex="1">
+          <mxGeometry height="180" width="180" x="230" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="transaction" parent="data" style="shape=box;html=1;fontSize=10;fillColor:#FFE0B2;strokeColor=#E65100;" value="Transaction Model&#xa;- id: int&#xa;- coin_id: str&#xa;- acc_id: int&#xa;- price: float&#xa;- amount: float&#xa;- type: str (BUY/SELL)&#xa;- timestamp: int&#xa;+ {static} for_account()" vertex="1">
+          <mxGeometry height="180" width="180" x="30" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="database" parent="data" style="shape=box;html=1;fontSize=10;fillColor=#FFE0B2;strokeColor:#E65100;" value="Database Access&#xa;- {static} DB_PATH&#xa;+ {static} get_connection()&#xa;- SQLite Connector&#xa;- Row Factory" vertex="1">
+          <mxGeometry height="140" width="180" x="230" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="sqlite" parent="data" style="shape=cylinder;html=1;fontSize=10;fillColor=#FFB74D;strokeColor=#E65100;" value="SQLite Database&#xa;crypto.db&#xa;- accounts (PK: id)&#xa;- coins (PK: id)&#xa;- transactions&#xa;- *_history" vertex="1">
+          <mxGeometry height="130" width="280" x="80" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="external" parent="1" style="swimlane;html=1;startSize=30;fillColor=#FCE4EC;strokeColor=#C2185B;fontSize=13;fontStyle=bold;" value="External Systems" vertex="1">
+          <mxGeometry height="140" width="1320" x="30" y="730" as="geometry" />
+        </mxCell>
+        <mxCell id="coingecko" parent="external" style="shape=box;html=1;fontSize=11;fillColor=#F8BBD0;strokeColor=#C2185B;" value="CoinGecko API&#xa;HTTPS REST&#xa;api.coingecko.com/api/v3&#xa;- /coins/markets&#xa;- /coins/{id}/market_chart" vertex="1">
+          <mxGeometry height="80" width="280" x="30" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="browser_ext" parent="external" style="shape=box;html=1;fontSize=11;fillColor=#F8BBD0;strokeColor=#C2185B;" value="Web Browser&#xa;HTTP/HTTPS Client&#xa;Port 5000" vertex="1">
+          <mxGeometry height="80" width="280" x="350" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="dep1" edge="1" parent="1" source="app" style="endArrow=open;endFill=0;html=1;dashed=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;entryX=0.003;entryY=0.464;entryDx=0;entryDy=0;entryPerimeter=0;" target="portfolio_service" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="410" y="130" as="sourcePoint" />
+            <mxPoint x="470" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IdHh-1ryFAU70hH3o8sQ-3" connectable="0" parent="dep1" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="uses" vertex="1">
+          <mxGeometry relative="1" x="0.2895" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dep3" edge="1" parent="1" source="portfolio_service" style="endArrow=open;endFill=0;html=1;dashed=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" target="account" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="850" y="125" as="sourcePoint" />
+            <mxPoint x="910" y="125" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dep3_label" connectable="0" parent="dep3" style="edgeLabel;resizable=0;align=center;verticalAlign=bottom;fontSize=10;" value="queries" vertex="1">
+          <mxGeometry relative="1" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="dep4" edge="1" parent="1" source="market_service" style="endArrow=open;endFill=0;html=1;dashed=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" target="transaction" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="850" y="295" as="sourcePoint" />
+            <mxPoint x="910" y="295" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dep4_label" connectable="0" parent="dep4" style="edgeLabel;resizable=0;align=center;verticalAlign=bottom;fontSize=10;" value="manages" vertex="1">
+          <mxGeometry relative="1" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="dep5" edge="1" parent="1" source="sync_service" style="endArrow=open;endFill=0;html=1;dashed=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;stroke=#C2185B;" target="coingecko" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="350" y="460" as="sourcePoint" />
+            <mxPoint x="170" y="730" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dep5_label" connectable="0" parent="dep5" style="edgeLabel;resizable=0;align=center;verticalAlign=bottom;fontSize=10;" value="fetches data" vertex="1">
+          <mxGeometry relative="1" y="-30" as="geometry" />
+        </mxCell>
+        <mxCell id="dep6" edge="1" parent="1" source="database" style="endArrow=open;endFill=0;html=1;dashed=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" target="sqlite" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1040" y="410" as="sourcePoint" />
+            <mxPoint x="1040" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dep6_label" connectable="0" parent="dep6" style="edgeLabel;resizable=0;align=center;verticalAlign=bottom;fontSize=10;" value="connects to" vertex="1">
+          <mxGeometry relative="1" y="-15" as="geometry" />
+        </mxCell>
+        <mxCell id="IdHh-1ryFAU70hH3o8sQ-1" edge="1" parent="1" source="app" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;" target="market_service">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IdHh-1ryFAU70hH3o8sQ-2" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="uses" vertex="1">
+          <mxGeometry height="20" width="50" x="400" y="200" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
