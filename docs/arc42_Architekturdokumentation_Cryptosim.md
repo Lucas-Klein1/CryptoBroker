@@ -5,7 +5,7 @@ title: "CryptoBroker - Architekturdokumentation (arc42)"
 
 # CryptoBroker - Softwarearchitektur (arc42)
 
-Dokumentation mit draw.io Diagrammen
+Dokumentation mit UML-Diagrammen
 
 ---
 
@@ -118,12 +118,7 @@ Die Architektur folgt dem **3-Schichten-Modell**:
 
 ### 5.1 Komponenten-Diagramm
 
-draw.io Diagramm: [`01_component_diagram.drawio`](UML/UML_Semester_2/01_component_diagram.drawio)
-
-Öffnen:
-- Online: https://app.diagrams.net/ → File → Open from Device → uml/01_component_diagram.drawio
-- VS Code: Installiere "Draw.io Integration" Extension
-- Desktop: https://github.com/jgraph/drawio-desktop/releases
+![Komponenten-Diagramm](UML/UML_Semester_2/01_component_diagram.png)
 
 **Komponenten-Übersicht:**
 
@@ -223,7 +218,7 @@ CryptoBroker Application
 
 ### 5.3 Paketdiagramm (3-Schichten-Architektur)
 
-draw.io Diagramm: [`05_package_diagram.drawio`](UML/UML_Semester_2/05_package_diagram.drawio)
+![Paket-Diagramm](UML/UML_Semester_2/05_package_diagram.jpg)
 
 **Paketstruktur:**
 
@@ -258,7 +253,7 @@ draw.io Diagramm: [`05_package_diagram.drawio`](UML/UML_Semester_2/05_package_di
 
 ### 6.1 Sequenzdiagramm: Login & Authentifizierung
 
-draw.io Diagramm: [`02_sequence_login.drawio`](UML/UML_Semester_2/02_sequence_login.drawio)
+![Sequenzdiagramm Login](UML/UML_Semester_2/02_sequence_login.jpg)
 
 **Ablaufschritte:**
 
@@ -283,7 +278,7 @@ Benutzer → Browser → Flask App → Account Model → Database
 
 ### 6.2 Sequenzdiagramm: Trade-Ausführung (BUY/SELL)
 
-draw.io Diagramm: [`03_sequence_trade.drawio`](UML/UML_Semester_2/03_sequence_trade.drawio)
+![Sequenzdiagramm Trade](UML/UML_Semester_2/03_sequence_trade.png)
 
 **Ablaufschritte:**
 
@@ -354,7 +349,7 @@ Für jeden Coin:
 
 ### 7.1 Deployment-Diagramm
 
-draw.io Diagramm: [`04_deployment_diagram.drawio`](UML/UML_Semester_2/04_deployment_diagram.drawio)
+![Deployment-Diagramm](UML/UML_Semester_2/04_deployment_diagram.jpg)
 
 **Systemverteilung:**
 
