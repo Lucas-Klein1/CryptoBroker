@@ -36,7 +36,7 @@ Dokumentation mit UML-Diagrammen
 | 2 | Benutzerfreundlichkeit | Intuitive Web-UI für einfache Navigation | Benutzer führen Trades in <3 Klicks durch |
 | 3 | Datensicherheit | Passwörter sicher gehashed, sichere Sessions | bcrypt mit 12 Runden, Session-Management |
 | 4 | Performance | Schnelle Antwortzeiten auch mit vielen Coins | API-Response < 200ms |
-| 5 | Zuverlässigkeit | Korrekte Berechnung von Portfolios und Trades | 100% Transaktionsgenauigkeit |
+| 5 | Zuverlässigkeit | Korrekte Berechnung von Portfolios und Trades | Keine Inkonsistenzen in Portfolio-Berechnung |
 
 ### 1.3 Stakeholder
 
@@ -55,12 +55,12 @@ Dokumentation mit UML-Diagrammen
 
 | Randbedingung | Details |
 |---------------|---------|
-| **Programmiersprache** | Python 3.13+ (Vorgabe des SE-Praktikums) |
+| **Programmiersprache** | Python 3.13+ |
 | **Web-Framework** | Flask (leichtgewichtig, für Lernziele geeignet) |
 | **Datenbank** | SQLite (lokal, keine Server-Infrastruktur erforderlich) |
 | **Frontend** | HTML5, CSS3 (Template-Engine: Jinja2) |
-| **Externe APIs** | CoinGecko API (kostenlos, keine Authentifizierung für Basis-Requests) |
-| **Hosting** | Lokale Ausführung oder Cloud (z.B. Heroku) |
+| **Externe APIs** | CoinGecko API (kostenlos, Nutzung eines Demo-API-Keys) |
+| **Hosting** | Lokale Ausführung |
 | **Browser-Support** | Chrome, Firefox, Safari, Edge (modern) |
 
 ### 2.2 Organisatorische Randbedingungen
@@ -68,7 +68,7 @@ Dokumentation mit UML-Diagrammen
 | Randbedingung | Details |
 |---------------|---------|
 | **Team-Größe** | 4 Personen (Praktikum TINF24B4) |
-| **Entwicklungszeit** | 1 Semester (ca. 13 Wochen) |
+| **Entwicklungszeit** | 2 Semester (ca. 25 Wochen) |
 | **Deployment** | Manuell über Git oder Docker |
 | **Versionskontrolle** | Git/GitHub |
 
@@ -104,7 +104,7 @@ Die Architektur folgt dem **3-Schichten-Modell**:
 
 1. **Präsentationsschicht (Flask Web Layer)**: HTTP-Handler, Template-Rendering, Session-Verwaltung
 2. **Geschäftslogik-Schicht (Services)**: Portfolio-Berechnung, Trade-Ausführung, Daten-Synchronisation
-3. **Persistierungs-Schicht (Models & Database)**: Datenbankzugriff, ORM-ähnliche Abstraktionen
+3. **Persistierungs-Schicht (Models & Database)**: Datenbankzugriff, Models kapseln Datenbankzugriffe, stellen Datenobjekte bereit (Lightweight Data Access Layer)
 
 **Gewählte Technologien:**
 - **Flask**: Einfach, flexibel, ideal für Lernzwecke
@@ -191,9 +191,9 @@ CryptoBroker Application
 
 **CoinSyncService**
 - Aktualisiert Coin-Tabelle von CoinGecko API
-- Synchronisiert historische Preisdaten inkrementell
+- Synchronisiert historische Preisdaten
 - Verhindert Duplikate durch UNIQUE Constraints
-- Lädt nur fehlende Daten (Optimierung)
+- Speichert nur fehlende Daten (Optimierung)
 
 #### **5.2.3 Models Layer**
 
@@ -231,14 +231,14 @@ CryptoBroker Application
 └─────────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────────┐
-│                    SERVICE LAYER                                     │
+│                    SERVICE LAYER                                    │
 │  - Portfolio Service                                                │
 │  - Market Service                                                   │
 │  - Coin Sync Service                                                │
 └─────────────────────────────────────────────────────────────────────┘
                               ↓
 ┌─────────────────────────────────────────────────────────────────────┐
-│                  MODEL & DATA LAYER                                  │
+│                  MODEL & DATA LAYER                                 │
 │  - Account Model                                                    │
 │  - Coin Model                                                       │
 │  - Transaction Model                                                │
@@ -390,8 +390,8 @@ Die CryptoBroker-Anwendung wird auf **zwei Knoten** verteilt:
 **Verbindungen:**
 
 ```
-┌──────────────────┐          HTTP/HTTPS           ┌──────────────────┐
-│  Client Machine  │◄────────────Port 5000──────►│Application Server│
+┌──────────────────┐          HTTP/HTTPS          ┌──────────────────┐
+│  Client Machine  │◄────────────Port 5000───────►│Application Server│
 │   Web Browser    │                              │   Flask + Python │
 └──────────────────┘                              └────────┬─────────┘
                                                            │
@@ -399,7 +399,7 @@ Die CryptoBroker-Anwendung wird auf **zwei Knoten** verteilt:
                                               │                         │
                                         SQLite3 Driver        HTTPS/REST API
                                               │                         │
-                                        ┌─────▼────────┐        ┌──────▼──────┐
+                                        ┌─────▼────────┐        ┌───────▼─────┐
                                         │  crypto.db   │        │ CoinGecko   │
                                         │  (Database)  │        │ (API)       │
                                         └──────────────┘        └─────────────┘
@@ -417,20 +417,7 @@ Developer Machine
 └── python app.py → http://localhost:5000
 ```
 
-**Variante 2: Heroku Deployment**
-```
-GitHub Repository
-    ↓
-Heroku (CI/CD)
-├── Procfile: web: python app.py
-├── requirements.txt
-├── crypto.db (persistent storage)
-└── Environment Variables (Settings → Config Vars)
-    - SECRET_KEY
-    - SECRET_KEY (CoinGecko API)
-```
-
-**Variante 3: Docker Containerization**
+**Variante 2: Docker Containerization**
 ```
 Dockerfile
 ├── FROM python:3.13
@@ -549,7 +536,7 @@ if action == "SELL":
 
 **API-Caching:**
 - Coin-Daten werden einmal pro Anwendungsstart aktualisiert
-- Historische Daten werden inkrementell synchronisiert (keine Duplikate durch UNIQUE)
+- Historische Daten werden zusätzlich beim Aufruf einzelner Coins nachgeladen, um API-Calls zu sparen (keine Duplikate durch UNIQUE)
 - Browser-Cache für statische Assets (CSS, Bilder)
 
 **Datenbankoptimierung:**
