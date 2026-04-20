@@ -51,7 +51,8 @@ def portfolio():
         return redirect(url_for("profile"))
 
     positions, total_value = portfolio_service.get_portfolio_overview(acc_id)
-    return render_template("portfolio.html", positions=positions, total_value=total_value)
+    balance = market_service.get_balance(acc_id)
+    return render_template("portfolio.html", positions=positions, total_value=total_value, balance=balance)
 
 @app.route("/transactions")
 def transactions():
@@ -96,10 +97,12 @@ def coin_detail(coin_id):
  
     acc_id = session.get("acc_id")
     position = None
+    balance = None
     if acc_id:
         position = market_service.get_position(acc_id, coin_id)
+        balance = market_service.get_balance(acc_id)
  
-    return render_template("coin_detail.html", coin=coin, history=history, position=position)
+    return render_template("coin_detail.html", coin=coin, history=history, position=position, balance=balance)
 
 
 @app.route("/trade/<coin_id>", methods=["POST"])

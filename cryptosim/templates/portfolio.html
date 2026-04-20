@@ -4,6 +4,8 @@
 {% block content %}
 <h2>Dein Portfolio</h2>
 
+<p class="total">Verfügbares Guthaben: <strong>{{ balance|eur }}</strong></p>
+
 {% if positions %}
 <table class="table portfolio-table">
   <thead>
@@ -38,7 +40,8 @@
   </tbody>
 </table>
 
-<p class="total">Gesamtwert: <strong>{{ total_value|eur }}</strong></p>
+<p class="total">Gesamtwert Coins: <strong>{{ total_value|eur }}</strong></p>
+<p class="total">Gesamtvermögen: <strong>{{ (balance + total_value)|eur }}</strong></p>
 
 {% else %}
 <p>Du hast noch keine Transaktionen.</p>

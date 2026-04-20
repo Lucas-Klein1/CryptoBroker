@@ -2,6 +2,8 @@ from models.database import Database
 from models.coin import Coin
 import time
 
+STARTING_BALANCE = 100_000.0
+
 
 class MarketService:
 
@@ -53,6 +55,27 @@ class MarketService:
 
         return float(row["balance"] if row["balance"] is not None else 0)
 
+    def get_balance(self, acc_id):
+        """Berechnet die verfügbare Euro-Balance des Accounts.
+        Startkapital 100.000 € minus alle Käufe plus alle Verkäufe."""
+        conn = Database.get_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT SUM(
+                CASE
+                    WHEN type='BUY'  THEN -(amount * price)
+                    WHEN type='SELL' THEN  (amount * price)
+                    ELSE 0
+                END
+            ) AS net
+            FROM transactions
+            WHERE acc_id=?
+        """, (acc_id,))
+        row = cur.fetchone()
+        conn.close()
+        net = row["net"] if row["net"] is not None else 0.0
+        return STARTING_BALANCE + net
+
     def execute_trade(self, acc_id, coin_id, action, amount):
         action = action.upper()
         if action not in ("BUY", "SELL"):
@@ -66,6 +89,15 @@ class MarketService:
             current = self.get_position(acc_id, coin_id)
             if amount > current:
                 raise ValueError("Zu wenig Bestand für Verkauf.")
+
+        if action == "BUY":
+            cost = amount * coin.current_price
+            balance = self.get_balance(acc_id)
+            if cost > balance:
+                raise ValueError(
+                    f"Nicht genug Guthaben. Kosten: {cost:,.2f} €, "
+                    f"Verfügbar: {balance:,.2f} €"
+                )
 
         price = coin.current_price
         ts = int(time.time() * 1000)

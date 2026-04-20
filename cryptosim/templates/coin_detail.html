@@ -46,12 +46,16 @@
 
 <h3 style="margin-top: 2rem;">Handeln</h3>
 
-<div class="trade-card">
+<div class="trade-card" data-balance="{{ balance if balance is not none else 0 }}">
     {% if position is not none %}
     <div class="trade-info">
+        <p>Verfügbares Guthaben: <strong>{{ balance|eur }}</strong></p>
         <p>Dein Bestand: <strong>{{ "%.6f"|format(position) }} {{ coin.symbol.upper() }}</strong></p>
         <p>Preis pro Einheit: <strong>{{ coin.current_price|eur }}</strong></p>
         <p>Gesamt (Menge × Preis): <strong><span id="tradeTotal">0,00 €</span></strong></p>
+        <p id="balanceWarning" style="color:#ff5c5c; display:none; margin-top:0.4rem;">
+            ⚠ Nicht genug Guthaben für diesen Kauf.
+        </p>
     </div>
 
     <form method="post"
@@ -69,6 +73,7 @@
 
         <div class="trade-buttons">
             <button class="btn small-btn buy-btn"
+                    id="buyBtn"
                     type="submit"
                     name="action"
                     value="BUY">
@@ -97,6 +102,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const rawHistory = coinInfoEl.dataset.history || "[]";
     const priceAttr = (coinInfoEl.dataset.price || "").toString().replace(",", ".");
     const unitPrice = parseFloat(priceAttr);  // Euro pro Einheit
+
+    // Verfügbares Guthaben aus data-Attribut
+    const tradeCard = document.querySelector(".trade-card");
+    const availableBalance = tradeCard ? parseFloat(tradeCard.dataset.balance || "0") : 0;
 
     let fullHistory;
     try {
@@ -154,7 +163,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // ---------- Chart ----------
     const canvas = document.getElementById("priceChart");
     if (!canvas || typeof Chart === "undefined") {
-        // falls Chart.js aus irgendeinem Grund nicht geladen ist
         return;
     }
 
@@ -193,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 plugins: {
                     legend: {
                         labels: { color: "#ddd" },
-                        onClick: () => {}  // Linie nicht ausblendbar
+                        onClick: () => {}
                     },
                     tooltip: {
                         backgroundColor: "rgba(0,0,0,0.7)",
@@ -265,9 +273,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ---------- Live Gesamtpreis (Menge × Preis) ----------
+    // ---------- Live Gesamtpreis + Balance-Check ----------
     const amountInput = document.getElementById("tradeAmount");
     const totalEl = document.getElementById("tradeTotal");
+    const warningEl = document.getElementById("balanceWarning");
+    const buyBtn = document.getElementById("buyBtn");
 
     function updateTotal() {
         if (!amountInput || !totalEl || !unitPrice || isNaN(unitPrice)) {
@@ -278,6 +288,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const amount = parseFloat(raw);
         if (isNaN(amount) || amount <= 0) {
             totalEl.textContent = "0,00 €";
+            if (warningEl) warningEl.style.display = "none";
+            if (buyBtn) buyBtn.disabled = false;
             return;
         }
         const total = amount * unitPrice;
@@ -285,6 +297,11 @@ document.addEventListener("DOMContentLoaded", function () {
             style: "currency",
             currency: "EUR"
         });
+
+        // Balance-Check
+        const insufficient = total > availableBalance;
+        if (warningEl) warningEl.style.display = insufficient ? "" : "none";
+        if (buyBtn) buyBtn.disabled = insufficient;
     }
 
     if (amountInput && totalEl) {
