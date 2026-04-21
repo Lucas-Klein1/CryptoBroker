@@ -757,10 +757,94 @@ Qualitätsanforderungen (CryptoBroker)
 
 ---
 
-## 11. Glossar
+## 11. Risiken und technische Schulden {#section-technical-risks}
 
+Dieses Kapitel dokumentiert die identifizierten Risiken sowie bekannte technische Schulden im CryptoBroker-Projekt.
+Die vollständige RMMM-Liste (Risiko-Minimierung, Monitoring und Management) befindet sich als Excel-Datei unter:
+`docs/RMMM_CryptoBroker.xlsx`
 
+### 11.1 Risikoübersicht
+
+Die Risiken wurden anhand der **Top-Ten-Liste von Software-Projektrisiken** (Pressman) sowie projektspezifischer
+Eigenschaften identifiziert. Bewertung nach Schema: **Risiko-Score = Wahrscheinlichkeit (1–5) × Schadenshöhe (1–5)**.
+
+| Score | Bewertung |
+|-------|-----------|
+| ≥ 15  | Hohes Risiko – sofortiger Handlungsbedarf |
+| 9–14  | Mittleres Risiko – aktives Monitoring |
+| ≤ 8   | Geringes Risiko – Beobachtung ausreichend |
+
+#### Technische Risiken
+
+| Risiko ID | Beschreibung | W | S | Score | Status |
+|-----------|-------------|---|---|-------|--------|
+| **T-01** | CoinGecko API-Ausfall / Rate-Limit überschritten | 3 | 4 | **12** | Offen |
+| **T-02** | Fiktive Währung: fehlerhafte Kursgenerierung | 4 | 5 | **20** | Offen |
+| **T-03** | SQLite Race Conditions bei gleichzeitigen Trades | 2 | 5 | **10** | Offen |
+| **T-04** | Unsicherer Flask Secret Key im Quellcode | 3 | 5 | **15** | Offen |
+
+#### Projektrisiken
+
+| Risiko ID | Beschreibung | W | S | Score | Status |
+|-----------|-------------|---|---|-------|--------|
+| **P-01** | Teamausfall durch Krankheit oder Prüfungsphase | 3 | 3 | **9** | Offen |
+| **P-02** | Scope Creep durch unkontrolliertes Feature-Wachstum | 4 | 3 | **12** | Offen |
+| **P-03** | Fehlende automatisierte Tests (Coverage aktuell ~0 %) | 4 | 3 | **12** | Offen |
+| **P-04** | Zeitdruck vor Blog- und Abgabe-Deadlines | 3 | 2 | **6** | Offen |
 
 ---
 
-## 12. Anhänge
+### 11.2 Größtes technisches Risiko: T-02 – Fiktive Währung (Kursgenerierung)
+
+**Worin besteht es?**
+
+Im Sprint „Fiktive Währung" wurde eine nicht reale Kryptowährung eingeführt, deren Kursverlauf
+algorithmisch generiert wird – ohne externe Datenquelle wie CoinGecko. Fehler in der Generierungslogik
+(z. B. negative Kurse, NaN-/Inf-Werte, fehlende History-Tabelle) propagieren direkt in die
+Portfolio-Berechnung (`PortfolioService`) und können zu falschen Gesamtwerten, Abstürzen beim
+Öffnen der Coin-Detailseite oder inkonsistenten Datenbankeinträgen führen. Der Score von **20** (4 × 5)
+macht dieses Risiko zum kritischsten im Projekt.
+
+**Minimierungs-Strategie:**
+- Unit-Tests für den Kurs-Generator implementieren (Randwerte: Preis > 0, keine NaN/Inf-Werte, Zeitreihe monoton steigend).
+- Validierung im `CoinSyncService` vor jedem INSERT: `assert price > 0 and math.isfinite(price)`.
+- Separate History-Tabelle für die fiktive Währung analog zu realen Coins anlegen und befüllen.
+
+**Notfallplan:**
+Fiktive Währung im Dashboard ausblenden (Feature-Flag in `app.py`), bis der Generator validiert ist.
+Datenbankeinträge mit ungültigen Preisen löschen und die Tabelle neu generieren.
+Hotfix direkt auf `main` mergen und sofort deployen.
+
+---
+
+### 11.3 Technische Schulden
+
+| ID | Beschreibung | Priorität | Maßnahme |
+|----|-------------|-----------|----------|
+| TS-01 | Flask Secret Key ist Klartext im Quellcode (`"change-me-in-production"`) | Hoch | In `.env` auslagern, `python-dotenv` verwenden, `.env` in `.gitignore` |
+| TS-02 | Keine automatisierten Tests vorhanden (Unit-Test-Coverage ≈ 0 %) | Hoch | `pytest` einrichten, Tests für `PortfolioService` und `MarketService` priorisieren |
+| TS-03 | Logging nur über `print()`-Statements | Mittel | Python `logging`-Modul einführen, Log-Level konfigurierbar machen |
+| TS-04 | Fehlende Datenbankindizes auf `transactions.acc_id` und `accounts.name` | Mittel | `CREATE INDEX`-Statements beim DB-Init hinzufügen |
+| TS-05 | SQLite nicht für parallele Schreibzugriffe geeignet | Niedrig | WAL-Modus aktivieren; langfristig Migration zu PostgreSQL |
+
+---
+
+## 12. Glossar
+
+| Begriff | Erklärung |
+|---------|-----------|
+| **BUY / SELL** | Trade-Typen in der Anwendung: Kauf bzw. Verkauf einer Kryptowährung |
+| **CoinGecko** | Externe REST-API, die aktuelle Marktdaten und historische Kursverläufe für Kryptowährungen liefert |
+| **Fiktive Währung** | Nicht reale Kryptowährung, deren Kursverlauf algorithmisch generiert wird (eingeführt im Sprint „Fiktive Währung") |
+| **Portfolio** | Gesamtheit aller Positionen eines Nutzers; Wert = Σ (Bestand × aktueller Preis) pro Coin |
+| **Position** | Bestand eines Nutzers in einer bestimmten Kryptowährung = Σ(BUY) − Σ(SELL) |
+| **RMMM** | Risiko-Minimierung, Monitoring und Management – Methode zur strukturierten Risikoanalyse |
+| **Rate-Limit** | Maximale Anzahl API-Anfragen pro Zeiteinheit (CoinGecko Free Tier: 240 req/min) |
+| **Session** | Server-seitig verschlüsselter Cookie, der die Anmeldung des Nutzers in Flask speichert |
+| **SQLite** | Dateibasierte relationale Datenbank, die lokal ohne separaten Datenbankserver läuft |
+| **WAL** | Write-Ahead Logging – SQLite-Modus für bessere Parallelzugriff-Toleranz |
+| **bcrypt** | Kryptografische Hash-Funktion zur sicheren Speicherung von Passwörtern (12 Runden Salt) |
+
+---
+
+## 13. Anhänge
