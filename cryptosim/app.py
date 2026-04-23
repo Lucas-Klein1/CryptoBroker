@@ -54,6 +54,7 @@ def portfolio():
     balance = market_service.get_balance(acc_id)
     return render_template("portfolio.html", positions=positions, total_value=total_value, balance=balance)
 
+
 @app.route("/transactions")
 def transactions():
     acc_id = session.get("acc_id")
@@ -83,25 +84,57 @@ def profile():
     return render_template("profile.html", account=account)
 
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Du wurdest erfolgreich abgemeldet.", "success")
+    return redirect(url_for("home"))
+
+
+@app.route("/change-password", methods=["POST"])
+def change_password():
+    acc_id = session.get("acc_id")
+    if not acc_id:
+        flash("Bitte melde dich zuerst an.", "error")
+        return redirect(url_for("profile"))
+
+    account = Account.get_by_id(acc_id)
+    old_pw = request.form.get("old_pw")
+    new_pw = request.form.get("new_pw")
+    confirm_pw = request.form.get("confirm_pw")
+
+    if new_pw != confirm_pw:
+        flash("Neues Passwort und Bestätigung stimmen nicht überein.", "error")
+        return redirect(url_for("profile"))
+
+    try:
+        account.change_password(old_pw, new_pw)
+        flash("Passwort erfolgreich geändert.", "success")
+    except ValueError as e:
+        flash(str(e), "error")
+
+    return redirect(url_for("profile"))
+
+
 @app.route("/coin/<coin_id>")
 def coin_detail(coin_id):
     coin = Coin.get_by_id(coin_id)
     if coin is None:
         flash("Coin nicht gefunden.", "error")
         return redirect(url_for("dashboard"))
- 
+
     # Synchronisiere History für diesen Coin
     coin_sync_service.sync_coin_history(coin_id, days=365)
-    
+
     history = market_service.get_history(coin_id)
- 
+
     acc_id = session.get("acc_id")
     position = None
     balance = None
     if acc_id:
         position = market_service.get_position(acc_id, coin_id)
         balance = market_service.get_balance(acc_id)
- 
+
     return render_template("coin_detail.html", coin=coin, history=history, position=position, balance=balance)
 
 

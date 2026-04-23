@@ -6,8 +6,6 @@
   <title>{% block title %}CryptoSim{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Chart.js kann hier oben oder unten geladen werden; unten lassen wir es, aber sorgen dafür,
-       dass die Seitenskripte erst auf DOMContentLoaded laufen -->
 </head>
 
 <body>
@@ -18,9 +16,11 @@
       <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
       <li><a href="{{ url_for('portfolio') }}">Portfolio</a></li>
       <li><a href="{{ url_for('transactions') }}">Transaktionen</a></li>
-      <li><a href="{{ url_for('profile') }}">Profile</a></li>
+      <li><a href="{{ url_for('profile') }}">Profil</a></li>
+      {% if session.get('acc_id') %}
+      <li><a href="{{ url_for('logout') }}" style="color:#ff8080;">Abmelden</a></li>
+      {% endif %}
     </ul>
-
   </nav>
 
   <main class="container">
