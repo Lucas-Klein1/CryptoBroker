@@ -4,6 +4,7 @@ import bcrypt
 # Mindestanforderungen an Passwörter
 MIN_PW_LENGTH = 8
 
+
 def validate_password(pw: str):
     """Prüft Passwortanforderungen. Wirft ValueError bei Verstoß."""
     if len(pw) < MIN_PW_LENGTH:
@@ -12,6 +13,21 @@ def validate_password(pw: str):
         raise ValueError("Passwort muss mindestens einen Großbuchstaben enthalten.")
     if not any(c.isdigit() for c in pw):
         raise ValueError("Passwort muss mindestens eine Zahl enthalten.")
+
+
+def _hash_password(pw: str) -> bytes:
+    """Erzeugt einen bcrypt-Hash aus einem Klartextpasswort."""
+    salt = bcrypt.gensalt(rounds=12)
+    return bcrypt.hashpw(pw.encode("utf-8"), salt)
+
+
+def _password_matches(pw: str, stored_hash) -> bool:
+    """Prueft ein Klartextpasswort gegen den gespeicherten Hash.
+    Faellt fuer Alt-Daten auf einen Klartextvergleich zurueck."""
+    try:
+        return bcrypt.checkpw(pw.encode("utf-8"), stored_hash)
+    except Exception:
+        return pw == stored_hash
 
 
 class Account:
@@ -53,8 +69,7 @@ class Account:
     @staticmethod
     def create(name: str, pw: str):
         validate_password(pw)
-        salt = bcrypt.gensalt(rounds=12)
-        hashed_password = bcrypt.hashpw(pw.encode("utf-8"), salt)
+        hashed_password = _hash_password(pw)
         conn = Database.get_connection()
         cur = conn.cursor()
         cur.execute(
@@ -68,36 +83,24 @@ class Account:
 
     @staticmethod
     def login_or_register(name: str, pw: str):
-        acc = Account.get_by_name(name)
-        if acc:
-            try:
-                if not bcrypt.checkpw(pw.encode("utf-8"), acc.pw):
-                    raise ValueError("Falsches Passwort.")
-                return acc
-            except Exception:
-                if pw != acc.pw:
-                    raise ValueError("Falsches Passwort.")
-                return acc
-        # Falls nicht existiert -> registrieren
-        return Account.create(name, pw)
+        existing = Account.get_by_name(name)
+        if existing is None:
+            return Account.create(name, pw)
+        if not _password_matches(pw, existing.pw):
+            raise ValueError("Falsches Passwort.")
+        return existing
 
     def change_password(self, old_pw: str, new_pw: str):
         """Ändert das Passwort nach Verifikation des alten Passworts."""
-        # Altes Passwort prüfen
-        try:
-            if not bcrypt.checkpw(old_pw.encode("utf-8"), self.pw):
-                raise ValueError("Aktuelles Passwort ist falsch.")
-        except Exception:
-            if old_pw != self.pw:
-                raise ValueError("Aktuelles Passwort ist falsch.")
-
+        if not _password_matches(old_pw, self.pw):
+            raise ValueError("Aktuelles Passwort ist falsch.")
         validate_password(new_pw)
+        self._update_password(_hash_password(new_pw))
 
-        salt = bcrypt.gensalt(rounds=12)
-        hashed = bcrypt.hashpw(new_pw.encode("utf-8"), salt)
+    def _update_password(self, hashed: bytes):
         conn = Database.get_connection()
         cur = conn.cursor()
         cur.execute("UPDATE accounts SET pw = ? WHERE id = ?", (hashed, self.id))
         conn.commit()
         conn.close()
-        
+        self.pw = hashed
