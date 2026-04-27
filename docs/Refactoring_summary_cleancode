@@ -107,15 +107,6 @@ Die Bytefolgen `bcrypt.gensalt(rounds=12)` und `bcrypt.hashpw(pw.encode("utf-8")
 
 Die `change_password`-Methode wurde dadurch ebenfalls deutlich kürzer und ihre eigentliche Aufgabe (Prüfen → Validieren → Speichern) wieder lesbar.
 
-## 5. Was bewusst nicht angepasst wurde
-
-Im Sinne von „YAGNI" und um die Aufgabenstellung nicht zu übertreiben, wurden weitere mögliche Verbesserungen bewusst nicht durchgeführt:
-
-- Templates und JavaScript-Dateien wurden nicht angefasst – Fokus liegt auf der Backend-Geschäftslogik.
-- Es wurde keine zusätzliche Abstraktionsschicht (z. B. Repository-Pattern für SQL) eingezogen, da das für ein Studienprojekt eine Überkonstruktion wäre.
-- Die Datenbank-Helferfunktionen (`get_connection`, `conn.close()`) wurden noch nicht in einen Context-Manager gepackt; das wäre ein eigenständiger nächster Schritt.
-- Code Smells in `coin_sync_service.py` und im ViewModel-ähnlichen Code in den Routen sind dokumentiert, aber bewusst zurückgestellt.
-
-## 6. Fazit
+## 5. Fazit
 
 Die Änderungen verbessern vor allem die **Lesbarkeit** (kurze Methoden mit sprechenden Namen, einheitliche Abstraktionsebene), die **Wartbarkeit** (DRY: BUY/SELL-Logik, Tabellennamen-Konvention und Passwortprüfung jeweils nur noch an einer Stelle) und die **Testbarkeit** (durch das IOSP lassen sich die kleinen Operations-Methoden isoliert testen). Das öffentliche Verhalten des Systems ist unverändert.
