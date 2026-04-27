@@ -140,8 +140,13 @@ class CoinSyncService:
                 return 0
             
             # 5. Schreibe nur neue Einträge (UNIQUE verhindert Duplikate!)
+            #    Nur exakte 00:00-UTC-Tagespunkte uebernehmen, damit die History
+            #    eine konsistente Tagesgranularitaet behaelt.
+            MS_PER_DAY = 24 * 60 * 60 * 1000
             new_entries = 0
             for entry in history_data:
+                if entry['timestamp_ms'] % MS_PER_DAY != 0:
+                    continue
                 try:
                     cursor.execute(f"""
                         INSERT INTO {table_name} (timestamp_ms, price)

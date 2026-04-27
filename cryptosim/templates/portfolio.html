@@ -47,4 +47,184 @@
 <p>Du hast noch keine Transaktionen.</p>
 {% endif %}
 
+{% if portfolio_history %}
+<h3 style="margin-top: 2rem;">Wertverlauf Gesamtvermögen</h3>
+
+<div id="portfolioRangeButtons" style="margin-bottom: 1rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+    <button class="btn small-btn" data-portfolio-range="1M">1M</button>
+    <button class="btn small-btn" data-portfolio-range="3M">3M</button>
+    <button class="btn small-btn" data-portfolio-range="6M">6M</button>
+    <button class="btn small-btn" data-portfolio-range="1Y">1Y</button>
+    <button class="btn small-btn" data-portfolio-range="ALL">ALL</button>
+</div>
+
+<div style="
+    padding: 1.5rem;
+    border-radius: 15px;
+    background:#0f1528;
+    border:1px solid #222a3a;
+    min-height: 380px;
+">
+    <canvas id="portfolioChart"></canvas>
+</div>
+{% endif %}
+
+<script id="portfolioData" type="application/json">{{ portfolio_history | tojson }}</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const rawHistory = JSON.parse(document.getElementById("portfolioData").textContent);
+    if (!rawHistory || !rawHistory.length) return;
+
+    const canvas = document.getElementById("portfolioChart");
+    if (!canvas || typeof Chart === "undefined") return;
+
+    const ctx = canvas.getContext("2d");
+    let chart = null;
+
+    const monthNames = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+
+    rawHistory.sort((a, b) => a.timestamp - b.timestamp);
+
+    function filterRange(range) {
+        if (!rawHistory.length) return [];
+        const now = rawHistory[rawHistory.length - 1].timestamp;
+        let cutoff = null;
+
+        if (range === "1M") cutoff = now - 1000 * 60 * 60 * 24 * 30;
+        if (range === "3M") cutoff = now - 1000 * 60 * 60 * 24 * 90;
+        if (range === "6M") cutoff = now - 1000 * 60 * 60 * 24 * 180;
+        if (range === "1Y") cutoff = now - 1000 * 60 * 60 * 24 * 365;
+
+        if (!cutoff) return rawHistory;
+        return rawHistory.filter(p => p.timestamp >= cutoff);
+    }
+
+    function buildChartData(history) {
+        if (!history.length) {
+            return { labels: [], values: [], lineColor: "rgba(180,180,180,0.5)" };
+        }
+
+        const values = history.map(p => p.value);
+        const first = values[0];
+        const last = values[values.length - 1];
+
+        let lineColor = "rgba(180,180,180,0.95)";
+        if (last > first) lineColor = "rgba(0,200,0,0.95)";
+        if (last < first) lineColor = "rgba(255,60,60,0.95)";
+
+        const labels = history.map(p => {
+            const d = new Date(p.timestamp);
+            return monthNames[d.getMonth()];
+        });
+
+        return { labels, values, lineColor };
+    }
+
+    function updateChart(range, filtered) {
+        const data = buildChartData(filtered);
+
+        if (chart) chart.destroy();
+
+        chart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: "Gesamtvermögen",
+                    data: data.values,
+                    borderWidth: 3,
+                    borderColor: data.lineColor,
+                    tension: 0.35,
+                    pointRadius: 0,
+                    pointHitRadius: 20,
+                    pointHoverRadius: 6,
+                    hoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: "index"
+                },
+                plugins: {
+                    legend: {
+                        labels: { color: "#ddd" },
+                        onClick: () => {}
+                    },
+                    tooltip: {
+                        backgroundColor: "rgba(0,0,0,0.7)",
+                        titleColor: "#fff",
+                        bodyColor: "#fff",
+                        callbacks: {
+                            title: (items) => {
+                                if (!filtered.length) return "";
+                                const d = filtered[items[0].dataIndex].timestamp;
+                                return new Date(d).toLocaleDateString("de-DE");
+                            },
+                            label: (item) =>
+                                item.raw.toLocaleString("de-DE", {
+                                    style: "currency",
+                                    currency: "EUR"
+                                })
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: "#b0b5d0",
+                            maxTicksLimit: 12
+                        },
+                        grid: {
+                            color: "rgba(255,255,255,0.05)"
+                        }
+                    },
+                    y: {
+                        grace: "10%",
+                        ticks: {
+                            color: "#b0b5d0",
+                            callback: value =>
+                                value.toLocaleString("de-DE", {
+                                    style: "currency",
+                                    currency: "EUR"
+                                })
+                        },
+                        grid: {
+                            color: "rgba(255,255,255,0.05)"
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    const buttons = document.querySelectorAll("[data-portfolio-range]");
+
+    function setActiveButton(active) {
+        buttons.forEach(btn => {
+            if (btn.dataset.portfolioRange === active) {
+                btn.classList.add("btn-active");
+            } else {
+                btn.classList.remove("btn-active");
+            }
+        });
+    }
+
+    function render(range) {
+        const filtered = filterRange(range);
+        updateChart(range, filtered);
+        setActiveButton(range);
+    }
+
+    render("ALL");
+
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => render(btn.dataset.portfolioRange));
+    });
+});
+</script>
+
 {% endblock %}

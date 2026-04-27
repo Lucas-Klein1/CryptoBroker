@@ -52,7 +52,9 @@ def portfolio():
 
     positions, total_value = portfolio_service.get_portfolio_overview(acc_id)
     balance = market_service.get_balance(acc_id)
-    return render_template("portfolio.html", positions=positions, total_value=total_value, balance=balance)
+    portfolio_history = market_service.get_portfolio_history(acc_id)
+    return render_template("portfolio.html", positions=positions, total_value=total_value,
+                           balance=balance, portfolio_history=portfolio_history)
 
 
 @app.route("/transactions")
