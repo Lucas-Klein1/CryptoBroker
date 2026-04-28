@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from models.account import Account
 from models.coin import Coin
+from models.favorite import Favorite
 from services.portfolio_service import PortfolioService
 from services.market_service import MarketService
 from services.coin_sync_service import CoinSyncService
@@ -34,7 +35,9 @@ def datetimeformat(value):
 
 @app.route("/")
 def home():
-    return render_template("home.html")
+    acc_id = session.get("acc_id")
+    favorites = Favorite.get_for_account(acc_id) if acc_id else []
+    return render_template("home.html", favorites=favorites)
 
 
 @app.route("/dashboard")
@@ -133,11 +136,36 @@ def coin_detail(coin_id):
     acc_id = session.get("acc_id")
     position = None
     balance = None
+    is_favorite = False
     if acc_id:
         position = market_service.get_position(acc_id, coin_id)
         balance = market_service.get_balance(acc_id)
+        is_favorite = Favorite.is_favorite(acc_id, coin_id)
 
-    return render_template("coin_detail.html", coin=coin, history=history, position=position, balance=balance)
+    return render_template("coin_detail.html", coin=coin, history=history,
+                           position=position, balance=balance,
+                           is_favorite=is_favorite)
+
+
+@app.route("/favorite/<coin_id>/toggle", methods=["POST"])
+def toggle_favorite(coin_id):
+    acc_id = session.get("acc_id")
+    if not acc_id:
+        flash("Bitte melde dich zuerst an, um Favoriten zu speichern.", "error")
+        return redirect(url_for("profile"))
+
+    coin = Coin.get_by_id(coin_id)
+    if coin is None:
+        flash("Coin nicht gefunden.", "error")
+        return redirect(url_for("dashboard"))
+
+    now_favorite = Favorite.toggle(acc_id, coin_id)
+    if now_favorite:
+        flash(f"{coin.name} zu deinen Favoriten hinzugefügt.", "success")
+    else:
+        flash(f"{coin.name} aus deinen Favoriten entfernt.", "success")
+
+    return redirect(url_for("coin_detail", coin_id=coin_id))
 
 
 @app.route("/trade/<coin_id>", methods=["POST"])

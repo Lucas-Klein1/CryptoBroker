@@ -3,11 +3,25 @@
 
 {% block content %}
 
-<h2>{{ coin.name }} ({{ coin.symbol.upper() }})</h2>
+<div style="display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap;">
+  <h2 style="margin:0;">{{ coin.name }} ({{ coin.symbol.upper() }})</h2>
+
+  {% if session.get('acc_id') %}
+  <form method="post"
+        action="{{ url_for('toggle_favorite', coin_id=coin.id) }}"
+        style="margin:0;">
+    <button type="submit"
+            class="favorite-btn {% if is_favorite %}is-favorite{% endif %}"
+            title="{% if is_favorite %}Aus Favoriten entfernen{% else %}Zu Favoriten hinzufügen{% endif %}">
+      {% if is_favorite %}★ Favorit{% else %}☆ Favorit hinzufügen{% endif %}
+    </button>
+  </form>
+  {% endif %}
+</div>
 
 <img src="{{ coin.image }}"
      alt="{{ coin.name }}"
-     style="width: 64px; height: 64px; border-radius: 50%; margin-bottom:1rem;">
+     style="width: 64px; height: 64px; border-radius: 50%; margin: 1rem 0;">
 
 
 <div class="coin-info"

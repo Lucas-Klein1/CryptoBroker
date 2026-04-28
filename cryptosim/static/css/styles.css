@@ -353,3 +353,35 @@ a {
   transform: scale(1.07);
   box-shadow: 0 0 12px rgba(255,255,255,0.2);
 }
+
+/*--------------------------------------------------------*/
+
+.favorite-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid #4b8cff;
+  background: transparent;
+  color: #82aaff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+ 
+.favorite-btn:hover {
+  background: rgba(75, 140, 255, 0.12);
+  color: #b4c5ff;
+}
+ 
+.favorite-btn.is-favorite {
+  background: linear-gradient(135deg, #f7c948, #f0a020);
+  border-color: #f0a020;
+  color: #1a1300;
+}
+ 
+.favorite-btn.is-favorite:hover {
+  opacity: 0.9;
+}
