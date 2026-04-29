@@ -60,47 +60,67 @@
 
 <h3 style="margin-top: 2rem;">Handeln</h3>
 
-<div class="trade-card" data-balance="{{ balance if balance is not none else 0 }}">
+<div class="trade-card"
+     data-balance="{{ balance if balance is not none else 0 }}"
+     data-position="{{ position if position is not none else 0 }}"
+     data-min-eur="1">
     {% if position is not none %}
     <div class="trade-info">
         <p>Verfügbares Guthaben: <strong>{{ balance|eur }}</strong></p>
         <p>Dein Bestand: <strong>{{ "%.6f"|format(position) }} {{ coin.symbol.upper() }}</strong></p>
         <p>Preis pro Einheit: <strong>{{ coin.current_price|eur }}</strong></p>
-        <p>Gesamt (Menge × Preis): <strong><span id="tradeTotal">0,00 €</span></strong></p>
+        <p>Geschätzter Wert: <strong><span id="tradeTotal">0,00 €</span></strong></p>
+        <p>Geschätzte Menge: <strong><span id="tradeAmountPreview">0 {{ coin.symbol.upper() }}</span></strong></p>
         <p id="balanceWarning" style="color:#ff5c5c; display:none; margin-top:0.4rem;">
             ⚠ Nicht genug Guthaben für diesen Kauf.
         </p>
+        <p id="positionWarning" style="color:#ff5c5c; display:none; margin-top:0.4rem;">
+            ⚠ Du hast nicht genug Anteile für diesen Verkauf.
+        </p>
+        <p id="minWarning" style="color:#ff5c5c; display:none; margin-top:0.4rem;">
+            ⚠ Mindestwert pro Trade: 1,00 €.
+        </p>
+    </div>
+
+    <!-- ===== Aktion (Kauf / Verkauf) ===== -->
+    <div class="trade-action-tabs" style="margin-top:1rem; display:flex; gap:0.5rem;">
+        <button type="button" class="btn small-btn trade-action-btn active" data-action="BUY">Kaufen</button>
+        <button type="button" class="btn small-btn trade-action-btn" data-action="SELL">Verkaufen</button>
+    </div>
+
+    <!-- ===== Modus (Menge / Betrag / Prozent) ===== -->
+    <div class="trade-mode-tabs" style="margin-top:0.6rem; display:flex; gap:0.4rem; flex-wrap:wrap;">
+        <button type="button" class="btn small-btn trade-mode-btn active" data-mode="AMOUNT">Menge</button>
+        <button type="button" class="btn small-btn trade-mode-btn" data-mode="EUR">Betrag (€)</button>
+        <button type="button" class="btn small-btn trade-mode-btn" data-mode="PERCENT" data-sell-only="true">% des Bestands</button>
     </div>
 
     <form method="post"
           action="{{ url_for('trade', coin_id=coin.id) }}"
-          class="trade-form">
+          class="trade-form"
+          id="tradeForm">
 
-        <label for="amount">Menge</label>
+        <input type="hidden" name="action" id="tradeActionInput" value="BUY">
+        <input type="hidden" name="mode"   id="tradeModeInput"   value="AMOUNT">
+
+        <label for="tradeValue" id="tradeValueLabel">Menge ({{ coin.symbol.upper() }})</label>
         <input type="number"
-               id="tradeAmount"
+               id="tradeValue"
+               name="value"
                step="0.000001"
                min="0"
-               name="amount"
                required
                placeholder="z.B. 0.05">
 
-        <div class="trade-buttons">
-            <button class="btn small-btn buy-btn"
-                    id="buyBtn"
-                    type="submit"
-                    name="action"
-                    value="BUY">
-                Kaufen
-            </button>
+        <!-- Schnell-Buttons (kontextabhaengig) -->
+        <div id="quickButtons" style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-top:-0.3rem;"></div>
 
-            <button class="btn small-btn sell-btn"
-                    type="submit"
-                    name="action"
-                    value="SELL">
-                Verkaufen
-            </button>
-        </div>
+        <button class="btn small-btn"
+                id="submitBtn"
+                type="submit"
+                style="margin-top:0.4rem;">
+            Kaufen
+        </button>
     </form>
     {% else %}
       <p>Bitte logge dich ein, um handeln zu können.</p>
@@ -287,41 +307,195 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ---------- Live Gesamtpreis + Balance-Check ----------
-    const amountInput = document.getElementById("tradeAmount");
-    const totalEl = document.getElementById("tradeTotal");
-    const warningEl = document.getElementById("balanceWarning");
-    const buyBtn = document.getElementById("buyBtn");
+    // ---------- Live Trade-Berechnung (Modi: Menge / Betrag / Prozent) ----------
+    const tradeCardEl   = document.querySelector(".trade-card");
+    const valueInput    = document.getElementById("tradeValue");
+    const valueLabel    = document.getElementById("tradeValueLabel");
+    const totalEl       = document.getElementById("tradeTotal");
+    const amountPrevEl  = document.getElementById("tradeAmountPreview");
+    const balanceWarn   = document.getElementById("balanceWarning");
+    const positionWarn  = document.getElementById("positionWarning");
+    const minWarn       = document.getElementById("minWarning");
+    const submitBtn     = document.getElementById("submitBtn");
+    const actionInput   = document.getElementById("tradeActionInput");
+    const modeInput     = document.getElementById("tradeModeInput");
+    const actionBtns    = document.querySelectorAll(".trade-action-btn");
+    const modeBtns      = document.querySelectorAll(".trade-mode-btn");
+    const quickWrap     = document.getElementById("quickButtons");
 
-    function updateTotal() {
-        if (!amountInput || !totalEl || !unitPrice || isNaN(unitPrice)) {
-            if (totalEl) totalEl.textContent = "0,00 €";
-            return;
-        }
-        const raw = amountInput.value.trim().replace(",", ".");
-        const amount = parseFloat(raw);
-        if (isNaN(amount) || amount <= 0) {
-            totalEl.textContent = "0,00 €";
-            if (warningEl) warningEl.style.display = "none";
-            if (buyBtn) buyBtn.disabled = false;
-            return;
-        }
-        const total = amount * unitPrice;
-        totalEl.textContent = total.toLocaleString("de-DE", {
-            style: "currency",
-            currency: "EUR"
+    if (!tradeCardEl || !valueInput || !submitBtn) return;
+
+    const userPosition = parseFloat(tradeCardEl.dataset.position || "0");
+    const minEur       = parseFloat(tradeCardEl.dataset.minEur || "1");
+    const coinSymbol   = "{{ coin.symbol.upper() }}";
+
+    let currentAction = "BUY";
+    let currentMode   = "AMOUNT";
+
+    function setActiveBtn(btns, attr, val) {
+        btns.forEach(b => {
+            if (b.dataset[attr] === val) b.classList.add("active");
+            else b.classList.remove("active");
         });
-
-        // Balance-Check
-        const insufficient = total > availableBalance;
-        if (warningEl) warningEl.style.display = insufficient ? "" : "none";
-        if (buyBtn) buyBtn.disabled = insufficient;
     }
 
-    if (amountInput && totalEl) {
-        amountInput.addEventListener("input", updateTotal);
+    function applyActionStyle() {
+        // Submit-Button-Farbe und Text je nach Aktion
+        submitBtn.classList.remove("buy-btn", "sell-btn");
+        if (currentAction === "BUY") {
+            submitBtn.classList.add("buy-btn");
+            submitBtn.textContent = "Kaufen";
+        } else {
+            submitBtn.classList.add("sell-btn");
+            submitBtn.textContent = "Verkaufen";
+        }
+        // PERCENT-Mode-Button nur bei SELL anzeigen
+        modeBtns.forEach(b => {
+            if (b.dataset.sellOnly === "true") {
+                b.style.display = (currentAction === "SELL") ? "" : "none";
+            }
+        });
+        // Wenn aktuell PERCENT aktiv ist und auf BUY gewechselt wird -> auf AMOUNT zurueck
+        if (currentAction === "BUY" && currentMode === "PERCENT") {
+            currentMode = "AMOUNT";
+            modeInput.value = "AMOUNT";
+            setActiveBtn(modeBtns, "mode", "AMOUNT");
+        }
+        renderQuickButtons();
+        applyModeToInput();
         updateTotal();
     }
+
+    function applyModeToInput() {
+        if (currentMode === "EUR") {
+            valueLabel.textContent = "Betrag (€)";
+            valueInput.step = "0.01";
+            valueInput.placeholder = "z.B. 100";
+        } else if (currentMode === "PERCENT") {
+            valueLabel.textContent = "Prozent vom Bestand (%)";
+            valueInput.step = "0.01";
+            valueInput.max = "100";
+            valueInput.placeholder = "z.B. 50";
+        } else {
+            valueLabel.textContent = "Menge (" + coinSymbol + ")";
+            valueInput.step = "0.000001";
+            valueInput.placeholder = "z.B. 0.05";
+            valueInput.removeAttribute("max");
+        }
+        if (currentMode !== "PERCENT") valueInput.removeAttribute("max");
+    }
+
+    function renderQuickButtons() {
+        quickWrap.innerHTML = "";
+        if (currentAction === "SELL" && currentMode === "PERCENT") {
+            [25, 50, 75, 100].forEach(p => {
+                const b = document.createElement("button");
+                b.type = "button";
+                b.className = "btn small-btn";
+                b.textContent = p + "%";
+                b.addEventListener("click", () => {
+                    valueInput.value = p;
+                    updateTotal();
+                });
+                quickWrap.appendChild(b);
+            });
+        } else if (currentAction === "BUY" && currentMode === "EUR") {
+            [10, 100, 1000].forEach(eur => {
+                if (eur > availableBalance) return;
+                const b = document.createElement("button");
+                b.type = "button";
+                b.className = "btn small-btn";
+                b.textContent = eur + " €";
+                b.addEventListener("click", () => {
+                    valueInput.value = eur;
+                    updateTotal();
+                });
+                quickWrap.appendChild(b);
+            });
+            // "Max"-Knopf: gesamtes Guthaben
+            if (availableBalance >= minEur) {
+                const bMax = document.createElement("button");
+                bMax.type = "button";
+                bMax.className = "btn small-btn";
+                bMax.textContent = "Max";
+                bMax.addEventListener("click", () => {
+                    valueInput.value = availableBalance.toFixed(2);
+                    updateTotal();
+                });
+                quickWrap.appendChild(bMax);
+            }
+        }
+    }
+
+    function computeAmountAndEur() {
+        // Liefert {amount, eur} fuer den aktuell eingegebenen Wert
+        const raw = (valueInput.value || "").toString().trim().replace(",", ".");
+        const v = parseFloat(raw);
+        if (!isFinite(v) || v <= 0 || !isFinite(unitPrice) || unitPrice <= 0) {
+            return { amount: 0, eur: 0 };
+        }
+        let amount;
+        if (currentMode === "EUR")           amount = v / unitPrice;
+        else if (currentMode === "PERCENT")  amount = userPosition * (v / 100);
+        else                                  amount = v;
+        return { amount: amount, eur: amount * unitPrice };
+    }
+
+    function updateTotal() {
+        const { amount, eur } = computeAmountAndEur();
+
+        totalEl.textContent = eur.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+        amountPrevEl.textContent = amount.toLocaleString("de-DE", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 6
+        }) + " " + coinSymbol;
+
+        // Warnungen
+        const insufficientBalance  = (currentAction === "BUY")  && eur > availableBalance + 1e-9;
+        const insufficientPosition = (currentAction === "SELL") && amount > userPosition + 1e-9;
+        const belowMin             = eur > 0 && eur < minEur;
+
+        balanceWarn.style.display  = insufficientBalance  ? "" : "none";
+        positionWarn.style.display = insufficientPosition ? "" : "none";
+        minWarn.style.display      = belowMin             ? "" : "none";
+
+        // Submit-Button deaktivieren wenn ungueltig
+        const invalid = amount <= 0 || insufficientBalance || insufficientPosition || belowMin;
+        submitBtn.disabled = invalid;
+        submitBtn.style.opacity = invalid ? "0.5" : "";
+        submitBtn.style.cursor  = invalid ? "not-allowed" : "";
+    }
+
+    // Aktion-Tabs (Kaufen / Verkaufen)
+    actionBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            currentAction = btn.dataset.action;
+            actionInput.value = currentAction;
+            setActiveBtn(actionBtns, "action", currentAction);
+            applyActionStyle();
+        });
+    });
+
+    // Modus-Tabs (Menge / Betrag / Prozent)
+    modeBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            // PERCENT nur bei SELL
+            if (btn.dataset.mode === "PERCENT" && currentAction !== "SELL") return;
+            currentMode = btn.dataset.mode;
+            modeInput.value = currentMode;
+            setActiveBtn(modeBtns, "mode", currentMode);
+            valueInput.value = "";
+            applyModeToInput();
+            renderQuickButtons();
+            updateTotal();
+        });
+    });
+
+    valueInput.addEventListener("input", updateTotal);
+
+    // Initial-Setup
+    applyActionStyle();
+    updateTotal();
 });
 </script>
 

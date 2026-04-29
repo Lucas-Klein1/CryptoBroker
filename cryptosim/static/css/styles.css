@@ -385,3 +385,30 @@ a {
 .favorite-btn.is-favorite:hover {
   opacity: 0.9;
 }
+
+.trade-action-btn,
+.trade-mode-btn {
+  opacity: 0.65;
+  transition: all 0.15s ease;
+}
+ 
+.trade-action-btn:hover,
+.trade-mode-btn:hover {
+  opacity: 0.85;
+}
+ 
+.trade-action-btn.active,
+.trade-mode-btn.active {
+  opacity: 1 !important;
+  border: 2px solid #ffffff88 !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.22);
+  transform: scale(1.05);
+}
+ 
+/* Aktion-Tab Farben */
+.trade-action-btn[data-action="BUY"].active {
+  background: linear-gradient(135deg, #38c76a, #2ca656);
+}
+.trade-action-btn[data-action="SELL"].active {
+  background: linear-gradient(135deg, #ff5c5c, #ff3333);
+}
