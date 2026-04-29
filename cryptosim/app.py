@@ -53,6 +53,13 @@ def portfolio():
         flash("Bitte melde dich zuerst an.", "error")
         return redirect(url_for("profile"))
 
+    # History fuer alle jemals gehandelten Coins aktualisieren, damit der
+    # Portfolio-Chart aktuell ist. Dank des Lazy-Load-Checks in
+    # sync_coin_history wird pro Coin nur dann ein API-Call gemacht, wenn
+    # fuer heute (00:00 UTC) noch kein Eintrag in der History-Tabelle liegt.
+    for coin_id in market_service.get_traded_coin_ids(acc_id):
+        coin_sync_service.sync_coin_history(coin_id, days=365)
+
     positions, total_value = portfolio_service.get_portfolio_overview(acc_id)
     balance = market_service.get_balance(acc_id)
     portfolio_history = market_service.get_portfolio_history(acc_id)

@@ -20,6 +20,20 @@ class MarketService:
         history = self._load_coin_history(coin.id)
         return [{"timestamp": ts, "price": price} for ts, price in history]
 
+    def get_traded_coin_ids(self, acc_id):
+        """Liefert alle Coin-IDs, in denen der Account jemals getradet hat.
+        Dient als Quelle fuer das Portfolio-History-Sync (alle Coins, die in
+        den Portfolio-Chart einfliessen)."""
+        conn = Database.get_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT DISTINCT coin_id FROM transactions WHERE acc_id = ?",
+            (acc_id,),
+        )
+        rows = cur.fetchall()
+        conn.close()
+        return [row["coin_id"] for row in rows]
+
     # ---------- Portfolio-Verlauf (Integration) ----------
 
     def get_portfolio_history(self, acc_id):
