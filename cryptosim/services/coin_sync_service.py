@@ -1,12 +1,22 @@
 import requests
 from models.database import Database
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv
 import os
 
 load_dotenv()  # loads .env from current directory
 
 secret = os.getenv("SECRET_KEY")
+
+MS_PER_DAY = 24 * 60 * 60 * 1000
+
+
+def _today_midnight_utc_ms() -> int:
+    """Liefert den Unix-Timestamp (ms) von heute 00:00 UTC."""
+    now = datetime.now(timezone.utc)
+    midnight = datetime(now.year, now.month, now.day, tzinfo=timezone.utc)
+    return int(midnight.timestamp() * 1000)
+
 
 class CoinSyncService:
     def update_coins_table(self):
@@ -84,27 +94,29 @@ class CoinSyncService:
         Synchronisiert die History für einen Coin inkrementell.
         - Lädt nur fehlende Tage
         - Überschreibt bestehende Daten NICHT
-        
+        - Spart API-Calls: Wenn fuer heute (00:00 UTC) bereits ein Eintrag
+          existiert, wird gar nicht erst die API angefragt.
+
         Args:
             coin_id: Die Coin-ID (z.B. 'bitcoin')
             days: Wie viele Tage maximal zurück (Standard: 1 Jahr)
-        
+
         Returns:
             Anzahl neuer Einträge die hinzugefügt wurden
         """
         try:
             table_name = f"{coin_id.lower().replace('-', '_')}_history"
-            
+
             conn = Database.get_connection()
             cursor = conn.cursor()
-            
+
             # 1. Prüfe: Existiert die Tabelle schon?
             cursor.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
                 (table_name,)
             )
             table_exists = cursor.fetchone() is not None
-            
+
             if not table_exists:
                 # Neue Tabelle erstellen
                 cursor.execute(f"""
@@ -116,33 +128,46 @@ class CoinSyncService:
                 """)
                 conn.commit()
                 print(f"History-Tabelle erstellt: {table_name}")
-            
+
+            # 1b. Frueher Abbruch: Wenn fuer den heutigen Tag (00:00 UTC) schon
+            #     ein Eintrag existiert, ist die History "fuer heute" aktuell.
+            #     Da Eintraege immer um 00:00 UTC liegen, ist das exakt der
+            #     letzte erwartete Datenpunkt.
+            today_ts = _today_midnight_utc_ms()
+            cursor.execute(
+                f"SELECT 1 FROM {table_name} WHERE timestamp_ms = ? LIMIT 1",
+                (today_ts,)
+            )
+            if cursor.fetchone() is not None:
+                conn.close()
+                print(f"ℹ️ {coin_id}: Heutiger Wert bereits vorhanden, kein API-Call.")
+                return 0
+
             # 2. Finde den ältesten Datenpunkt
             cursor.execute(f"SELECT MIN(timestamp_ms) FROM {table_name}")
             result = cursor.fetchone()
             oldest_timestamp = result[0] if result and result[0] else None
-            
+
             # 3. Berechne Zeitraum
             end_timestamp = int(datetime.now().timestamp() * 1000)
-            
+
             if oldest_timestamp:
                 # Bereits Daten vorhanden: Hole alles ab einem Tag vor dem ältesten Datenpunkt
                 start_timestamp = oldest_timestamp - (24 * 60 * 60 * 1000)
             else:
                 # Keine Daten: Hole die letzten X Tage
                 start_timestamp = end_timestamp - (days * 24 * 60 * 60 * 1000)
-            
+
             # 4. Lade Daten vom API
             history_data = self._fetch_coin_history(coin_id, start_timestamp, end_timestamp)
-            
+
             if not history_data:
                 conn.close()
                 return 0
-            
+
             # 5. Schreibe nur neue Einträge (UNIQUE verhindert Duplikate!)
             #    Nur exakte 00:00-UTC-Tagespunkte uebernehmen, damit die History
             #    eine konsistente Tagesgranularitaet behaelt.
-            MS_PER_DAY = 24 * 60 * 60 * 1000
             new_entries = 0
             for entry in history_data:
                 if entry['timestamp_ms'] % MS_PER_DAY != 0:
@@ -156,17 +181,17 @@ class CoinSyncService:
                 except Exception:
                     # UNIQUE Constraint verletzt → Datenpunkt existiert schon
                     pass
-            
+
             conn.commit()
             conn.close()
-            
+
             if new_entries > 0:
                 print(f"{coin_id}: {new_entries} neue Einträge hinzugefügt")
             else:
-                print(f"ℹ️ {coin_id}: Daten sind aktuell")
-            
+                print(f"{coin_id}: Daten sind aktuell")
+
             return new_entries
-        
+
         except Exception as e:
             print(f"Fehler beim Synchronisieren von {coin_id}: {e}")
             return 0
@@ -174,54 +199,54 @@ class CoinSyncService:
     def _fetch_coin_history(self, coin_id, start_timestamp, end_timestamp):
         """
         Ruft historische Daten von CoinGecko ab
-        
+
         Args:
             coin_id: Die Coin-ID (z.B. 'bitcoin')
             start_timestamp: Startzeitpunkt in Millisekunden
             end_timestamp: Endzeitpunkt in Millisekunden
-        
+
         Returns:
             Liste mit Einträgen: [{'timestamp_ms': 1704067200000, 'price': 42000}, ...]
         """
         try:
             history_data = []
             current_start = start_timestamp
-            
+
             # CoinGecko hat ein Limit von ~365 Tagen pro Request
             while current_start < end_timestamp:
                 current_end = min(
                     current_start + (365 * 24 * 60 * 60 * 1000),
                     end_timestamp
                 )
-                
+
                 url = "https://api.coingecko.com/api/v3/coins/{}/market_chart".format(coin_id)
                 params = {
                     "vs_currency": "eur",
                     "days": "365",
                     "x_cg_demo_api_key": secret
                 }
-                
+
                 response = requests.get(url, params=params, timeout=10)
                 response.raise_for_status()
-                
+
                 data = response.json()
-                
+
                 # Verarbeite die Daten
                 if 'prices' in data:
                     for price_data in data['prices']:
                         timestamp_ms = price_data[0]  # CoinGecko gibt Millisekunden
                         price = price_data[1]
-                        
+
                         history_data.append({
                             'timestamp_ms': timestamp_ms,
                             'price': price
                         })
-                
+
                 # Nächster Request
                 current_start = current_end
-            
+
             return history_data
-        
+
         except Exception as e:
             print(f"Fehler beim Abrufen der History für {coin_id}: {e}")
             return []

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Bestenliste – CryptoSim{% endblock %}
+
+{% block content %}
+<style>
+  .leaderboard-self {
+    background: rgba(111, 92, 255, 0.15) !important;
+  }
+  .leaderboard-self td {
+    border-bottom-color: rgba(111, 92, 255, 0.4) !important;
+  }
+</style>
+
+<h2>🏆 Bestenliste</h2>
+<p class="subtext" style="color:#b0b5d0;">
+  Gesamtvermögen aller Accounts (Cash + aktueller Coin-Wert).
+</p>
+
+{% if entries %}
+<table class="table leaderboard-table">
+  <thead>
+    <tr>
+      <th>Rang</th>
+      <th>Benutzer</th>
+      <th>Guthaben</th>
+      <th>Coin-Wert</th>
+      <th>Gesamtvermögen</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in entries %}
+    <tr class="{% if e.acc_id == current_acc_id %}leaderboard-self{% endif %}">
+      <td>
+        {% if e.rank == 1 %}🥇
+        {% elif e.rank == 2 %}🥈
+        {% elif e.rank == 3 %}🥉
+        {% else %}{{ e.rank }}
+        {% endif %}
+      </td>
+      <td>
+        {{ e.name }}
+        {% if e.acc_id == current_acc_id %}
+          <span style="color:#6f5cff; font-size:0.8rem;">(du)</span>
+        {% endif %}
+      </td>
+      <td>{{ e.balance|eur }}</td>
+      <td>{{ e.coin_value|eur }}</td>
+      <td><strong>{{ e.total|eur }}</strong></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Es gibt noch keine Accounts.</p>
+{% endif %}
+
+{% endblock %}

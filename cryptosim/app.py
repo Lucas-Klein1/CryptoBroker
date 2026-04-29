@@ -60,6 +60,13 @@ def portfolio():
                            balance=balance, portfolio_history=portfolio_history)
 
 
+@app.route("/leaderboard")
+def leaderboard():
+    entries = portfolio_service.get_leaderboard()
+    acc_id = session.get("acc_id")
+    return render_template("leaderboard.html", entries=entries, current_acc_id=acc_id)
+
+
 @app.route("/transactions")
 def transactions():
     acc_id = session.get("acc_id")
@@ -259,4 +266,3 @@ def trade(coin_id):
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0", port=5000)
-ys
