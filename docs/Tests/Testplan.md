@@ -41,6 +41,14 @@ Optional (Bonus, wenn Zeit bleibt): `services/portfolio_service.py`
 | U6 | Ungültige Trade-Aktion | `execute_trade` mit `"HODL"` | `ValueError` |
 | U7 | Position nach Kauf korrekt | `get_position` nach BUY | entspricht gekaufter Menge |
 | U8 | Position nach vollständigem Verkauf | `get_position` nach BUY + SELL | 0.0 |
+| U9 | Trade mit unbekanntem Coin | `execute_trade` mit ungültiger Coin-ID | `ValueError` |
+| U10 | Historische Daten ohne History-Tabelle | `get_history` | leere Liste |
+| U11 | Historische Daten für unbekannten Coin | `get_history` | leere Liste |
+| U12 | Transaktionshistorie nach Kauf | `get_transactions` | 1 Eintrag mit korrekten Werten |
+| U13 | Gehandelte Coins ohne Trades | `get_traded_coin_ids` | leere Liste |
+| U14 | Gehandelte Coins nach Kauf | `get_traded_coin_ids` | enthält Coin-ID |
+| U15 | Portfolio-Verlauf ohne Trades | `get_portfolio_history` | leere Liste |
+| U16 | Portfolio-Verlauf mit Kauf und Preishistorie | `get_portfolio_history` | ≥ 2 Datenpunkte, Startpunkt = 100.000 € |
 
 ### Integrations-Test – `test_trade_flow.py`
 
@@ -49,7 +57,7 @@ Optional (Bonus, wenn Zeit bleibt): `services/portfolio_service.py`
 | I1 | Vollständiger Trade-Zyklus | Kauf → Verkauf gleicher Menge → Balance wieder 100.000 € |
 | I2 | Mehrere Käufe kumulieren korrekt | 2× BUY → Position = Summe beider Käufe |
 
-**Gesamt: 10 Testfälle** – aufgeteilt auf 4 Personen ca. 2–3 Testfälle pro Person.
+**Gesamt: 18 Testfälle** – aufgeteilt auf 4 Personen ca. 4–5 Testfälle pro Person.
 
 ---
 
@@ -60,7 +68,7 @@ Optional (Bonus, wenn Zeit bleibt): `services/portfolio_service.py`
 | `services/market_service.py` | ≥ 80 % |
 | `services/portfolio_service.py` (optional) | ≥ 80 % |
 
-Die Coverage wird nur auf den Services gemessen, nicht global über das gesamte Projekt. Das wird mit `--cov=services` in pytest eingestellt.
+Die Coverage wird nur auf `market_service.py` gemessen, nicht global über das gesamte Projekt. Das wird mit `--cov=services.market_service` in pytest eingestellt.
 
 ---
 
@@ -69,7 +77,7 @@ Die Coverage wird nur auf den Services gemessen, nicht global über das gesamte 
 | Werkzeug | Zweck |
 |---|---|
 | `pytest` | Test-Runner |
-| `pytest-cov` | Coverage-Messung auf `services/` |
+| `pytest-cov` | Coverage-Messung auf `services.market_service` |
 | GitHub Actions | Automatische Ausführung bei Push / PR |
 
 **Installation:**
@@ -85,9 +93,10 @@ Kein `pytest-flask` nötig – Services werden direkt mit In-Memory-SQLite getes
 
 ```
 cryptosim/
+├── pytest.ini                   # pythonpath + testpaths
 └── tests/
-    ├── conftest.py              # Fixtures: In-Memory-DB, Test-Account, Test-Coin
-    ├── test_market_service.py   # Unit-Tests U1–U8
+    ├── conftest.py              # Fixtures: in_memory_db, test_account, test_coin
+    ├── test_market_service.py   # Unit-Tests U1–U16
     └── test_trade_flow.py       # Integrations-Tests I1–I2
 ```
 
@@ -146,7 +155,7 @@ Erweiterung der bestehenden `.github/workflows/ci.yml` um einen Test-Job **vor**
       - name: Run tests with coverage
         run: |
           pytest tests/ \
-            --cov=services \
+            --cov=services.market_service \
             --cov-report=html:coverage-html \
             --cov-fail-under=80 \
             --junit-xml=test-results.xml \
@@ -185,6 +194,6 @@ Erweiterung der bestehenden `.github/workflows/ci.yml` um einen Test-Job **vor**
 
 Ein Build gilt als **bestanden**, wenn:
 
-- [ ] Alle 10 Testfälle grün
+- [ ] Alle 18 Testfälle grün
 - [ ] Coverage auf `services/market_service.py` ≥ 80 %
 - [ ] Smoke-Test: Container startet und antwortet auf `/`

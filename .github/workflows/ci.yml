@@ -7,10 +7,9 @@ on:
     branches: [ main ]
 
 jobs:
-  build-test:
+  tests:
     runs-on: ubuntu-latest
 
-    # Wir arbeiten im Unterordner "cryptosim"
     defaults:
       run:
         working-directory: cryptosim
@@ -32,8 +31,38 @@ jobs:
       - name: Syntax check (compile all .py files)
         run: python -m compileall .
 
+      - name: Run tests with coverage
+        run: echo "Tests noch nicht eingecheckt"
+        # Sobald tests/ gepusht: Zeile oben ersetzen durch:
+        # pytest tests/ --cov=services.market_service --cov-report=html:coverage-html --cov-fail-under=80 --junit-xml=test-results.xml -v
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: cryptosim/coverage-html/
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: cryptosim/test-results.xml
+
+  build-test:
+    runs-on: ubuntu-latest
+    needs: tests
+
+    defaults:
+      run:
+        working-directory: cryptosim
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Build Docker image (test environment)
-        # Hier wird im Ordner "cryptosim" ein Docker-Image gebaut
         run: docker build -t cryptosim-test .
 
       - name: Start container for smoke test
@@ -42,7 +71,7 @@ jobs:
 
       - name: Smoke test (container reachable)
         run: |
-          for i in {1..30}; do 
+          for i in {1..30}; do
             code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:5000 || true)
             if [ "$code" = "200" ] || [ "$code" = "403" ]; then
               echo "Startseite erreichbar: $code"
@@ -58,6 +87,6 @@ jobs:
 
       - name: Stop and remove test container
         if: always()
-        run:
+        run: |
           docker stop cryptosim-test || true
           docker rm cryptosim-test || true
