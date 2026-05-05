@@ -32,9 +32,12 @@ jobs:
         run: python -m compileall .
 
       - name: Run tests with coverage
-        run: echo "Tests noch nicht eingecheckt"
-        # Sobald tests/ gepusht: Zeile oben ersetzen durch:
-        # pytest tests/ --cov=services.market_service --cov-report=html:coverage-html --cov-fail-under=80 --junit-xml=test-results.xml -v
+        run: |
+          pytest tests/test_trade_flow.py \
+          --cov=services.market_service \
+          --cov-report=html:coverage-html \
+          --junit-xml=test-results.xml \
+          -v
 
       - name: Upload coverage report
         if: always()
