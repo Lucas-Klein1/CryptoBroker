@@ -5,21 +5,91 @@
 <h2>Profil / Login</h2>
 
 {% if account %}
-<p>Angemeldet als: <strong>{{ account.name }}</strong></p>
-<p>Account-ID: {{ account.id }}</p>
-<p>Erstellt am: {{ account.created_at }}</p>
+  {# ===== EINGELOGGT ===== #}
+  <div class="form" style="max-width: 400px;">
+    <p>Angemeldet als: <strong>{{ account.name }}</strong></p>
+    <p style="color:#b0b5d0; font-size:0.85rem;">Account-ID: {{ account.id }}</p>
+    <p style="color:#b0b5d0; font-size:0.85rem;">Erstellt am: {{ account.created_at }}</p>
+
+    <a href="{{ url_for('logout') }}" class="btn" style="text-align:center; margin-top:0.5rem;">
+      Abmelden
+    </a>
+  </div>
+
+  {# ===== PASSWORT ÄNDERN ===== #}
+  <h3 style="margin-top: 2rem;">Passwort ändern</h3>
+  <form method="post" action="{{ url_for('change_password') }}" class="form" style="max-width: 400px;">
+
+    <label>
+      Aktuelles Passwort:
+      <input type="password" name="old_pw" required autocomplete="current-password">
+    </label>
+
+    <label>
+      Neues Passwort:
+      <input type="password" name="new_pw" id="newPw" required autocomplete="new-password"
+             placeholder="Mind. 8 Zeichen, 1 Großbuchstabe, 1 Zahl">
+    </label>
+
+    <label>
+      Neues Passwort bestätigen:
+      <input type="password" name="confirm_pw" id="confirmPw" required autocomplete="new-password">
+    </label>
+
+    <p id="pwMismatch" style="color:#ff5c5c; font-size:0.85rem; display:none;">
+      Passwörter stimmen nicht überein.
+    </p>
+    <p style="color:#b0b5d0; font-size:0.8rem;">
+      Anforderungen: mind. 8 Zeichen, 1 Großbuchstabe, 1 Zahl.
+    </p>
+
+    <button type="submit" class="btn">Passwort ändern</button>
+  </form>
+
 {% else %}
-<form method="post" class="form">
-  <label>
-    Name:
-    <input type="text" name="name" required>
-  </label>
-  <label>
-    Passwort:
-    <input type="password" name="pw" required>
-  </label>
-  <button type="submit" class="btn">Login / Registrieren</button>
-</form>
-<p class="hint">Falls der Name noch nicht existiert, wird ein neuer Account angelegt.</p>
+  {# ===== LOGIN / REGISTRIERUNG ===== #}
+  <p style="color:#b0b5d0; margin-bottom:1rem;">
+    Melde dich mit deinem Benutzernamen und Passwort an. Falls der Account noch nicht
+    existiert, wird er automatisch angelegt.
+  </p>
+
+  <form method="post" class="form" style="max-width: 400px;">
+    <label>
+      Benutzername:
+      <input type="text" name="name" required autocomplete="username"
+             minlength="3" maxlength="32" placeholder="z.B. max_mustermann">
+    </label>
+
+    <label>
+      Passwort:
+      <input type="password" name="pw" id="loginPw" required autocomplete="current-password"
+             placeholder="Mind. 8 Zeichen, 1 Großbuchstabe, 1 Zahl">
+    </label>
+
+    <p style="color:#b0b5d0; font-size:0.8rem;">
+      Anforderungen (bei Registrierung): mind. 8 Zeichen, 1 Großbuchstabe, 1 Zahl.
+    </p>
+
+    <button type="submit" class="btn">Login / Registrieren</button>
+  </form>
 {% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // Client-seitiger Passwort-Match-Check beim Ändern
+    const newPw = document.getElementById("newPw");
+    const confirmPw = document.getElementById("confirmPw");
+    const mismatch = document.getElementById("pwMismatch");
+
+    if (newPw && confirmPw && mismatch) {
+        function checkMatch() {
+            const differs = confirmPw.value.length > 0 && newPw.value !== confirmPw.value;
+            mismatch.style.display = differs ? "" : "none";
+        }
+        newPw.addEventListener("input", checkMatch);
+        confirmPw.addEventListener("input", checkMatch);
+    }
+});
+</script>
+
 {% endblock %}
