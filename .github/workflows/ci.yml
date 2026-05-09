@@ -33,7 +33,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest tests/test_trade_flow.py \
+          pytest tests/ \
           --cov=services.market_service \
           --cov-report=html:coverage-html \
           --junit-xml=test-results.xml \
