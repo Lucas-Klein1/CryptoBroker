@@ -1,5 +1,9 @@
+import os
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from models.account import Account
+
+load_dotenv()
 from models.coin import Coin
 from models.favorite import Favorite
 from services.portfolio_service import PortfolioService
@@ -7,7 +11,7 @@ from services.market_service import MarketService
 from services.coin_sync_service import CoinSyncService
 
 app = Flask(__name__)
-app.secret_key = "change-me-in-production"  # für Sessions & flash
+app.secret_key = os.environ["FLASK_SECRET_KEY"]
 
 portfolio_service = PortfolioService()
 market_service = MarketService()
