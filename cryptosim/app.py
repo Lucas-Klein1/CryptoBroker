@@ -11,7 +11,7 @@ from services.market_service import MarketService
 from services.coin_sync_service import CoinSyncService
 
 app = Flask(__name__)
-app.secret_key = os.environ["FLASK_SECRET_KEY"]
+app.secret_key = os.getenv("FLASK_SECRET_KEY")
 
 portfolio_service = PortfolioService()
 market_service = MarketService()
