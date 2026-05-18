@@ -4,3 +4,4 @@ requests
 python-dotenv
 pytest>=8.0
 pytest-cov>=5.0
+radon>=6.0
