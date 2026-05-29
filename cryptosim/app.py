@@ -1,4 +1,5 @@
 import os
+from functools import wraps
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from models.account import Account
@@ -12,6 +13,17 @@ from services.coin_sync_service import CoinSyncService
 
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY")
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not session.get("acc_id"):
+            flash("Bitte melde dich zuerst an.", "error")
+            return redirect(url_for("profile"))
+        return f(*args, **kwargs)
+    return decorated
+
 
 portfolio_service = PortfolioService()
 market_service = MarketService()
@@ -51,11 +63,9 @@ def dashboard():
 
 
 @app.route("/portfolio")
+@login_required
 def portfolio():
     acc_id = session.get("acc_id")
-    if not acc_id:
-        flash("Bitte melde dich zuerst an.", "error")
-        return redirect(url_for("profile"))
 
     # History fuer alle jemals gehandelten Coins aktualisieren, damit der
     # Portfolio-Chart aktuell ist. Dank des Lazy-Load-Checks in
@@ -79,11 +89,9 @@ def leaderboard():
 
 
 @app.route("/transactions")
+@login_required
 def transactions():
     acc_id = session.get("acc_id")
-    if not acc_id:
-        flash("Bitte melde dich zuerst an.", "error")
-        return redirect(url_for("profile"))
 
     txs = market_service.get_transactions(acc_id)
     return render_template("transactions.html", txs=txs)
@@ -115,11 +123,9 @@ def logout():
 
 
 @app.route("/change-password", methods=["POST"])
+@login_required
 def change_password():
     acc_id = session.get("acc_id")
-    if not acc_id:
-        flash("Bitte melde dich zuerst an.", "error")
-        return redirect(url_for("profile"))
 
     account = Account.get_by_id(acc_id)
     old_pw = request.form.get("old_pw")
@@ -166,11 +172,9 @@ def coin_detail(coin_id):
 
 
 @app.route("/favorite/<coin_id>/toggle", methods=["POST"])
+@login_required
 def toggle_favorite(coin_id):
     acc_id = session.get("acc_id")
-    if not acc_id:
-        flash("Bitte melde dich zuerst an, um Favoriten zu speichern.", "error")
-        return redirect(url_for("profile"))
 
     coin = Coin.get_by_id(coin_id)
     if coin is None:
@@ -190,11 +194,9 @@ MIN_TRADE_EUR = 1.0  # Mindestwert eines Trades in Euro
 
 
 @app.route("/trade/<coin_id>", methods=["POST"])
+@login_required
 def trade(coin_id):
     acc_id = session.get("acc_id")
-    if not acc_id:
-        flash("Bitte melde dich zuerst an.", "error")
-        return redirect(url_for("profile"))
 
     action = (request.form.get("action") or "").upper()
     # mode: AMOUNT (Menge in Coin-Einheiten), EUR (Euro-Betrag), PERCENT (Anteil am Bestand, nur SELL)
