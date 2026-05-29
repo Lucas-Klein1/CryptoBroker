@@ -35,10 +35,8 @@ class CoinSyncService:
             conn = Database.get_connection()
             cursor = conn.cursor()
 
-            # Tabelle neu erstellen (wie bisher)
-            cursor.execute("DROP TABLE IF EXISTS coins")
             cursor.execute("""
-            CREATE TABLE coins (
+            CREATE TABLE IF NOT EXISTS coins (
                 id TEXT PRIMARY KEY,
                 symbol TEXT,
                 name TEXT,
@@ -66,11 +64,12 @@ class CoinSyncService:
                 last_updated TEXT
             )
             """)
-            conn.commit()
+
+            api_ids = [coin["id"] for coin in data]
 
             for coin in data:
                 cursor.execute("""
-                INSERT INTO coins VALUES (
+                INSERT OR REPLACE INTO coins VALUES (
                     :id, :symbol, :name, :image, :current_price, :market_cap,
                     :market_cap_rank, :fully_diluted_valuation, :total_volume,
                     :high_24h, :low_24h, :price_change_24h, :price_change_percentage_24h,
@@ -80,6 +79,9 @@ class CoinSyncService:
                     :atl, :atl_change_percentage, :atl_date, :last_updated
                 )
                 """, coin)
+
+            placeholders = ",".join("?" * len(api_ids))
+            cursor.execute(f"DELETE FROM coins WHERE id NOT IN ({placeholders})", api_ids)
 
             conn.commit()
             conn.close()
