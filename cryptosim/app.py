@@ -1,4 +1,5 @@
 import os
+import datetime
 from functools import wraps
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -6,6 +7,8 @@ from models.account import Account
 
 load_dotenv()
 from models.coin import Coin
+
+MIN_TRADE_EUR = 1.0
 from models.favorite import Favorite
 from services.portfolio_service import PortfolioService
 from services.market_service import MarketService
@@ -44,7 +47,6 @@ def eur_format(value):
 
 @app.template_filter("datetimeformat")
 def datetimeformat(value):
-    import datetime
     return datetime.datetime.fromtimestamp(value / 1000).strftime("%d.%m.%Y %H:%M")
 
 
@@ -189,8 +191,6 @@ def toggle_favorite(coin_id):
 
     return redirect(url_for("coin_detail", coin_id=coin_id))
 
-
-MIN_TRADE_EUR = 1.0  # Mindestwert eines Trades in Euro
 
 
 @app.route("/trade/<coin_id>", methods=["POST"])
