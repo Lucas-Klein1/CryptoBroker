@@ -44,8 +44,8 @@ class MarketService:
 
         coin_histories = self._load_histories_for_transactions(txs)
         timeline = self._build_timeline(txs, coin_histories)
-        portfolio_history = self._compute_portfolio_values(txs, coin_histories, timeline)
-        self._append_current_value(portfolio_history, txs, coin_histories)
+        portfolio_history, holdings, balance = self._compute_portfolio_values(txs, coin_histories, timeline)
+        self._append_current_value(portfolio_history, holdings, balance, timeline)
         return portfolio_history
 
     # ---------- Trading ----------
@@ -179,22 +179,13 @@ class MarketService:
             total = self._total_value(balance, holdings, price_lookup, ts)
             portfolio_history.append({"timestamp": ts, "value": total})
 
-        return portfolio_history
+        return portfolio_history, holdings, balance
 
-    def _append_current_value(self, portfolio_history, txs, coin_histories):
+    def _append_current_value(self, portfolio_history, holdings, balance, timeline):
         """Endpunkt mit aktuellen Coin-Preisen anhaengen, damit das Chart-Ende
         zum angezeigten Gesamtvermoegen passt."""
-        timeline = self._build_timeline(txs, coin_histories)
-        first_tx_ts = min(tx["timestamp"] for tx in txs)
-        price_lookup = self._build_price_lookup(coin_histories)
-
-        # Alle Transaktionen erneut anwenden, um den aktuellen Stand zu kennen.
-        holdings, balance = {}, STARTING_BALANCE
-        for tx in txs:
-            balance = self._apply_single_transaction(tx, holdings, balance)
-
         now_ts = int(time.time() * 1000)
-        last_ts = timeline[-1] if timeline else first_tx_ts
+        last_ts = timeline[-1] if timeline else 0
         if now_ts <= last_ts:
             return
 
