@@ -72,7 +72,7 @@ def portfolio():
     # sync_coin_history wird pro Coin nur dann ein API-Call gemacht, wenn
     # fuer heute (00:00 UTC) noch kein Eintrag in der History-Tabelle liegt.
     for coin_id in market_service.get_traded_coin_ids(acc_id):
-        coin_sync_service.sync_coin_history(coin_id, days=365)
+        coin_sync_service.sync_coin_history(coin_id)
 
     positions, total_value = portfolio_service.get_portfolio_overview(acc_id)
     balance = market_service.get_balance(acc_id)
@@ -153,7 +153,7 @@ def coin_detail(coin_id):
         return redirect(url_for("dashboard"))
 
     # Synchronisiere History für diesen Coin
-    coin_sync_service.sync_coin_history(coin_id, days=365)
+    coin_sync_service.sync_coin_history(coin_id)
 
     history = market_service.get_history(coin_id)
 

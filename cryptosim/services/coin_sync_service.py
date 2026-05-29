@@ -91,7 +91,7 @@ class CoinSyncService:
             print("Fehler beim Coin-Sync:", e)
             return False
 
-    def sync_coin_history(self, coin_id, days=365):
+    def sync_coin_history(self, coin_id):
         """
         Synchronisiert die History für einen Coin inkrementell.
         - Lädt nur fehlende Tage
@@ -145,23 +145,7 @@ class CoinSyncService:
                 print(f"ℹ️ {coin_id}: Heutiger Wert bereits vorhanden, kein API-Call.")
                 return 0
 
-            # 2. Finde den ältesten Datenpunkt
-            cursor.execute(f"SELECT MIN(timestamp_ms) FROM {table_name}")
-            result = cursor.fetchone()
-            oldest_timestamp = result[0] if result and result[0] else None
-
-            # 3. Berechne Zeitraum
-            end_timestamp = int(datetime.now().timestamp() * 1000)
-
-            if oldest_timestamp:
-                # Bereits Daten vorhanden: Hole alles ab einem Tag vor dem ältesten Datenpunkt
-                start_timestamp = oldest_timestamp - (24 * 60 * 60 * 1000)
-            else:
-                # Keine Daten: Hole die letzten X Tage
-                start_timestamp = end_timestamp - (days * 24 * 60 * 60 * 1000)
-
-            # 4. Lade Daten vom API
-            history_data = self._fetch_coin_history(coin_id, start_timestamp, end_timestamp)
+            history_data = self._fetch_coin_history(coin_id)
 
             if not history_data:
                 conn.close()
@@ -198,56 +182,26 @@ class CoinSyncService:
             print(f"Fehler beim Synchronisieren von {coin_id}: {e}")
             return 0
 
-    def _fetch_coin_history(self, coin_id, start_timestamp, end_timestamp):
-        """
-        Ruft historische Daten von CoinGecko ab
-
-        Args:
-            coin_id: Die Coin-ID (z.B. 'bitcoin')
-            start_timestamp: Startzeitpunkt in Millisekunden
-            end_timestamp: Endzeitpunkt in Millisekunden
-
-        Returns:
-            Liste mit Einträgen: [{'timestamp_ms': 1704067200000, 'price': 42000}, ...]
-        """
+    def _fetch_coin_history(self, coin_id):
         try:
-            history_data = []
-            current_start = start_timestamp
+            url = "https://api.coingecko.com/api/v3/coins/{}/market_chart".format(coin_id)
+            params = {
+                "vs_currency": "eur",
+                "days": "365",
+                "x_cg_demo_api_key": secret
+            }
 
-            # CoinGecko hat ein Limit von ~365 Tagen pro Request
-            while current_start < end_timestamp:
-                current_end = min(
-                    current_start + (365 * 24 * 60 * 60 * 1000),
-                    end_timestamp
-                )
+            response = requests.get(url, params=params, timeout=10)
+            response.raise_for_status()
+            data = response.json()
 
-                url = "https://api.coingecko.com/api/v3/coins/{}/market_chart".format(coin_id)
-                params = {
-                    "vs_currency": "eur",
-                    "days": "365",
-                    "x_cg_demo_api_key": secret
-                }
+            if 'prices' not in data:
+                return []
 
-                response = requests.get(url, params=params, timeout=10)
-                response.raise_for_status()
-
-                data = response.json()
-
-                # Verarbeite die Daten
-                if 'prices' in data:
-                    for price_data in data['prices']:
-                        timestamp_ms = price_data[0]  # CoinGecko gibt Millisekunden
-                        price = price_data[1]
-
-                        history_data.append({
-                            'timestamp_ms': timestamp_ms,
-                            'price': price
-                        })
-
-                # Nächster Request
-                current_start = current_end
-
-            return history_data
+            return [
+                {'timestamp_ms': p[0], 'price': p[1]}
+                for p in data['prices']
+            ]
 
         except Exception as e:
             print(f"Fehler beim Abrufen der History für {coin_id}: {e}")
