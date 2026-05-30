@@ -15,6 +15,8 @@
       <th>Symbol</th>
       <th>Menge</th>
       <th>Wert</th>
+      <th>Gewinn/Verlust</th>
+      <th>%</th>
     </tr>
   </thead>
   <tbody>
@@ -34,6 +36,14 @@
       <td>{{ "%.6f"|format(p.amount) }}</td>
 
       <td>{{ p.value|eur }}</td>
+
+      <td style="color: {{ '#00c800' if p.profit_loss >= 0 else '#ff3c3c' }}">
+        {{ '+' if p.profit_loss >= 0 else '' }}{{ p.profit_loss|eur }}
+      </td>
+
+      <td style="color: {{ '#00c800' if p.profit_loss_pct >= 0 else '#ff3c3c' }}">
+        {{ '+' if p.profit_loss_pct >= 0 else '' }}{{ "%.2f"|format(p.profit_loss_pct) }} %
+      </td>
 
     </tr>
     {% endfor %}

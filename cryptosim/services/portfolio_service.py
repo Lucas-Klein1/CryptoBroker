@@ -8,11 +8,16 @@ from services.market_service import STARTING_BALANCE
 class PortfolioService:
     def get_portfolio_overview(self, acc_id: int):
         txs = Transaction.for_account(acc_id)
-        # Coin-Bestände aufsummieren
+
         amounts = defaultdict(float)
+        total_cost = defaultdict(float)
+        total_bought = defaultdict(float)
+
         for tx in txs:
             if tx.type.upper() == "BUY":
                 amounts[tx.coin_id] += tx.amount
+                total_cost[tx.coin_id] += tx.amount * tx.price
+                total_bought[tx.coin_id] += tx.amount
             elif tx.type.upper() == "SELL":
                 amounts[tx.coin_id] -= tx.amount
 
@@ -25,13 +30,19 @@ class PortfolioService:
             coin = Coin.get_by_id(coin_id)
             value = amount * coin.current_price
             total_value += value
-            positions.append(
-                {
-                    "coin": coin,
-                    "amount": amount,
-                    "value": value,
-                }
-            )
+
+            avg_buy_price = total_cost[coin_id] / total_bought[coin_id]
+            profit_loss = (coin.current_price - avg_buy_price) * amount
+            profit_loss_pct = (coin.current_price - avg_buy_price) / avg_buy_price * 100
+
+            positions.append({
+                "coin": coin,
+                "amount": amount,
+                "value": value,
+                "avg_buy_price": avg_buy_price,
+                "profit_loss": profit_loss,
+                "profit_loss_pct": profit_loss_pct,
+            })
 
         return positions, total_value
 
