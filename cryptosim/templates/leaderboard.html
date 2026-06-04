@@ -25,6 +25,7 @@
       <th>Guthaben</th>
       <th>Coin-Wert</th>
       <th>Gesamtvermögen</th>
+      <th>Gewinn/Verlust</th>
     </tr>
   </thead>
   <tbody>
@@ -46,6 +47,10 @@
       <td>{{ e.balance|eur }}</td>
       <td>{{ e.coin_value|eur }}</td>
       <td><strong>{{ e.total|eur }}</strong></td>
+      <td style="color: {{ '#00c800' if e.profit_loss >= 0 else '#ff3c3c' }}">
+        {{ '+' if e.profit_loss >= 0 else '' }}{{ e.profit_loss|eur }}
+        ({{ '+' if e.profit_loss_pct >= 0 else '' }}{{ "%.2f"|format(e.profit_loss_pct) }} %)
+      </td>
     </tr>
     {% endfor %}
   </tbody>

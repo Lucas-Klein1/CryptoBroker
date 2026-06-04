@@ -11,7 +11,7 @@ from models.coin import Coin
 MIN_TRADE_EUR = 1.0
 from models.favorite import Favorite
 from services.portfolio_service import PortfolioService
-from services.market_service import MarketService
+from services.market_service import MarketService, STARTING_BALANCE
 from services.coin_sync_service import CoinSyncService
 
 app = Flask(__name__)
@@ -80,7 +80,8 @@ def portfolio():
     balance = market_service.get_balance(acc_id)
     portfolio_history = market_service.get_portfolio_history(acc_id)
     return render_template("portfolio.html", positions=positions, total_value=total_value,
-                           balance=balance, portfolio_history=portfolio_history)
+                           balance=balance, portfolio_history=portfolio_history,
+                           starting_balance=STARTING_BALANCE)
 
 
 @app.route("/leaderboard")

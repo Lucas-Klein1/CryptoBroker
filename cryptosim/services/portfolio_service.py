@@ -105,12 +105,16 @@ class PortfolioService:
                     coin_value += amount * price
 
             total = balance + coin_value
+            profit_loss = total - STARTING_BALANCE
+            profit_loss_pct = profit_loss / STARTING_BALANCE * 100
             entries.append({
                 "acc_id": acc_id,
                 "name": acc["name"],
                 "balance": balance,
                 "coin_value": coin_value,
                 "total": total,
+                "profit_loss": profit_loss,
+                "profit_loss_pct": profit_loss_pct,
             })
 
         # Sortieren absteigend nach Gesamtvermoegen, Rang vergeben

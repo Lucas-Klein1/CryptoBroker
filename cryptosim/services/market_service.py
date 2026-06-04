@@ -179,6 +179,11 @@ class MarketService:
             total = self._total_value(balance, holdings, price_lookup, ts)
             portfolio_history.append({"timestamp": ts, "value": total})
 
+        # Transaktionen nach dem letzten Timeline-Punkt noch anwenden
+        while tx_index < len(txs):
+            balance = self._apply_single_transaction(txs[tx_index], holdings, balance)
+            tx_index += 1
+
         return portfolio_history, holdings, balance
 
     def _append_current_value(self, portfolio_history, holdings, balance, timeline):

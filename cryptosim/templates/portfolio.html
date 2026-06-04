@@ -51,7 +51,14 @@
 </table>
 
 <p class="total">Gesamtwert Coins: <strong>{{ total_value|eur }}</strong></p>
-<p class="total">Gesamtvermögen: <strong>{{ (balance + total_value)|eur }}</strong></p>
+{% set total = balance + total_value %}
+{% set pl = total - starting_balance %}
+{% set pl_pct = pl / starting_balance * 100 %}
+<p class="total">Gesamtvermögen: <strong>{{ total|eur }}</strong>
+  <span style="color: {{ '#00c800' if pl >= 0 else '#ff3c3c' }}; margin-left: 0.75rem;">
+    {{ '+' if pl >= 0 else '' }}{{ pl|eur }} ({{ '+' if pl_pct >= 0 else '' }}{{ "%.2f"|format(pl_pct) }} %)
+  </span>
+</p>
 
 {% else %}
 <p>Du hast noch keine Transaktionen.</p>
@@ -60,13 +67,14 @@
 {% if portfolio_history %}
 <h3 style="margin-top: 2rem;">Wertverlauf Gesamtvermögen</h3>
 
-<div id="portfolioRangeButtons" style="margin-bottom: 1rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
+<div id="portfolioRangeButtons" style="margin-bottom: 0.5rem; display:flex; gap:0.5rem; flex-wrap:wrap;">
     <button class="btn small-btn" data-portfolio-range="1M">1M</button>
     <button class="btn small-btn" data-portfolio-range="3M">3M</button>
     <button class="btn small-btn" data-portfolio-range="6M">6M</button>
     <button class="btn small-btn" data-portfolio-range="1Y">1Y</button>
     <button class="btn small-btn" data-portfolio-range="ALL">ALL</button>
 </div>
+<div id="portfolioChange" style="margin-bottom: 1rem; font-size: 0.95rem;"></div>
 
 <div style="
     padding: 1.5rem;
@@ -223,9 +231,26 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    function updatePortfolioChange(filtered) {
+        const el = document.getElementById("portfolioChange");
+        if (!el || filtered.length < 2) { if (el) el.textContent = ""; return; }
+        const startVal = filtered[0].value;
+        const endVal = filtered[filtered.length - 1].value;
+        const change = endVal - startVal;
+        const changePct = change / startVal * 100;
+        const color = change >= 0 ? "#00c800" : "#ff3c3c";
+        const sign = change >= 0 ? "+" : "";
+        el.innerHTML =
+            `<span style="color:${color}; font-weight:600;">` +
+            `${sign}${change.toLocaleString("de-DE", {style:"currency", currency:"EUR"})} ` +
+            `(${sign}${changePct.toFixed(2).replace(".", ",")} %)` +
+            `</span>`;
+    }
+
     function render(range) {
         const filtered = filterRange(range);
         updateChart(range, filtered);
+        updatePortfolioChange(filtered);
         setActiveButton(range);
     }
 
