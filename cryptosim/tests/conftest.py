@@ -21,13 +21,15 @@ def in_memory_db(monkeypatch, tmp_path):
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         CREATE TABLE IF NOT EXISTS coins (
-            id                   TEXT PRIMARY KEY,
-            symbol               TEXT,
-            name                 TEXT,
-            image                TEXT,
-            current_price        REAL,
-            market_cap           INTEGER,
-            market_cap_rank      INTEGER
+            id                          TEXT PRIMARY KEY,
+            symbol                      TEXT,
+            name                        TEXT,
+            image                       TEXT,
+            current_price               REAL,
+            market_cap                  INTEGER,
+            market_cap_rank             INTEGER,
+            price_change_24h            REAL,
+            price_change_percentage_24h REAL
         );
         CREATE TABLE IF NOT EXISTS transactions (
             id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -61,9 +63,10 @@ def test_coin(in_memory_db):
     from models.coin import Coin
     conn = Database.get_connection()
     conn.execute(
-        "INSERT INTO coins (id, symbol, name, current_price, market_cap, market_cap_rank, image)"
-        " VALUES (?,?,?,?,?,?,?)",
-        ("bitcoin", "BTC", "Bitcoin", 50000.0, 1_000_000_000, 1, ""),
+        "INSERT INTO coins (id, symbol, name, current_price, market_cap, market_cap_rank, image,"
+        " price_change_24h, price_change_percentage_24h)"
+        " VALUES (?,?,?,?,?,?,?,?,?)",
+        ("bitcoin", "BTC", "Bitcoin", 50000.0, 1_000_000_000, 1, "", 500.0, 1.0),
     )
     conn.commit()
     conn.close()
