@@ -1,9 +1,11 @@
 from models.database import Database
 from models.coin import Coin
+from models.transaction import Transaction
 import bisect
 import time
 
 STARTING_BALANCE = 100_000.0
+MIN_TRADE_EUR = 1.0
 
 
 class MarketService:
@@ -24,15 +26,7 @@ class MarketService:
         """Liefert alle Coin-IDs, in denen der Account jemals getradet hat.
         Dient als Quelle fuer das Portfolio-History-Sync (alle Coins, die in
         den Portfolio-Chart einfliessen)."""
-        conn = Database.get_connection()
-        cur = conn.cursor()
-        cur.execute(
-            "SELECT DISTINCT coin_id FROM transactions WHERE acc_id = ?",
-            (acc_id,),
-        )
-        rows = cur.fetchall()
-        conn.close()
-        return [row["coin_id"] for row in rows]
+        return Transaction.traded_coin_ids(acc_id)
 
     # ---------- Portfolio-Verlauf (Integration) ----------
 
@@ -56,59 +50,42 @@ class MarketService:
         self._validate_trade(acc_id, coin, action, amount)
         self._save_transaction(acc_id, coin, action, amount)
 
+    def place_order(self, acc_id, coin_id, action, mode, raw_value):
+        """Verarbeitet eine Order aus dem Trade-Formular: parst die Roheingabe,
+        rechnet sie je nach Modus (AMOUNT/EUR/PERCENT) in eine Coin-Menge um,
+        prueft den Mindesthandelswert und fuehrt den Trade aus.
+
+        Raises ValueError mit einer anzeigefertigen Fehlermeldung, wenn die
+        Eingabe ungueltig ist oder die Trade-Voraussetzungen nicht erfuellt sind.
+
+        Returns:
+            (coin, amount): der gehandelte Coin und die tatsaechlich gehandelte
+            Menge (fuer die Erfolgsmeldung im Aufrufer).
+        """
+        action = self._normalize_action(action)
+        mode = (mode or "AMOUNT").upper()
+        value = self._parse_positive_value(raw_value)
+
+        coin = self._require_coin(coin_id)
+        price = self._require_price(coin)
+
+        amount = self._resolve_amount(acc_id, coin, action, mode, value)
+        self._validate_min_trade_value(amount, price)
+
+        self.execute_trade(acc_id, coin.id, action, amount)
+        return coin, amount
+
     # ---------- Account-Stand ----------
 
     def get_position(self, acc_id, coin_id):
-        conn = Database.get_connection()
-        cur = conn.cursor()
-        cur.execute("""
-            SELECT SUM(
-                CASE
-                    WHEN type='BUY' THEN amount
-                    WHEN type='SELL' THEN -amount
-                    ELSE 0
-                END
-            ) AS balance
-            FROM transactions
-            WHERE acc_id=? AND coin_id=?
-        """, (acc_id, coin_id))
-        row = cur.fetchone()
-        conn.close()
-        return float(row["balance"] if row["balance"] is not None else 0)
+        return Transaction.net_position(acc_id, coin_id)
 
     def get_balance(self, acc_id):
         """Verfuegbares Euro-Guthaben: Startkapital - Kaeufe + Verkaeufe."""
-        conn = Database.get_connection()
-        cur = conn.cursor()
-        cur.execute("""
-            SELECT SUM(
-                CASE
-                    WHEN type='BUY'  THEN -(amount * price)
-                    WHEN type='SELL' THEN  (amount * price)
-                    ELSE 0
-                END
-            ) AS net
-            FROM transactions
-            WHERE acc_id=?
-        """, (acc_id,))
-        row = cur.fetchone()
-        conn.close()
-        net = row["net"] if row["net"] is not None else 0.0
-        return STARTING_BALANCE + net
+        return STARTING_BALANCE + Transaction.net_cash_flow(acc_id)
 
     def get_transactions(self, acc_id):
-        conn = Database.get_connection()
-        cur = conn.cursor()
-        cur.execute("""
-            SELECT t.id, t.coin_id, t.type, t.amount, t.price, t.timestamp,
-                   c.name, c.symbol, c.image
-            FROM transactions t
-            JOIN coins c ON c.id = t.coin_id
-            WHERE t.acc_id = ?
-            ORDER BY t.timestamp DESC
-        """, (acc_id,))
-        rows = cur.fetchall()
-        conn.close()
+        rows = Transaction.for_account_with_coin_info(acc_id)
         return [self._row_to_transaction_dict(r) for r in rows]
 
     # ====================================================================
@@ -138,17 +115,16 @@ class MarketService:
         return [(row["timestamp_ms"], row["price"]) for row in rows]
 
     def _load_transactions(self, acc_id):
-        conn = Database.get_connection()
-        cur = conn.cursor()
-        cur.execute("""
-            SELECT coin_id, type, amount, price, timestamp
-            FROM transactions
-            WHERE acc_id = ?
-            ORDER BY timestamp ASC
-        """, (acc_id,))
-        rows = cur.fetchall()
-        conn.close()
-        return [dict(r) for r in rows]
+        return [
+            {
+                "coin_id": tx.coin_id,
+                "type": tx.type,
+                "amount": tx.amount,
+                "price": tx.price,
+                "timestamp": tx.timestamp,
+            }
+            for tx in Transaction.for_account(acc_id)
+        ]
 
     def _load_histories_for_transactions(self, txs):
         coin_ids = {tx["coin_id"] for tx in txs}
@@ -267,6 +243,58 @@ class MarketService:
             raise ValueError("Coin nicht gefunden.")
         return coin
 
+    @staticmethod
+    def _require_price(coin):
+        price = coin.current_price
+        if not price or price <= 0:
+            raise ValueError("Ungültiger Preis für diesen Coin.")
+        return price
+
+    @staticmethod
+    def _parse_positive_value(raw_value):
+        """Parst die Roheingabe (mit Komma oder Punkt) und prueft, dass sie > 0 ist."""
+        try:
+            value = float((raw_value or "0").replace(",", "."))
+        except ValueError:
+            raise ValueError("Ungültige Eingabe.")
+        if value <= 0:
+            raise ValueError("Wert muss größer als 0 sein.")
+        return value
+
+    def _resolve_amount(self, acc_id, coin, action, mode, value):
+        """Rechnet den eingegebenen Wert je nach Modus in eine Coin-Menge um.
+        AMOUNT: Wert ist bereits die Menge. EUR: Wert ist ein Euro-Betrag.
+        PERCENT: Wert ist ein Anteil des aktuellen Bestands (nur beim Verkauf)."""
+        if mode == "EUR":
+            amount = value / coin.current_price
+        elif mode == "PERCENT":
+            amount = self._amount_from_percent(acc_id, coin, action, value)
+        else:  # AMOUNT
+            amount = value
+
+        if amount <= 0:
+            raise ValueError("Menge muss größer als 0 sein.")
+        return amount
+
+    def _amount_from_percent(self, acc_id, coin, action, percent):
+        if action != "SELL":
+            raise ValueError("Prozentangabe ist nur beim Verkauf möglich.")
+        if percent > 100:
+            raise ValueError("Prozent darf maximal 100 sein.")
+        position = self.get_position(acc_id, coin.id)
+        if position <= 0:
+            raise ValueError("Du besitzt keine Anteile zum Verkaufen.")
+        return position * (percent / 100.0)
+
+    @staticmethod
+    def _validate_min_trade_value(amount, price):
+        trade_value_eur = amount * price
+        if trade_value_eur < MIN_TRADE_EUR:
+            raise ValueError(
+                f"Mindestbetrag pro Transaktion ist {MIN_TRADE_EUR:.2f} €. "
+                f"Dein Wert: {trade_value_eur:.2f} €."
+            )
+
     def _validate_trade(self, acc_id, coin, action, amount):
         if action == "SELL":
             current = self.get_position(acc_id, coin.id)
@@ -284,14 +312,7 @@ class MarketService:
     @staticmethod
     def _save_transaction(acc_id, coin, action, amount):
         ts = int(time.time() * 1000)
-        conn = Database.get_connection()
-        cur = conn.cursor()
-        cur.execute("""
-            INSERT INTO transactions (coin_id, acc_id, price, amount, type, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?)
-        """, (coin.id, acc_id, coin.current_price, amount, action, ts))
-        conn.commit()
-        conn.close()
+        Transaction.create(acc_id, coin.id, coin.current_price, amount, action, ts)
 
     @staticmethod
     def _row_to_transaction_dict(r):

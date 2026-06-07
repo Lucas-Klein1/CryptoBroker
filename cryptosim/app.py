@@ -7,8 +7,6 @@ from models.account import Account
 
 load_dotenv()
 from models.coin import Coin
-
-MIN_TRADE_EUR = 1.0
 from models.favorite import Favorite
 from services.portfolio_service import PortfolioService
 from services.market_service import MarketService, STARTING_BALANCE
@@ -33,8 +31,9 @@ market_service = MarketService()
 
 coin_sync_service = CoinSyncService()
 
-# Tabelle beim Start aktualisieren
+# Tabellen beim Start anlegen/aktualisieren
 coin_sync_service.update_coins_table()
+Favorite.ensure_table()
 
 # ---------- EURO FORMAT FILTER ----------
 @app.template_filter("eur")
@@ -209,70 +208,15 @@ def trade(coin_id):
         raw_value = request.form.get("amount") or "0"
 
     try:
-        value = float(raw_value.replace(",", "."))
-    except ValueError:
-        flash("Ungültige Eingabe.", "error")
-        return redirect(url_for("coin_detail", coin_id=coin_id))
-
-    if value <= 0:
-        flash("Wert muss größer als 0 sein.", "error")
-        return redirect(url_for("coin_detail", coin_id=coin_id))
-
-    coin = Coin.get_by_id(coin_id)
-    if coin is None:
-        flash("Coin nicht gefunden.", "error")
-        return redirect(url_for("dashboard"))
-
-    price = coin.current_price
-    if not price or price <= 0:
-        flash("Ungültiger Preis für diesen Coin.", "error")
-        return redirect(url_for("coin_detail", coin_id=coin_id))
-
-    # ---- Eingabe in eine Coin-Menge umrechnen, je nach Modus ----
-    if mode == "EUR":
-        # Euro-Betrag eingegeben -> in Coin-Menge umrechnen
-        amount = value / price
-    elif mode == "PERCENT":
-        # Nur fuer SELL sinnvoll
-        if action != "SELL":
-            flash("Prozentangabe ist nur beim Verkauf möglich.", "error")
-            return redirect(url_for("coin_detail", coin_id=coin_id))
-        if value > 100:
-            flash("Prozent darf maximal 100 sein.", "error")
-            return redirect(url_for("coin_detail", coin_id=coin_id))
-        position = market_service.get_position(acc_id, coin_id)
-        if position <= 0:
-            flash("Du besitzt keine Anteile zum Verkaufen.", "error")
-            return redirect(url_for("coin_detail", coin_id=coin_id))
-        amount = position * (value / 100.0)
-    else:  # AMOUNT
-        amount = value
-
-    if amount <= 0:
-        flash("Menge muss größer als 0 sein.", "error")
-        return redirect(url_for("coin_detail", coin_id=coin_id))
-
-    # ---- Mindestwert-Pruefung: Trade muss mindestens MIN_TRADE_EUR wert sein ----
-    trade_value_eur = amount * price
-    if trade_value_eur < MIN_TRADE_EUR:
-        flash(
-            f"Mindestbetrag pro Transaktion ist {MIN_TRADE_EUR:.2f} €. "
-            f"Dein Wert: {trade_value_eur:.2f} €.",
-            "error",
-        )
-        return redirect(url_for("coin_detail", coin_id=coin_id))
-
-    try:
-        market_service.execute_trade(acc_id, coin_id, action, amount)
+        coin, amount = market_service.place_order(acc_id, coin_id, action, mode, raw_value)
     except ValueError as e:
         flash(str(e), "error")
+        return redirect(url_for("coin_detail", coin_id=coin_id))
+
+    if action == "BUY":
+        flash(f"Erfolgreich {amount:.6f} {coin.symbol.upper()} gekauft.", "success")
     else:
-        if action == "BUY":
-            flash(f"Erfolgreich {amount:.6f} {coin.symbol.upper()} gekauft.", "success")
-        elif action == "SELL":
-            flash(f"Erfolgreich {amount:.6f} {coin.symbol.upper()} verkauft.", "success")
-        else:
-            flash("Unbekannte Aktion.", "error")
+        flash(f"Erfolgreich {amount:.6f} {coin.symbol.upper()} verkauft.", "success")
 
     return redirect(url_for("coin_detail", coin_id=coin_id))
 
