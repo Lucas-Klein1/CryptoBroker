@@ -20,6 +20,7 @@
         <th>Name</th>
         <th>Symbol</th>
         <th>Preis</th>
+        <th>24h %</th>
         <th>Market Cap</th>
       </tr>
     </thead>
@@ -38,6 +39,12 @@
         <td>{{ c.symbol.upper() }}</td>
 
         <td>{{ c.current_price|eur }}</td>
+
+        <td style="color: {{ '#00c800' if c.price_change_percentage_24h and c.price_change_percentage_24h >= 0 else '#ff3c3c' }}">
+          {% if c.price_change_percentage_24h is not none %}
+            {{ '+' if c.price_change_percentage_24h >= 0 else '' }}{{ "%.2f"|format(c.price_change_percentage_24h) }} %
+          {% else %}–{% endif %}
+        </td>
 
         <td>{{ c.market_cap|eur }}</td>
 

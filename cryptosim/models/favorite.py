@@ -80,7 +80,8 @@ class Favorite:
         cur = conn.cursor()
         cur.execute("""
             SELECT c.id, c.name, c.symbol, c.current_price,
-                   c.market_cap, c.market_cap_rank, c.image
+                   c.market_cap, c.market_cap_rank, c.image,
+                   c.price_change_percentage_24h
             FROM favorites f
             JOIN coins c ON c.id = f.coin_id
             WHERE f.acc_id = ?
