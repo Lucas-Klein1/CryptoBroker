@@ -781,28 +781,28 @@ Eigenschaften identifiziert. Bewertung nach Schema: **Risiko-Score = Wahrscheinl
 
 | Risiko ID | Beschreibung | W | S | Score | Status |
 |-----------|-------------|---|---|-------|--------|
-| **T-01** | CoinGecko API-Ausfall / Rate-Limit überschritten | 3 | 4 | **12** | Offen |
-| **T-02** | SQLite Race Conditions bei gleichzeitigen Trades | 2 | 5 | **10** | Offen |
+| **T-01** | CoinGecko API-Ausfall / Rate-Limit (Demo API Key: ~30 req/min) | 3 | 4 | **12** | Mitigiert (Caching implementiert, externe Abhängigkeit bleibt) |
+| **T-02** | SQLite Race Conditions bei gleichzeitigen Trades | 2 | 5 | **10** | Geschlossen |
 
 #### Projektrisiken
 
 | Risiko ID | Beschreibung | W | S | Score | Status |
 |-----------|-------------|---|---|-------|--------|
-| **P-01** | Teamausfall durch Krankheit oder Prüfungsphase | 3 | 3 | **9** | Offen |
-| **P-02** | Scope Creep durch unkontrolliertes Feature-Wachstum | 4 | 3 | **12** | Offen |
-| **P-03** | Fehlende automatisierte Tests  | 4 | 3 | **12** | Offen |
-| **P-04** | Zeitdruck vor Blog- und Abgabe-Deadlines | 3 | 2 | **6** | Offen |
+| **P-01** | Teamausfall durch Krankheit oder Prüfungsphase | 3 | 3 | **9** | Geschlossen |
+| **P-02** | Scope Creep durch unkontrolliertes Feature-Wachstum | 4 | 3 | **12** | Geschlossen |
+| **P-03** | Fehlende automatisierte Tests | 1 | 2 | **2** | Geschlossen |
+| **P-04** | Zeitdruck vor Blog- und Abgabe-Deadlines | 3 | 2 | **6** | Geschlossen |
 
 ---
 
 ### 11.2 Technische Schulden
 
-| ID    | Beschreibung                                                             | Priorität | Maßnahme |
-|-------|--------------------------------------------------------------------------|-----------|----------|
-| TS-01 | Fehlende automatisierten Tests                                           | Hoch | `pytest` einrichten, Tests für `PortfolioService` und `MarketService` priorisieren |
-| TS-02 | Logging nur über `print()`-Statements                                    | Mittel | Python `logging`-Modul einführen, Log-Level konfigurierbar machen |
-| TS-03 | Fehlende Datenbankindizes auf `transactions.acc_id` und `accounts.name`  | Mittel | `CREATE INDEX`-Statements beim DB-Init hinzufügen |
-| TS-04 | SQLite nicht für parallele Schreibzugriffe geeignet                      | Niedrig | WAL-Modus aktivieren; langfristig Migration zu PostgreSQL |
+| ID    | Beschreibung | Priorität | Status |
+|-------|-------------|-----------|--------|
+| TS-01 | Fehlende automatisierte Tests | Hoch | ✅ Behoben – 35 Tests, 92 % Coverage |
+| TS-02 | Logging nur über `print()`-Statements | Mittel | Offen |
+| TS-03 | Fehlende Datenbankindizes auf `transactions.acc_id` und `accounts.name` | Mittel | Offen |
+| TS-04 | SQLite WAL-Modus für parallele Schreibzugriffe | Niedrig | ✅ Behoben – WAL-Modus aktiviert |
 
 ---
 
