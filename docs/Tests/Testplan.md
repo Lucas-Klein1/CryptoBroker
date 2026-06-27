@@ -1,15 +1,15 @@
 # Testplan – CryptoBroker (Cryptosim)
 
 **Projekt:** CryptoBroker / Cryptosim  
-**Version:** 1.1  
-**Stand:** 2026-05-05  
+**Version:** 1.2  
+**Stand:** 2026-06-27  
 **Kurs:** Software Engineering – TINF24B4  
 
 ---
 
 ## 1. Überblick
 
-Cryptosim ist eine Flask-basierte Web-Applikation für simulierten Krypto-Handel. Der Testfokus liegt bewusst eng: Wir testen nur den Service-Layer, da dort die gesamte kritische Geschäftslogik (Balance, Positionen, Trade-Validierung) liegt. Das ist für ein 4-Personen-Team realistisch umsetzbar und ergibt die höchste Risikoreduktion pro investierter Testzeit.
+Cryptosim ist eine Flask-basierte Web-Applikation für simulierten Krypto-Handel. Der Testfokus liegt bewusst eng: Wir testen nur den Service-Layer, da dort die gesamte kritische Geschäftslogik (Balance, Positionen, Trade-Validierung, Order-Modi) liegt. Das ist für ein 4-Personen-Team realistisch umsetzbar und ergibt die höchste Risikoreduktion pro investierter Testzeit.
 
 **Bewusst nicht getestet:** Flask-Routen, Templates, CoinGecko-Sync.
 
@@ -22,6 +22,7 @@ Cryptosim ist eine Flask-basierte Web-Applikation für simulierten Krypto-Handel
 - `get_balance(acc_id)` – EUR-Kontostand aus Transaktionen
 - `get_position(acc_id, coin_id)` – Crypto-Bestand aus Transaktionen
 - `execute_trade(acc_id, coin_id, action, amount)` – Kauf/Verkauf mit Validierung
+- `place_order(acc_id, coin_id, action, mode, raw_value)` – Order mit Modus-Umrechnung (AMOUNT / EUR / PERCENT)
 
 Optional (Bonus, wenn Zeit bleibt): `services/portfolio_service.py`
 
@@ -29,18 +30,18 @@ Optional (Bonus, wenn Zeit bleibt): `services/portfolio_service.py`
 
 ## 3. Konkrete Testfälle
 
-### Unit-Tests – `test_market_service.py`
+### Unit-Tests – `test_market_service.py` (U1–U16)
 
 | # | Testfall | Methode | Erwartetes Ergebnis |
 |---|---|---|---|
 | U1 | Startguthaben ohne Transaktionen | `get_balance` | 100.000 € |
 | U2 | Kauf reduziert Balance korrekt | `get_balance` nach BUY | `100.000 - (amount × price)` |
 | U3 | Verkauf erhöht Balance korrekt | `get_balance` nach SELL | Balance steigt um `amount × price` |
-| U4 | Kauf ohne ausreichendes Guthaben | `execute_trade` BUY | `ValueError` |
-| U5 | Verkauf ohne ausreichende Position | `execute_trade` SELL | `ValueError` |
-| U6 | Ungültige Trade-Aktion | `execute_trade` mit `"HODL"` | `ValueError` |
-| U7 | Position nach Kauf korrekt | `get_position` nach BUY | entspricht gekaufter Menge |
-| U8 | Position nach vollständigem Verkauf | `get_position` nach BUY + SELL | 0.0 |
+| U4 | Position nach Kauf korrekt | `get_position` nach BUY | entspricht gekaufter Menge |
+| U5 | Position nach vollständigem Verkauf | `get_position` nach BUY + SELL | 0.0 |
+| U6 | Kauf ohne ausreichendes Guthaben | `execute_trade` BUY | `ValueError` |
+| U7 | Verkauf ohne ausreichende Position | `execute_trade` SELL | `ValueError` |
+| U8 | Ungültige Trade-Aktion | `execute_trade` mit `"HODL"` | `ValueError` |
 | U9 | Trade mit unbekanntem Coin | `execute_trade` mit ungültiger Coin-ID | `ValueError` |
 | U10 | Historische Daten ohne History-Tabelle | `get_history` | leere Liste |
 | U11 | Historische Daten für unbekannten Coin | `get_history` | leere Liste |
@@ -50,14 +51,36 @@ Optional (Bonus, wenn Zeit bleibt): `services/portfolio_service.py`
 | U15 | Portfolio-Verlauf ohne Trades | `get_portfolio_history` | leere Liste |
 | U16 | Portfolio-Verlauf mit Kauf und Preishistorie | `get_portfolio_history` | ≥ 2 Datenpunkte, Startpunkt = 100.000 € |
 
-### Integrations-Test – `test_trade_flow.py`
+### Unit-Tests – `test_place_order.py` (P1–P17)
+
+| # | Testfall | Klasse | Erwartetes Ergebnis |
+|---|---|---|---|
+| P1 | AMOUNT-Modus: Wert direkt als Menge | `TestPlaceOrderModes` | amount = 0.1 |
+| P2 | EUR-Modus: EUR-Betrag wird umgerechnet | `TestPlaceOrderModes` | amount = EUR / Preis |
+| P3 | PERCENT-Modus: Verkauf 50 % der Position | `TestPlaceOrderModes` | amount = 0.5, Position = 0.5 |
+| P4 | Komma als Dezimaltrennzeichen akzeptiert | `TestPlaceOrderModes` | amount = 0.5 |
+| P5 | Unbekannter Modus fällt auf AMOUNT zurück | `TestPlaceOrderModes` | amount = 0.2 |
+| P6 | Nicht-numerischer Wert wirft ValueError | `TestPlaceOrderInputValidation` | ValueError "Ungültige Eingabe" |
+| P7 | Wert = 0 wirft ValueError | `TestPlaceOrderInputValidation` | ValueError "größer als 0" |
+| P8 | Negativer Wert wirft ValueError | `TestPlaceOrderInputValidation` | ValueError "größer als 0" |
+| P9 | Unbekannter Coin wirft ValueError | `TestPlaceOrderInputValidation` | ValueError "Coin nicht gefunden" |
+| P10 | Coin mit Preis 0 wirft ValueError | `TestPlaceOrderInputValidation` | ValueError "Ungültiger Preis" |
+| P11 | Unter Mindestbetrag wirft ValueError | `TestPlaceOrderInputValidation` | ValueError "Mindestbetrag" |
+| P12 | PERCENT beim Kauf wirft ValueError | `TestPlaceOrderPercentMode` | ValueError "nur beim Verkauf" |
+| P13 | PERCENT > 100 wirft ValueError | `TestPlaceOrderPercentMode` | ValueError "maximal 100" |
+| P14 | PERCENT ohne Position wirft ValueError | `TestPlaceOrderPercentMode` | ValueError "keine Anteile" |
+| P15 | Kauf ohne Guthaben wirft ValueError | `TestPlaceOrderTradeRules` | ValueError "Nicht genug Guthaben" |
+| P16 | Verkauf mehr als Bestand wirft ValueError | `TestPlaceOrderTradeRules` | ValueError "Zu wenig Bestand" |
+| P17 | Erfolgreicher Kauf persistiert Transaktion | `TestPlaceOrderTradeRules` | 1 Transaktion in DB |
+
+### Integrations-Tests – `test_trade_flow.py` (I1–I2)
 
 | # | Testfall | Beschreibung |
 |---|---|---|
 | I1 | Vollständiger Trade-Zyklus | Kauf → Verkauf gleicher Menge → Balance wieder 100.000 € |
 | I2 | Mehrere Käufe kumulieren korrekt | 2× BUY → Position = Summe beider Käufe |
 
-**Gesamt: 18 Testfälle** – aufgeteilt auf 4 Personen ca. 4–5 Testfälle pro Person.
+**Gesamt: 35 Testfälle** – U1–U16 (16), P1–P17 (17), I1–I2 (2).
 
 ---
 
@@ -65,7 +88,7 @@ Optional (Bonus, wenn Zeit bleibt): `services/portfolio_service.py`
 
 | Ziel | Wert |
 |---|---|
-| `services/market_service.py` | ≥ 80 % |
+| `services/market_service.py` | ≥ 80 % (erreicht: 92 %) |
 | `services/portfolio_service.py` (optional) | ≥ 80 % |
 
 Die Coverage wird nur auf `market_service.py` gemessen, nicht global über das gesamte Projekt. Das wird mit `--cov=services.market_service` in pytest eingestellt.
@@ -95,8 +118,9 @@ Kein `pytest-flask` nötig – Services werden direkt mit In-Memory-SQLite getes
 cryptosim/
 ├── pytest.ini                   # pythonpath + testpaths
 └── tests/
-    ├── conftest.py              # Fixtures: in_memory_db, test_account, test_coin
+    ├── conftest.py              # Fixtures: in_memory_db, test_account, test_coin, zero_price_coin
     ├── test_market_service.py   # Unit-Tests U1–U16
+    ├── test_place_order.py      # Unit-Tests P1–P17
     └── test_trade_flow.py       # Integrations-Tests I1–I2
 ```
 
@@ -131,7 +155,7 @@ Fehlschlagende Tests werden als Bug-Issue im GitHub-Repository angelegt und dem 
 
 ## 8. CI/CD-Integration (GitHub Actions)
 
-Erweiterung der bestehenden `.github/workflows/ci.yml` um einen Test-Job **vor** dem Smoke-Test:
+Die bestehende `.github/workflows/ci.yml` enthält einen Test-Job **vor** dem Smoke-Test:
 
 ```yaml
   tests:
@@ -194,6 +218,6 @@ Erweiterung der bestehenden `.github/workflows/ci.yml` um einen Test-Job **vor**
 
 Ein Build gilt als **bestanden**, wenn:
 
-- [ ] Alle 18 Testfälle grün
-- [ ] Coverage auf `services/market_service.py` ≥ 80 %
-- [ ] Smoke-Test: Container startet und antwortet auf `/`
+- [x] Alle 35 Testfälle grün
+- [x] Coverage auf `services/market_service.py` ≥ 80 % (erreicht: 92 %)
+- [x] Smoke-Test: Container startet und antwortet auf `/`
