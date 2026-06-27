@@ -745,15 +745,18 @@ Qualitätsanforderungen (CryptoBroker)
 
 ### 10.4 Qualitäts-Metriken
 
-| Metrik | Ziel | Status |
-|--------|------|--------|
-| Unit-Test Coverage | > 70% | Geplant |
-| Code Duplication | < 3% | Zu überprüfen |
-| Cyclomatic Complexity | < 10 | OK |
-| Security Vulnerabilities | 0 | OK |
-| API Response Time | < 200ms | Zu überprüfen |
-| Database Query Time | < 100ms | OK |
-| Uptime | > 95% | In Betrieb |
+| Metrik | Ziel | Gemessener Wert | Status |
+|--------|------|-----------------|--------|
+| Unit-Test Coverage (`market_service.py`) | ≥ 80 % | **92 %** | ✅ OK |
+| Anzahl Testfälle | ≥ 10 | **35** (U1–U16, P1–P17, I1–I2) | ✅ OK |
+| Cyclomatic Complexity (Ø) | < 10 | **3,49** (radon, Klasse A) | ✅ OK |
+| Maintainability Index | > 20 (Klasse A/B) | **A** (34–60, je Modul) | ✅ OK |
+| SLOC Services | – | **487** (coin_sync: 150, portfolio: 93, market: 244) | ℹ️ Info |
+| Code Duplication | < 3 % | nicht gemessen | – |
+| Security Vulnerabilities | 0 | 0 (keine bekannten) | ✅ OK |
+| API Response Time | < 200 ms | nicht gemessen | – |
+| Database Query Time | < 100 ms | nicht gemessen | – |
+| Uptime | > 95 % | in Betrieb | ✅ OK |
 
 ---
 
