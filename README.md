@@ -44,6 +44,7 @@ CryptoBroker (Cryptosim) ist eine webbasierte Anwendung, mit der Nutzer den Kryp
 - [Demo-Screenshots](docs/Screenshots/)
 
 ### Weitere Ressourcen
+- [Retrospektive](https://github.com/Lucas-Klein1/CryptoBroker/blob/main/docs/Screenshots/11_retrospektive.png)
 - [Scrum-Board (GitHub Projects)](https://github.com/Lucas-Klein1/CryptoBroker/projects)
 - [Blogs & Diskussionen](https://github.com/Lucas-Klein1/CryptoBroker/discussions)
 - [CI/CD-Workflow](.github/workflows/ci.yml)
