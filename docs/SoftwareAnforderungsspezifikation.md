@@ -56,8 +56,8 @@ Hauptanwendungsfälle (ohne Benutzeranmeldung):
 
 #### 2.2 Create Account
 
-**User Story** *(GitHub Issue #9)*:
-> „Als Nutzer möchte ich einen Account erstellen können, damit ich den CryptoBroker personalisiert nutzen kann."
+**User Story** :
+> „Als Nutzer möchte ich einen Account erstellen können, damit ich den CryptoBroker personalisiert nutzen kann." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/9)
 
 **Schätzung:** 3 Story Points · Aufwand: mittel
 
@@ -96,7 +96,7 @@ Das Sequenzdiagramm zeigt die technische Kommunikation beim Account-Anlegen: Der
 #### 2.3 Login
 
 **User Story:**
-> „Als Nutzer möchte ich mich in meinen Account einloggen können, damit ich auf meine persönlichen Daten und mein Portfolio zugreifen kann."
+> „Als Nutzer möchte ich mich in meinen Account einloggen können, damit ich auf meine persönlichen Daten und mein Portfolio zugreifen kann." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/96)
 
 **Schätzung:** 2 Story Points · Aufwand: niedrig
 
@@ -128,7 +128,7 @@ Das Aktivitätsdiagramm zeigt den Login-Ablauf in zwei Swimlanes (Benutzer / Bac
 #### 2.4 Logout
 
 **User Story:**
-> „Als Nutzer möchte ich mich ausloggen können, damit meine Sitzung sicher beendet wird."
+> „Als Nutzer möchte ich mich ausloggen können, damit meine Sitzung sicher beendet wird." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/97)
 
 **Schätzung:** 1 Story Point · Aufwand: niedrig
 
@@ -158,11 +158,11 @@ Das Aktivitätsdiagramm zeigt den Logout-Ablauf in zwei Swimlanes (Benutzer / Ba
 
 #### 2.5 View Crypto Data
 
-**User Story** *(GitHub Issue #14)*:
-> „Als Nutzer möchte ich eine Übersicht aller Kryptowährungen sehen."
+**User Story** :
+> „Als Nutzer möchte ich eine Übersicht aller Kryptowährungen sehen." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/14)
 
-**User Story** *(GitHub Issue #10)*:
-> „Als Nutzer möchte ich die App mit Live-Daten aktualisieren."
+**User Story** :
+> „Als Nutzer möchte ich die App mit Live-Daten aktualisieren." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/10)
 
 **Schätzung:** 3 Story Points · Aufwand: mittel
 
@@ -192,8 +192,8 @@ Das Sequenzdiagramm zeigt den Ablauf beim Aufruf des Dashboards: Der Browser sen
 
 #### 2.6 Crypto Kaufen
 
-**User Story** *(GitHub Issue #12)*:
-> „Als Nutzer möchte ich über ein virtuelles Guthaben verfügen, mit dem ich wie in einem Planspiel investieren kann."
+**User Story** :
+> „Als Nutzer möchte ich über ein virtuelles Guthaben verfügen, mit dem ich wie in einem Planspiel investieren kann." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/12)
 
 **Schätzung:** 5 Story Points · Aufwand: hoch
 
@@ -227,7 +227,7 @@ Bevor ein Kauf durchgeführt werden kann, werden die aktuellen Coin-Daten vom Se
 #### 2.7 Crypto Verkaufen
 
 **User Story:**
-> „Als Nutzer möchte ich meine bereits gekauften Kryptowährungen wieder verkaufen, damit ich Gewinne oder Verluste realisieren kann."
+> „Als Nutzer möchte ich meine bereits gekauften Kryptowährungen wieder verkaufen, damit ich Gewinne oder Verluste realisieren kann." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/98)
 
 **Schätzung:** 5 Story Points · Aufwand: hoch
 
@@ -259,8 +259,8 @@ Der Verkaufsvorgang setzt eine aktive Nutzersitzung voraus. Das Aktivitätsdiagr
 
 #### 2.8 Crypto Watchlist
 
-**User Story** *(GitHub Issue #13)*:
-> „Als Nutzer möchte ich meine Lieblings-Coins speichern können."
+**User Story** :
+> „Als Nutzer möchte ich meine Lieblings-Coins speichern können." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/13)
 
 **Schätzung:** 3 Story Points · Aufwand: mittel
 
