@@ -50,7 +50,11 @@ Hauptanwendungsfälle (ohne Benutzeranmeldung):
 2. **Crypto Kaufen**
 3. **Crypto Verkaufen**
 4. **Crypto Watchlist**
-5. **Create Account**
+5. **View Portfolio**
+
+Ergänzend beschreibt dieses Dokument die Anwendungsfälle der Benutzerverwaltung
+(**Create Account**, **Login**, **Logout**), die den personalisierten Zugriff auf die
+oben genannten Hauptfunktionen ermöglichen.
 
 ---
 
@@ -284,6 +288,39 @@ Die Watchlist baut auf der Coin-Übersicht auf. Das Sequenzdiagramm zeigt wie Co
 **Definition of Done:**
 - Coins können zur Watchlist hinzugefügt und entfernt werden
 - Watchlist wird persistent in der DB gespeichert
+- Code von mindestens zwei Teammitgliedern geprüft
+
+---
+
+#### 2.9 View Portfolio
+
+**User Story** :
+> „Als Nutzer möchte ich eine Statistik über die gesamte Performance meines Portfolios, damit ich besser mit dem Cryptobroker lernen kann." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/62)
+
+**Schätzung:** 3 Story Points · Aufwand: mittel
+
+**Beschreibung:** Benutzer können ihr persönliches Portfolio einsehen: alle gehaltenen Positionen, deren aktuellen Wert sowie den Gesamtwert. Die Bestände werden dabei nicht separat gespeichert, sondern bei jedem Aufruf live aus der Transaktionshistorie berechnet (Bestand = Σ Käufe − Σ Verkäufe) und mit den aktuellen Kursen bewertet.
+
+**Voraussetzung:** Der Benutzer ist eingeloggt. Für eine aussagekräftige Anzeige liegt mindestens eine Transaktion vor; ohne Transaktionen wird ein leeres Portfolio mit dem Startguthaben angezeigt.
+**Nachbedingung:** Die Positionen und der Gesamtwert wurden aus den gespeicherten Transaktionen berechnet und angezeigt. Der Datenbestand bleibt unverändert (rein lesender Anwendungsfall).
+
+**GUI-Mockup:**
+
+![Portfolio Mockup](MockUps/Web/mockup_portfolio.png "Portfolio Mockup")
+
+**Verhaltensdiagramme:**
+
+Sequenzdiagramm – Coins anzeigen (Datengrundlage des Portfolios):
+
+![Sequenzdiagramm showCoins](UML/UML_Semester_1/UML-Sequenz-showCoins.png "Sequenzdiagramm showCoins")
+
+Die Portfolio-Ansicht baut auf derselben Datengrundlage auf wie die Coin-Übersicht: Das Sequenzdiagramm zeigt, wie aktuelle Coin-Daten geladen werden. Darauf aufbauend werden die Transaktionen des angemeldeten Nutzers aggregiert und jede Position mit dem aktuellen Kurs bewertet. Der detaillierte Ablauf der Portfolio-Berechnung auf Komponentenebene ist in der Architekturdokumentation beschrieben (arc42, Kapitel 6.3 „Sequenzdiagramm: Portfolio-Anzeige").
+
+**Definition of Done:**
+- Alle Positionen werden mit Bestand und aktuellem Wert angezeigt
+- Gesamtwert des Portfolios wird korrekt aus den Transaktionen berechnet
+- Zugriff nur für eingeloggte Benutzer möglich
+- Mindestens 2 Unit-Tests vorhanden und bestanden
 - Code von mindestens zwei Teammitgliedern geprüft
 
 ---
