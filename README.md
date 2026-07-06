@@ -4,12 +4,12 @@ Gruppenprojekt für die Vorlesung Software Engineering – TINF24B4, DHBW Karlsr
 
 ## Team
 
-| Person   | Rolle          |
-|----------|----------------|
-| Sara     | Developer      |
-| Lucas    | Product Owner  |
-| Jonathan | Developer      |
-| Julian   | Scrum Master   |
+| Person   | Schwerpunkt                                          |
+|----------|------------------------------------------------------|
+| Sara     | Anforderungsanalyse (SRS, ASR), Dokumentation, Testing |
+| Lucas    | Backend (Flask, app.py), CI/CD, Docker               |
+| Jonathan | Frontend (HTML/CSS/JS, Chart.js), UI & Dark Theme    |
+| Julian   | Datenbankmodelle (SQLite), Service-Layer             |
 
 ---
 
@@ -31,7 +31,8 @@ CryptoBroker (Cryptosim) ist eine webbasierte Anwendung, mit der Nutzer den Kryp
 ### Tests & Qualität
 - [Testplan](docs/Tests/Testplan.md)
 - [Testbericht](docs/Tests/Testbericht.md)
-- [Software-Metriken](docs/metrics/metriken_auswahl.md)
+- [Software-Metriken – Auswahl](docs/metrics/metriken_auswahl.md)
+- [Software-Metriken – Messwerte & Verbesserungen](docs/metrics/metriken_messwerte.md)
 - [Refactoring-Zusammenfassung (Clean Code)](docs/Refactoring_summary_cleancode.md)
 - [Review-Protokoll](docs/review-protocol.md)
 
