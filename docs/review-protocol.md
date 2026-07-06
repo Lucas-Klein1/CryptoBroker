@@ -62,13 +62,13 @@ Alle Teilnehmenden haben sich vorab ca. 30 Minuten selbstständig mit dem Code b
 
 ### Abgeleitete Aufgaben
 
-| # | Datei | Befund | Maßnahme | Verantwortlich | Frist |
-|---|---|---|---|---|---|
-| 1 | `coin_sync_service.py` | Beim App-Start wird die coins-Tabelle per `DROP TABLE` gelöscht. Bei einem API-Fehler bleibt die Tabelle leer und die App ist unbrauchbar. | `INSERT OR REPLACE` statt `DROP + CREATE` verwenden. | Julian | 01.06. |
-| 2 | `app.py` | Die Login-Prüfung (`session.get`) wird in fast jeder Route einzeln wiederholt – Codeduplizierung. | Zentralen `@login_required` Decorator einführen. | Julian | 01.06. |
-| 3 | `coin_sync_service.py` | In `_fetch_coin_history()` ist `days='365'` fest eingetragen, obwohl eine `while`-Schleife dynamische Zeiträume suggeriert. Die Schleife bewirkt nichts. | Schleife korrekt implementieren oder entfernen. | Julian | 01.06. |
-| 4 | `market_service.py` | `_append_current_value()` berechnet alle Transaktionen erneut von vorne, obwohl das kurz davor in `_compute_portfolio_values()` schon passiert ist. | Zwischenergebnis weitergeben statt neu berechnen. | Julian | 01.06. |
-| 5 | `app.py` | `import datetime` steht innerhalb einer Funktion; Konstante `MIN_TRADE_EUR` ist mitten in der Datei definiert. | Imports und Konstanten an den Dateianfang verschieben. | Julian | 01.06. |
+| # | Datei | Befund | Maßnahme | Verantwortlich | Frist | Status |
+|---|---|---|---|---|---|---|
+| 1 | `coin_sync_service.py` | Beim App-Start wird die coins-Tabelle per `DROP TABLE` gelöscht. Bei einem API-Fehler bleibt die Tabelle leer und die App ist unbrauchbar. | `INSERT OR REPLACE` statt `DROP + CREATE` verwenden. | Julian | 01.06. | ✅ Erledigt |
+| 2 | `app.py` | Die Login-Prüfung (`session.get`) wird in fast jeder Route einzeln wiederholt – Codeduplizierung. | Zentralen `@login_required` Decorator einführen. | Julian | 01.06. | ✅ Erledigt |
+| 3 | `coin_sync_service.py` | In `_fetch_coin_history()` ist `days='365'` fest eingetragen, obwohl eine `while`-Schleife dynamische Zeiträume suggeriert. Die Schleife bewirkt nichts. | Schleife korrekt implementieren oder entfernen. | Julian | 01.06. | ✅ Erledigt |
+| 4 | `market_service.py` | `_append_current_value()` berechnet alle Transaktionen erneut von vorne, obwohl das kurz davor in `_compute_portfolio_values()` schon passiert ist. | Zwischenergebnis weitergeben statt neu berechnen. | Julian | 01.06. | ✅ Erledigt |
+| 5 | `app.py` | `import datetime` steht innerhalb einer Funktion; Konstante `MIN_TRADE_EUR` ist mitten in der Datei definiert. | Imports und Konstanten an den Dateianfang verschieben. | Julian | 01.06. | ✅ Erledigt |
 
 ### Bewährte Praktiken
 
@@ -84,4 +84,4 @@ Alle Teilnehmenden haben sich vorab ca. 30 Minuten selbstständig mit dem Code b
 
 ---
 
-*Protokollführerin: Sara · Moderator: Lucas · 25.05.2026*
+*Protokollführerin: Sara · Moderator: Lucas · 25.05.2026 · Bearbeitungsstand aktualisiert: 05.07.2026*
