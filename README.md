@@ -41,8 +41,8 @@ CryptoBroker (Cryptosim) ist eine webbasierte Anwendung, mit der Nutzer den Kryp
 - [RMMM-Liste](docs/RMMM_CryptoBroker.xlsx)
 
 ### Präsentation & Demo
-- [Abschlussfolien](Abschlusspraesentation/CryptoBroker_Abschlusspraesentation%20(2).pptx)
-- [Handout](Abschlusspraesentation/CryptoBroker_Handout.docx)
+- [Abschlussfolien](Abschlusspraesentation/CryptoBroker_Abschlusspraesentation.pdf)
+- [Handout](Abschlusspraesentation/CryptoBroker_Handout.pdf)
 - [Demo-Screenshots](docs/Screenshots/)
 
 ### Weitere Ressourcen
