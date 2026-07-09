@@ -297,7 +297,7 @@ Die Watchlist baut auf der Coin-Übersicht auf. Das Sequenzdiagramm zeigt wie Co
 **User Story** :
 > „Als Nutzer möchte ich eine Statistik über die gesamte Performance meines Portfolios, damit ich besser mit dem Cryptobroker lernen kann." [Zur User Story ->](https://github.com/Lucas-Klein1/CryptoBroker/issues/62)
 
-**Schätzung:** 3 Story Points · Aufwand: mittel
+**Schätzung:** 8 Story Points · Aufwand: mittel
 
 **Beschreibung:** Benutzer können ihr persönliches Portfolio einsehen: alle gehaltenen Positionen, deren aktuellen Wert sowie den Gesamtwert. Die Bestände werden dabei nicht separat gespeichert, sondern bei jedem Aufruf live aus der Transaktionshistorie berechnet (Bestand = Σ Käufe − Σ Verkäufe) und mit den aktuellen Kursen bewertet.
 
