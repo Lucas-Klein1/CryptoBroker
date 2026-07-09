@@ -36,6 +36,7 @@ jobs:
           pytest tests/ \
           --cov=services.market_service \
           --cov-report=html:coverage-html \
+          --cov-fail-under=80 \
           --junit-xml=test-results.xml \
           -v
 
